@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "nom": "Nouvelle Collection Été 2024",
+    "images": [
+      {"file": "collection/Futuristic Performer.png", "text": "Futurisme & Élégance - Nouvelle collection 2024 : osez l'avant-garde."},
+      {"file": "collection/Relaxing on Sandy Beach.png", "text": "Été sur la plage - Des matières légères pour un été vibrant."}
+    ],
+    "articles": [2, 5, 9, 13],
+    "slogan": "L'été sera fort, coloré et audacieux.",
+    "categorie": "Été",
+    "description": "Une collection inspirée par la lumière et la chaleur de l'été, avec des matières légères et des couleurs vives.",
+    "annee": 2024,
+    "couleur_principale": "#FFD700",
+    "date_lancement": "2024-05-15",
+    "visible": true
+  },
+  {
+    "id": 2,
+    "nom": "Collection Hiver Polaire",
+    "images": [
+      {"file": "collection/Serious Man Portrait.png", "text": "Hiver Polaire - Élégance et chaleur pour la saison froide."},
+      {"file": "collection/Black-and-White Portrait.png", "text": "Minimalisme hivernal - Sobriété et style."}
+    ],
+    "articles": [3, 7, 14, 15],
+    "slogan": "Affrontez le froid avec style.",
+    "categorie": "Hiver",
+    "description": "Des pièces chaudes et confortables pour un hiver tout en élégance, avec des tons sobres et des matières techniques.",
+    "annee": 2023,
+    "couleur_principale": "#1A2233",
+    "date_lancement": "2023-11-01",
+    "visible": true
+  },
+  {
+    "id": 3,
+    "nom": "Les Essentiels Automne",
+    "images": [
+      {"file": "collection/Contemplative Portrait.png", "text": "Automne doré - L'automne, saison des battants."},
+      {"file": "collection/Stylish Young Man in Black Outfit.png", "text": "Essentiels urbains - Parfait pour la mi-saison."}
+    ],
+    "articles": [1, 4, 8, 12],
+    "slogan": "L'automne, saison des battants.",
+    "categorie": "Automne",
+    "description": "Des essentiels pour la mi-saison, parfaits pour superposer et affronter les premiers frimas.",
+    "annee": 2023,
+    "couleur_principale": "#B86B2B",
+    "date_lancement": "2023-09-10",
+    "visible": false
+  },
+  {
+    "id": 4,
+    "nom": "Printemps Urbain",
+    "images": [
+      {"file": "collection/Tennis Court Scene.png", "text": "Printemps sportif - L'énergie du renouveau."},
+      {"file": "collection/Stylish Portrait with Gradient Background.png", "text": "Fraîcheur pastel - Les couleurs du printemps."}
+    ],
+    "articles": [6, 10, 11],
+    "slogan": "Le printemps, saison du renouveau.",
+    "categorie": "Printemps",
+    "description": "Des pièces légères et colorées pour célébrer le retour des beaux jours.",
+    "annee": 2024,
+    "couleur_principale": "#7ED957",
+    "date_lancement": "2024-03-20",
+    "visible": true
+  }
+] 

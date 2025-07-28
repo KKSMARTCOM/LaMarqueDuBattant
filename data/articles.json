@@ -1,0 +1,101 @@
+[
+  {
+    "id": 1,
+    "title": "Article Title 1",
+    "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "image": "hero.webp",
+    "link": "#",
+    "price": 55,
+    "discount_price": 39,
+    "discount_percent": 29,
+    "sexe": "Unisexe"
+  },
+  {
+    "id": 2,
+    "title": "Article Title 2",
+    "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "image": "hero.webp",
+    "link": "#",
+    "price": 60,
+    "discount_price": 45,
+    "discount_percent": 25,
+    "sexe": "Unisexe"
+  },
+  {
+    "id": 3,
+    "title": "Article Title 3",
+    "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "image": "hero.webp",
+    "link": "#",
+    "price": 70,
+    "discount_price": 49,
+    "discount_percent": 30,
+    "sexe": "Unisexe"
+  },
+  {
+    "id": 4,
+    "title": "Article Title 4",
+    "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "image": "hero.webp",
+    "link": "#",
+    "price": 80,
+    "discount_price": 64,
+    "discount_percent": 20,
+    "sexe": "Unisexe"
+  },
+  {
+    "id": 5,
+    "title": "Article Title 5",
+    "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "image": "hero.webp",
+    "link": "#",
+    "price": 90,
+    "discount_price": 72,
+    "discount_percent": 20,
+    "sexe": "Unisexe"
+  },
+  {
+    "id": 6,
+    "title": "Article Title 7",
+    "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "image": "hero.webp",
+    "link": "#",
+    "price": 100,
+    "discount_price": 80,
+    "discount_percent": 20,
+    "sexe": "Unisexe"
+  },
+  {
+    "id": 8,
+    "title": "Article Title 8",
+    "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "image": "hero.webp",
+    "link": "#",
+    "price": 120,
+    "discount_price": 96,
+    "discount_percent": 20,
+    "sexe": "Unisexe"
+  },
+  {
+    "id": 9,
+    "title": "Article Title 9",
+    "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "image": "hero.webp",
+    "link": "#",
+    "price": 130,
+    "discount_price": 104,
+    "discount_percent": 20,
+    "sexe": "Unisexe"
+  },
+  {
+    "id": 10,
+    "title": "Article Title 10",
+    "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "image": "hero.webp",
+    "link": "#",
+    "price": 150,
+    "discount_price": 120,
+    "discount_percent": 20,
+    "sexe": "Unisexe"
+  }
+] 

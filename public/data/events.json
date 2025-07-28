@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "titre": "Concert Live 2024",
+    "type": "Concert",
+    "date": "2024-07-10",
+    "lieu": "Paris",
+    "image": "event2.jpg",
+    "description": "Venez profiter d'une soirée inoubliable avec des artistes de renom.",
+    "cta": "Voir événement"
+  },
+  {
+    "id": 2,
+    "titre": "Festival de Musique",
+    "type": "Festival",
+    "date": "2024-08-15",
+    "lieu": "Lyon",
+    "image": "event3.jpg",
+    "description": "Un week-end rempli de musique, de danse et de bonne humeur.",
+    "cta": "Voir événement"
+  },
+  {
+    "id": 3,
+    "titre": "Défilé de Mode Été",
+    "type": "Défilé",
+    "date": "2024-06-21",
+    "lieu": "Marseille",
+    "image": "event4.jpg",
+    "description": "Découvrez les nouvelles tendances de la saison lors de notre défilé exclusif.",
+    "cta": "Voir événement"
+  },
+  {
+    "id": 4,
+    "titre": "Atelier Créatif",
+    "type": "Atelier",
+    "date": "2024-09-05",
+    "lieu": "Bordeaux",
+    "image": "event5.jpg",
+    "description": "Participez à un atelier unique pour créer votre propre accessoire de mode.",
+    "cta": "Voir événement"
+  },
+  {
+    "id": 5,
+    "titre": "Vente Privée Automne",
+    "type": "Vente privée",
+    "date": "2024-10-12",
+    "lieu": "Lille",
+    "image": "event6.jpg",
+    "description": "Profitez d'offres exclusives sur la nouvelle collection automne.",
+    "cta": "Voir événement"
+  }
+]

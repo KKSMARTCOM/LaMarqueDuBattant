@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  overflow-x: hidden !important;
+  width: 100vw;
+  max-width: 100vw;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @apply font-montserrat;
+}
+
+.font-montserrat {
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Masque la barre de scroll mais garde le scroll horizontal */
+.hide-scrollbar {
+  scrollbar-width: none !important;         /* Firefox */
+  -ms-overflow-style: none !important;      /* IE 10+ */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none !important;                 /* Chrome/Safari/Webkit */
+}

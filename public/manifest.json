@@ -1,0 +1,27 @@
+{
+  "short_name": "LMDB",
+  "name": "La Marque du Battant",
+  "description": "Découvrez notre collection de vêtements qui allient style et confort. La Marque du Battant - Mode et tendances.",
+  "icons": [
+    {
+      "src": "LOGO_LMDB.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "LOGO_LMDB.svg",
+      "type": "image/svg+xml",
+      "sizes": "16x16 32x32 48x48 64x64 96x96 128x128 192x192 256x256 512x512",
+      "purpose": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "categories": ["fashion", "shopping", "lifestyle"],
+  "lang": "fr",
+  "dir": "ltr"
+}

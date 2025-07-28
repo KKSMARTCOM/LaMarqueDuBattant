@@ -1,0 +1,13 @@
+[
+  {"type" : "ALL", "stock":1200},
+  { "type": "T-Shirts", "stock": 75 },
+  { "type": "Longsleeves", "stock": 5 },
+  { "type": "Hoodies & Sweaters", "stock": 61 },
+  { "type": "Jackets", "stock": 45 },
+  { "type": "Shirts", "stock": 25 },
+  { "type": "Pants", "stock": 35 },
+  { "type": "Jeans", "stock": 15 },
+  { "type": "Sweatpants", "stock": 10 },
+  { "type": "Shorts", "stock": 37 },
+  { "type": "Swimwear", "stock": 15 }
+] 
