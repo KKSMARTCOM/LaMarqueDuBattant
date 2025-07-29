@@ -24,7 +24,7 @@ export default function Hero() {
         backgroundPosition: "center",
       }}
     >
-        <div className="absolute inset-0 z-10">
+        {/*<div className="absolute inset-0 z-10">
           <ImageTrail
             key={1}
             items={[
@@ -40,7 +40,7 @@ export default function Hero() {
             ]}
             variant={7}
           />
-        </div>
+        </div>*/}
       {/* Texte en bas à gauche - responsive avec animation d'entrée */}
       <div className="absolute bottom-32 md:bottom-42 xl:bottom-32 2xl:bottom-40 left-4 md:left-8 xl:left-12 2xl:left-16 text-white drop-shadow-lg max-w-xs md:max-w-none z-20 pointer-events-auto animate-fade-in-up">
         <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold tracking-tight leading-tight animate-slide-up-delay-1">
