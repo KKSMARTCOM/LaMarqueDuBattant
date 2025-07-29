@@ -15,7 +15,6 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      tabIndex={-1} // Permet le focus programmatique, sans tabulation utilisateur
       className="w-full h-screen bg-white flex items-center justify-start relative font-montserrat overflow-hidden "
       style={{
         backgroundImage: `url(${getImagePath("Elegant-Unity.png","cover")})`,
