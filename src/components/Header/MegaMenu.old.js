@@ -70,7 +70,7 @@ const MENU_CONFIG = {
     featuredButtonUrl: '/collection'
   },
   
-  // Configuration pour le menu ÉVÉNEMENTS
+  // Configuration pour le menu ÉVÉNEMENT
   EVENEMENTS: {
     title: 'ÉVÉNEMENTS',
     navigationLinks: [

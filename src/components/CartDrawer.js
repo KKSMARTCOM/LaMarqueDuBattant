@@ -118,8 +118,8 @@ export default function CartDrawer({ open, onClose }) {
                   <span className="text">APPLY</span>
                 </button>
               </div>
-              <button class="bouttonCheckout" >
-              <span class="text">CHECKOUT -  {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)} ¥</span>
+              <button className="bouttonCheckout" >
+              <span className="text">CHECKOUT -  {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)} ¥</span>
               <span>Thanks! -  {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)} ¥</span>
               </button>
               <div className="text-[10px] text-gray-500 mt-2 text-left">Vous pouvez bénéficier de la livraison gratuite</div>

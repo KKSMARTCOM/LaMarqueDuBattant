@@ -51,27 +51,36 @@ const CollectionSection = ({
     }
   ], [onNavItemClick]);
   
-  // Préparation des cartes de collection à afficher
-  const collectionCards = useMemo(() => {
+  // Sélectionne deux collections aléatoires de manière stable
+  const selectedCollections = useMemo(() => {
     if (!collections || collections.length === 0) return [];
     
-    // Si on a plusieurs collections, on prend une image de chaque
-    if (collections.length > 1) {
-      return [
-        // Première carte : première image de la deuxième collection
-        { ...collections[1].images[0], nom: collections[0].nom },
-        // Deuxième carte : première image de la troisième collection
-        { ...collections[2].images[0], nom: collections[1].nom }
-      ];
-    } 
-    // Si une seule collection, on prend ses deux premières images
-    return collections[0].images
-      .slice(0, 2) // Prendre les deux premières images
-      .map(img => ({ 
-        ...img, 
-        nom: collections[0].nom 
-      }));
+    // Si on a moins de 2 collections, on les prend toutes
+    if (collections.length <= 2) return [...collections];
+    
+    // Créer une copie du tableau pour ne pas modifier l'original
+    const shuffled = [...collections];
+    
+    // Mélanger le tableau (algorithme de Fisher-Yates)
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    // Prendre les deux premières collections du tableau mélangé
+    return shuffled.slice(0, 2);
   }, [collections]);
+  
+  // Préparation des cartes de collection à afficher
+  const collectionCards = useMemo(() => {
+    if (!selectedCollections || selectedCollections.length === 0) return [];
+    
+    return selectedCollections.map(collection => ({
+      ...(collection.images?.[0] || {}), // Prend la première image de la collection
+      nom: collection.nom || 'Collection',
+      collectionId: collection.id // Ajout d'un ID de collection pour la clé unique
+    }));
+  }, [selectedCollections]);
 
   // État de chargement des collections
   if (loading) {
@@ -98,14 +107,21 @@ const CollectionSection = ({
         <div className="flex flex-row gap-8 items-stretch">
           {collectionCards.map((card, index) => (
             <div 
-              key={`${card.file}-${index}`}
-              className="w-[220px] h-[280px] group relative overflow-hidden shadow hover:shadow-lg border border-gray-100 bg-black flex flex-col justify-end"
+              key={`${card.collectionId || index}`}
+              className="w-[220px] h-[280px] group relative overflow-hidden shadow hover:shadow-lg border border-gray-100 bg-black flex flex-col justify-end cursor-pointer"
+              onClick={() => onNavItemClick(`collection-${card.collectionId || index}`)}
             >
-              <img 
-                src={getImagePath(card.file, 'cover')} 
-                alt={card.text} 
-                className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-300 group-hover:scale-105" 
-              />
+              {card.file ? (
+                <img 
+                  src={getImagePath(card.file, 'cover')} 
+                  alt={card.nom} 
+                  className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-300 group-hover:scale-105" 
+                />
+              ) : (
+                <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+                  <span className="text-gray-500 text-sm">Aucune image</span>
+                </div>
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent z-10" />
               <div className="relative z-20 p-4 text-white">
                 <h3 className="font-bold text-xs text-left mb-1">| {card.nom}</h3>
