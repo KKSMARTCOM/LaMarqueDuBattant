@@ -102,23 +102,23 @@ export default function FilterBar({
       
       {/* Catégories */}
       <div className="mb-6">
-        <div className="font-normal text-left text-sm mb-2">CATÉGORIES</div>
+        <div className="text-left text-sm mb-2 font-semibold uppercase tracking-wider">CATÉGORIES</div>
         <select
-          className="w-full rounded-none border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black"
+          className="w-full rounded-none border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black text-gray-600"
           value={categorie}
           onChange={handleCategorieChange}
         >
-          <option value="">Toutes les catégories</option>
-          <option value="tshirt">T-shirt</option>
-          <option value="sweat">Sweat</option>
-          <option value="veste">Veste</option>
-          <option value="pantalon">Pantalon</option>
-          <option value="accessoire">Accessoire</option>
+          <option value="" className="text-gray-500">Toutes les catégories</option>
+          <option value="tshirt" className="text-gray-500">T-shirt</option>
+          <option value="sweat" className="text-gray-500">Sweat</option>
+          <option value="veste" className="text-gray-500">Veste</option>
+          <option value="pantalon" className="text-gray-500">Pantalon</option>
+          <option value="accessoire" className="text-gray-500">Accessoire</option>
         </select>
       </div>
       {/* Prix */}
       <div className="mb-6">
-        <div className="font-normal text-left text-sm mb-2 flex items-center justify-between">PRIX</div>
+        <div className="font-semibold uppercase tracking-wider text-left text-sm mb-2 flex items-center justify-between">PRIX</div>
         <div className="grid grid-cols-2 border border-gray-300 divide-x divide-gray200 mb-2">
           <div className="flex items-center justify-center gap-1 py-2">
             <span className="text-lg">¥</span>
@@ -160,7 +160,7 @@ export default function FilterBar({
         {/* Slider double, chaque moitié gère sa poignée */}
         <div className="relative flex items-center h-8">
           {/* Barre de fond */}
-          <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[2px] bg-black z-0" />
+          <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[2px] bg-gray-400 z-0" />
           {/* Slider min, zone gauche */}
           <div className="absolute left-0 top-0 h-full w-1/2" style={{zIndex: 2, pointerEvents: 'auto'}}>
             <input
@@ -238,9 +238,9 @@ export default function FilterBar({
       </div>
       {/* Remise */}
       <div className="mb-6">
-        <div className="font-normal text-left text-sm mb-2">REMISE</div>
+        <div className="font-semibold uppercase tracking-wider text-left text-sm mb-2">REMISE</div>
         <div className="flex flex-wrap gap-5">
-          <label className="flex items-center gap-2 text-sm">
+          <label className="flex items-center gap-2 text-sm text-gray-600">
             <input
               type="checkbox"
               className="w-5 h-5 rounded-none accent-black"
@@ -248,7 +248,7 @@ export default function FilterBar({
               onChange={() => handleRemiseToggle('Sans remise')}
             /> Sans remise
           </label>
-          <label className="flex items-center gap-2 text-sm">
+          <label className="flex items-center gap-2 text-sm text-gray-600">
             <input
               type="checkbox"
               className="w-5 h-5 rounded-none accent-black"
@@ -256,7 +256,7 @@ export default function FilterBar({
               onChange={() => handleRemiseToggle('-10%')}
             /> -10%
           </label>
-          <label className="flex items-center gap-2 text-sm">
+          <label className="flex items-center gap-2 text-sm text-gray-600">
             <input
               type="checkbox"
               className="w-5 h-5 rounded-none accent-black"
@@ -264,7 +264,7 @@ export default function FilterBar({
               onChange={() => handleRemiseToggle('-20%')}
             /> -20%
           </label>
-          <label className="flex items-center gap-2 text-sm">
+          <label className="flex items-center gap-2 text-sm text-gray-600">
             <input
               type="checkbox"
               className="w-5 h-5 rounded-none accent-black"
@@ -276,10 +276,10 @@ export default function FilterBar({
       </div>
       {/* Taille */}
       <div className="mb-6">
-        <div className="font-normal text-left text-sm mb-2">TAILLE</div>
+        <div className="font-semibold uppercase tracking-wider text-left text-sm mb-2">TAILLE</div>
         <div className="flex flex-wrap gap-5">
           {['XS','S','M','L','XL'].map(size => (
-            <label key={size} className="rounded-none flex items-center gap-1 text-sm">
+            <label key={size} className="rounded-none flex items-center gap-1 text-sm text-gray-600">
               <input type="checkbox" className="w-5 h-5 rounded-none accent-black" checked={tailles.includes(size)} onChange={() => handleTailleToggle(size)} /> {size}
             </label>
           ))}
@@ -287,9 +287,9 @@ export default function FilterBar({
       </div>
       {/* Sexe */}
       <div className="mb-6">
-        <div className="font-normal text-left text-sm mb-2">SEXE</div>
+        <div className="font-semibold uppercase tracking-wider text-left text-sm mb-2">SEXE</div>
         <select
-          className="flex-1 w-full rounded-none border justify-start justify-items-start border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black"
+          className="flex-1 w-full rounded-none border justify-start justify-items-start border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black text-gray-600"
           value={sexe}
           onChange={e => handleSexeChange(e.target.value)}
         >

@@ -8,6 +8,7 @@ import CartDrawer from "./CartDrawer";
 import "./App.css";
 import Apropos from "../pages/Apropos";
 import Events from "../pages/Events";
+import DetailsEvent from "../pages/DetailsEvent";
 import { useCart } from "./CartContext";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route path="/details-produit" element={<DetailsProduits />} />
           <Route path="/apropos" element={<Apropos />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/events/:id" element={<DetailsEvent />} />
         </Routes>
         {/* Le CartDrawer utilise le contexte pour s'ouvrir/se fermer */}
         <CartDrawer

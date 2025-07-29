@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import getImagePath from "./getImagePath";
 
 // Catégories fixes pour le filtrage
@@ -69,6 +70,25 @@ export default function EventSection() {
     return true;
   });
 
+  // État pour le formulaire de newsletter
+  const [email, setEmail] = useState('');
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) return;
+    
+    setIsLoading(true);
+    // Simulation d'envoi du formulaire
+    setTimeout(() => {
+      console.log('Email enregistré :', email);
+      setIsSubscribed(true);
+      setEmail('');
+      setIsLoading(false);
+    }, 1000);
+  };
+
   return (
     <section
       ref={sectionRef}
@@ -77,9 +97,14 @@ export default function EventSection() {
     <div>
         <div className="max-w-6xl mx-auto text-center">
           <div className="text-xs font-thin mb-2 mt-2 text-gray-400 ">Événements</div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 ">Événements</h2>
-          <p className="text-sm text-gray-700 mb-8   ">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 ">
+            {selectedCategory === 'Future' ? 'Prochains événements' : 
+             selectedCategory === 'Passé' ? 'Événements passés' : 'Tous nos événements'}
+          </h2>
+          <p className="text-sm text-gray-700 mb-8">
+            {selectedCategory === 'Future' ? 'Découvrez nos événements à venir' : 
+             selectedCategory === 'Passé' ? 'Revivez nos événements passés' : 
+             'Découvrez tous nos événements'}
           </p>
           <div className="flex flex-wrap justify-center border-b border-gray-200 pb-10 gap-2 mb-8">
             {categories.map((cat, idx) => (
@@ -98,6 +123,36 @@ export default function EventSection() {
         </div>
         {loading ? (
           <div className="text-center text-gray-400 py-12">Chargement des événements...</div>
+        ) : filteredEvents.length === 0 ? (
+          <div className="max-w-2xl mx-auto text-center py-12 px-4">
+            <h3 className="text-xl font-semibold mb-4">Aucun événement {selectedCategory === 'Future' ? 'à venir' : selectedCategory === 'Passé' ? 'passé' : 'disponible'} pour le moment</h3>
+            <p className="text-gray-600 mb-6">
+              Restez informé de nos prochains événements en vous abonnant à notre newsletter.
+            </p>
+            {!isSubscribed ? (
+              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Votre adresse email"
+                  className="flex-1 px-4 py-2 border border-gray-300  focus:outline-none focus:ring-2 focus:ring-black"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="px-6 py-1 bg-black text-white ring-2 ring-black hover:bg-gray-800 transition-colors disabled:opacity-50"
+                >
+                  {isLoading ? 'Envoi...' : 'M\'inscrire'}
+                </button>
+              </form>
+            ) : (
+              <div className="text-green-600 bg-green-50 px-4 py-3 rounded">
+                Merci pour votre inscription ! Vous serez informé des prochains événements.
+              </div>
+            )}
+          </div>
         ) : (
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
             {filteredEvents.map((event, idx) => {
@@ -128,9 +183,13 @@ export default function EventSection() {
                     <div className="font-bold text-base mb-1">{event.titre}</div>
                     <div className="text-xs text-gray-700 mb-1">{event.lieu}</div>
                     <div className="text-xs text-gray-700 mb-3">{event.description}</div>
-                    <a href="#" className="text-xs font-medium mt-auto flex items-center gap-1 hover:underline">
+                    <Link 
+                      to={`/events/${event.id}`} 
+                      className="text-xs font-medium mt-auto flex items-center gap-1 hover:underline"
+                      aria-label={`Voir les détails de l'événement ${event.titre}`}
+                    >
                       {event.cta || "Voir événement"} <span className="text-lg leading-none">&rarr;</span>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               );

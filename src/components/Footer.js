@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import GridDistortion from './ReactbitsAnimations/GridDistortion';
 import Silk from './ReactbitsAnimations/Silk';
 import getImagePath from "./getImagePath";
 
@@ -52,7 +51,7 @@ export default function Footer() {
         <div className={`w-full mb-12 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white text-center tracking-wide">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white text-center tracking-widest font-thin ">
             LA MARQUE DU BATTANT
           </h2>
           <div className="h-px bg-gradient-to-r from-transparent via-white/30 to-transparent w-3/4 mx-auto mt-6"></div>
@@ -92,7 +91,7 @@ export default function Footer() {
                   </button>
                 </form>
                 
-                <p className="mt-3 text-xs text-gray-400 text-center">En vous abonnant, vous acceptez notre <a href="#" className="text-white hover:underline">Politique de confidentialité</a>.</p>
+                <p className="mt-3 text-xs text-gray-400 text-center">En vous abonnant, vous acceptez notre <button onClick={() => window.location.href='/politique-confidentialite'} className="text-white hover:underline bg-transparent border-none p-0 cursor-pointer">Politique de confidentialité</button>.</p>
                 
                 {/* Réseaux sociaux */}
                 <div className="mt-6 pt-4 border-t border-white/20">

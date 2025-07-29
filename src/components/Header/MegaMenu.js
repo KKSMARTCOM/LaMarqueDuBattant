@@ -11,7 +11,7 @@ import EventsSection from './MegaMenu/sections/EventsSection';
  * MegaMenu - Composant principal du menu déroulant
  * 
  * @param {Object} props - Les propriétés du composant
- * @param {string} props.menu - Le menu actuellement sélectionné (ex: 'HOMMES', 'FEMMES', 'SALE')
+ * @param {string} props.menu - Le menu actuellement sélectionné (ex: 'HOMMES', 'FEMMES', 'SOLDE')
  * @param {Array} props.articles - Liste des articles à afficher
  * @param {boolean} props.loading - État de chargement
  * @param {Function} props.onClose - Fonction à appeler pour fermer le menu
@@ -31,7 +31,7 @@ export default function MegaMenu({ menu, articles, loading, onClose }) {
     FEMMES: getImagePath("hero.webp", "cover"),
     COLLECTION: getImagePath("hero.webp", "cover"),
     EVENEMENTS: getImagePath("hero.webp", "cover"),
-    SALE: getImagePath("hero.webp", "cover"),
+    SOLDE: getImagePath("hero.webp", "cover"),
   };
 
   /**
@@ -39,7 +39,7 @@ export default function MegaMenu({ menu, articles, loading, onClose }) {
    * @type {string[]}
    */
   const megaMenuFooterLinks = [
-    'ACCUEIL', 'PRODUITS', 'EVENEMENTS', 'COLLECTION', 'SALE'
+    'ACCUEIL', 'PRODUITS', 'EVENEMENTS', 'COLLECTION', 'SOLDE'
   ];
 
   // =========================================================================
@@ -181,7 +181,7 @@ export default function MegaMenu({ menu, articles, loading, onClose }) {
         
       case 'HOMMES':
       case 'FEMMES':
-      case 'SALE':
+      case 'SOLDE':
         // Filtrage des articles en fonction du menu sélectionné
         const filteredArticles = menu === 'HOMMES' 
           ? articles.filter(a => a.sexe && a.sexe.toLowerCase() === 'homme')

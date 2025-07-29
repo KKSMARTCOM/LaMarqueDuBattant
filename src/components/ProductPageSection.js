@@ -175,7 +175,7 @@ export default function ProductPageSection() {
         observer.unobserve(currentSection);
       }
     };
-  }, [searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams, setIsVisible]);
 
   // Initialiser filteredArticles avec tous les articles dès qu'ils sont chargés
   useEffect(() => {

@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
 import ImageTrail from "./ReactbitsAnimations/ImageTrail";
 import getImagePath from "./getImagePath";
 
@@ -20,7 +19,7 @@ export default function Hero() {
       tabIndex={-1} // Permet le focus programmatique, sans tabulation utilisateur
       className="w-full h-screen flex items-center justify-start relative font-montserrat overflow-hidden"
       style={{
-        backgroundImage: `url(${getImagePath("hero.webp")})`,
+        backgroundImage: `url(${getImagePath("Monochrome_Beach_Recline.png","cover")})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -52,14 +51,14 @@ export default function Hero() {
         </p>
       </div>
       
-      {/* Bouton en bas, pleine largeur - responsive avec animation d'entrée */}
+      {/* Bouton en bas, pleine largeur - responsive avec animation d'entrée 
       <div className="absolute left-0 right-0 bottom-0 z-20 pointer-events-auto animate-fade-in-delay-3">
         <Link to="/produits" className="block w-full">
           <button className="w-full bg-white text-black py-2 font-semibold uppercase text-sm md:text-base xl:text-lg 2xl:text-xl tracking-wider rounded-none hover:bg-gray-100 transition-colors duration-200">
             ACHETER MAINTENANT
           </button>
         </Link>
-      </div>
+      </div>*/}
 
       <style jsx>{`
         @keyframes fadeInUp {

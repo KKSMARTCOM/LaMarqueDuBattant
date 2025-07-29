@@ -202,11 +202,11 @@ export default function Header({ showCategoriesBar, opacity = 80 }) {
               </button>
             </div>
             <ul className="space-y-4 text-white font-semibold uppercase text-lg w-full">
-              {['HOMMES', 'FEMMES', 'COLLECTION', 'EVENEMENTS', 'SALE'].map((menu, idx) => (
+              {['HOMMES', 'FEMMES', 'COLLECTION', 'EVENEMENTS', 'SOLDE'].map((menu, idx) => (
                 <li
                   key={menu}
                   className={`cursor-pointer transition-colors duration-150 py-2 border-b border-gray-700 ${
-                    menu === 'SALE' ? 'text-red-500' : 'text-white'
+                    menu === 'SOLDE' ? 'text-red-500' : 'text-white'
                   }`}
                 >
                   {menu === 'COLLECTION' ? (
@@ -217,8 +217,20 @@ export default function Header({ showCategoriesBar, opacity = 80 }) {
                     <Link to="/events" className="block w-full h-full">
                       {menu}
                     </Link>
+                  ) : menu === 'SOLDE' ? (
+                    <Link to="/produits?remises=-10%25%2C-20%25%2C-30%25+et+plus&tailles=&sexe=Femme" className="block w-full h-full">
+                      {menu}
+                    </Link>
+                  ) : menu === 'HOMMES' ? (
+                    <Link to="/produits?remises=&tailles=&sexe=Homme" className="block w-full h-full">
+                      {menu}
+                    </Link>
+                  ) : menu === 'FEMMES' ? (
+                    <Link to="/produits?remises=&tailles=&sexe=Femme" className="block w-full h-full">
+                      {menu}
+                    </Link>
                   ) : (
-                    menu
+                    <span className="block w-full h-full">{menu}</span>
                   )}
                 </li>
               ))}
@@ -227,11 +239,11 @@ export default function Header({ showCategoriesBar, opacity = 80 }) {
               <input
                 type="text"
                 placeholder="Rechercher..."
-                className="w-full bg-transparent border border-white rounded px-3 py-2 text-white placeholder-white text-base"
+                className="w-full bg-transparent border border-white  px-3 py-2 text-white placeholder-white text-base"
                 style={{ fontFamily: 'Montserrat, Arial, Helvetica, sans-serif' }}
               />
               <Link to="/apropos">
-              <span className="inline-block mt-6 text-white text-sm border px-3 py-1 rounded border-white">Apropos de nous</span>
+              <span className="inline-block mt-6 bg-black text-white text-sm border px-3 py-1 hover:bg-white hover:text-black transition-colors duration-150">Apropos de nous</span>
               </Link>
             </div>
           </div>

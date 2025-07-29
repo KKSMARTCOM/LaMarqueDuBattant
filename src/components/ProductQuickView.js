@@ -104,7 +104,16 @@ export default function ProductQuickView({ articleId, open, onClose }) {
                   AJOUTER AU PANIER
                 </button>
                 {/* Lien fiche produit */}
-                <a href="#" className="text-gray-500 underline text-sm">Voir les détails du produit +</a>
+                <button 
+                  onClick={() => {
+                    onClose();
+                    // Navigation vers la page de détail du produit
+                    window.location.href = `/produit/${article.id}`;
+                  }} 
+                  className="text-gray-500 underline text-sm bg-transparent border-none p-0 cursor-pointer text-left"
+                >
+                  Voir les détails du produit +
+                </button>
               </div>
             </>
           )}

@@ -7,7 +7,9 @@
     "lieu": "Paris",
     "image": "event2.jpg",
     "description": "Venez profiter d'une soirée inoubliable avec des artistes de renom.",
-    "cta": "Voir événement"
+    "cta": "Voir événement",
+    "placesLeft": 15,
+    "details": "Ouverture des portes à 19h. Prévoir une tenue élégante. Restauration sur place."
   },
   {
     "id": 2,
@@ -17,7 +19,9 @@
     "lieu": "Lyon",
     "image": "event3.jpg",
     "description": "Un week-end rempli de musique, de danse et de bonne humeur.",
-    "cta": "Voir événement"
+    "cta": "Voir événement",
+    "placesLeft": 42,
+    "details": "Festival sur 3 jours. Billet valable pour l'ensemble des représentations. Hébergement non inclus."
   },
   {
     "id": 3,
@@ -27,7 +31,9 @@
     "lieu": "Marseille",
     "image": "event4.jpg",
     "description": "Découvrez les nouvelles tendances de la saison lors de notre défilé exclusif.",
-    "cta": "Voir événement"
+    "cta": "Voir événement",
+    "placesLeft": 0,
+    "details": "Événement complet. Liste d'attente disponible. Tenue de ville exigée."
   },
   {
     "id": 4,
@@ -37,7 +43,9 @@
     "lieu": "Bordeaux",
     "image": "event5.jpg",
     "description": "Participez à un atelier unique pour créer votre propre accessoire de mode.",
-    "cta": "Voir événement"
+    "cta": "Voir événement",
+    "placesLeft": 8,
+    "details": "Matériel fourni. Atelier de 3h. À partir de 16 ans. Inscription obligatoire."
   },
   {
     "id": 5,
@@ -47,6 +55,8 @@
     "lieu": "Lille",
     "image": "event6.jpg",
     "description": "Profitez d'offres exclusives sur la nouvelle collection automne.",
-    "cta": "Voir événement"
+    "cta": "Voir événement",
+    "placesLeft": 25,
+    "details": "Sur invitation uniquement. Carte d'identité requise. Paiement en espèces et CB acceptés."
   }
 ]
