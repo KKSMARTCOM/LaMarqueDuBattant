@@ -38,10 +38,10 @@ export default function AproposFeatureSection() {
     <>
       <section
         ref={sectionRef}
-        className={`w-full flex flex-col justify-center items-center py-10 sm:py-16 bg-black px-4 sm:px-8 transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+        className={`w-full flex flex-col justify-center items-center py-6 md:py-16 bg-black px-4 sm:px-8 transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
       >
         {/* Conteneur responsive : flex-row sur md+, flex-col sur mobile */}
-        <div className="w-full max-w-7xl bg-white/10  border-white/50 rounded-none flex flex-col md:flex-row overflow-hidden h-auto md:h-[500px] lg:h-[600px]">
+        <div className="w-full max-w-7xl bg-white/10 border border-white/50 rounded-none flex flex-col md:flex-row overflow-hidden h-auto md:h-[500px] lg:h-[600px]">
           {/* Image à gauche ou en haut */}
           <div className="w-full md:w-1/2 h-48 md:h-full flex-shrink-0 flex items-stretch">
           <img

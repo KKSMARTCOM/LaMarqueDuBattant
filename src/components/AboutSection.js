@@ -64,9 +64,9 @@ export default function AboutSection() {
   };
 
   return (
-    // Section avec hauteur complète de l'écran
-    <section className="w-full h-screen bg-black flex items-stretch mt-16">
-      <div className="flex flex-col md:flex-row w-full h-full pb-14">
+    // Section avec hauteur automatique sur mobile et pleine hauteur sur desktop
+    <section className="w-full min-h-[80vh] md:h-screen bg-black flex items-stretch pt-16 md:pt-0 mt-0 md:mt-16">
+      <div className="flex flex-col md:flex-row w-full h-full pb-8 md:pb-14">
         {/* Colonne texte : prend toute la hauteur disponible */}
         <div className="w-full md:w-1/2 p-4 md:p-8 flex flex-col justify-center">
           {/* Titre principal */}
@@ -96,7 +96,7 @@ export default function AboutSection() {
             />
           </div>
           {/* Partie basse : texte dynamique, prend 30% de la hauteur */}
-          <div className="bg-black pr-4 md:pr-8 py-6 flex flex-col justify-center flex-shrink-0">
+          <div className="bg-black pr-4 md:pr-8 py-6 md:py-0 px-2 md:px-0 flex flex-col justify-center flex-shrink-0">
             <h2 className="text-lg font-semibold mb-2 text-left text-white">{slides[current].title}</h2>
             <p className="text-sm text-gray-300 text-left">{slides[current].desc}</p>
             {/* Pagination et flèches */}

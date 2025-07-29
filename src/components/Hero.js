@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from "react";
-import ImageTrail from "./ReactbitsAnimations/ImageTrail";
 import getImagePath from "./getImagePath";
 
 export default function Hero() {
@@ -17,30 +16,14 @@ export default function Hero() {
     <section
       ref={sectionRef}
       tabIndex={-1} // Permet le focus programmatique, sans tabulation utilisateur
-      className="w-full h-screen flex items-center justify-start relative font-montserrat overflow-hidden"
+      className="w-full h-screen bg-white flex items-center justify-start relative font-montserrat overflow-hidden "
       style={{
-        backgroundImage: `url(${getImagePath("Monochrome_Beach_Recline.png","cover")})`,
+        backgroundImage: `url(${getImagePath("Elegant-Unity.png","cover")})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-        <div className="absolute inset-0 z-10">
-          <ImageTrail
-            key={1}
-            items={[
-              'https://picsum.photos/id/287/300/300',
-              'https://picsum.photos/id/1001/300/300',
-              'https://picsum.photos/id/1025/300/300',
-              'https://picsum.photos/id/1026/300/300',
-              'https://picsum.photos/id/1027/300/300',
-              'https://picsum.photos/id/1028/300/300',
-              'https://picsum.photos/id/1029/300/300',
-              'https://picsum.photos/id/1030/300/300',
-              // ...
-            ]}
-            variant={7}
-          />
-        </div>
+
       {/* Texte en bas à gauche - responsive avec animation d'entrée */}
       <div className="absolute bottom-32 md:bottom-42 xl:bottom-32 2xl:bottom-40 left-4 md:left-8 xl:left-12 2xl:left-16 text-white drop-shadow-lg max-w-xs md:max-w-none z-20 pointer-events-auto animate-fade-in-up">
         <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold tracking-tight leading-tight animate-slide-up-delay-1">

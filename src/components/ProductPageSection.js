@@ -193,7 +193,7 @@ export default function ProductPageSection() {
 
   return (
     <>
-      <section ref={sectionRef} className="w-full bg-white pl-2 pr-2 sm:pl-4 sm:pr-4 lg:pl-8 lg:pr-11 pt-8 pb-8 mt-24" style={{ fontFamily: 'Commissioner, sans-serif' }}>
+      <section ref={sectionRef} className="w-full border-t bg-white pl-2 pr-2 sm:pl-4 sm:pr-4 lg:pl-8 lg:pr-11 pt-8 pb-8 mt-24" style={{ fontFamily: 'Commissioner, sans-serif' }}>
       {/* Header section */}
       <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-6 sticky top-0 z-20 bg-white">
         <div className="flex items-center gap-3">

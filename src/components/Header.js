@@ -146,7 +146,7 @@ export default function Header({ showCategoriesBar, opacity = 80 }) {
             <img 
               src={getImagePath('LOGO_LMDB.svg', 'logo')} 
               alt="Logo" 
-              className="max-h-10 md:max-h-14 w-auto mr-2 cursor-pointer hover:opacity-80 transition-opacity duration-200" 
+              className="max-h-10 md:max-h-14 w-12 mr-2 cursor-pointer hover:opacity-80 transition-opacity duration-200" 
               style={{ minHeight: '40px' }}
               onError={(e) => {
                 console.log('Erreur de chargement du logo');
@@ -165,11 +165,11 @@ export default function Header({ showCategoriesBar, opacity = 80 }) {
             className="hidden md:block bg-transparent border border-white  px-2 py-1 text-white placeholder-white text-[10px]"
             style={{ fontFamily: 'Montserrat, Arial, Helvetica, sans-serif' }}
           />
-          {/* Bouton community */}
-          <Link to="/apropos">
-          <button class="btnAbout">
-          <span>A propos de nous</span>
-          </button>
+          {/* Bouton community - Caché sur mobile */}
+          <Link to="/apropos" className="hidden md:block">
+            <button class="btnAbout">
+              <span>A propos de nous</span>
+            </button>
           </Link>
           {/* Icône utilisateur */}
           <span className="text-white text-2xl cursor-pointer p-2" onClick={() => setUserDrawerOpen(true)}><FiUser /></span>

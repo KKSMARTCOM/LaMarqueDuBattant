@@ -68,12 +68,12 @@ export default function ProductsSection() {
           Tendances
         </div>
         <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 md:mb-12 gap-4 ${isVisible ? 'animate-fade-in-delay-1' : 'opacity-0'}`}>
-          <h2 className="text-2xl md:text-3xl font-bold text-left">Products</h2>
-          <Link to="/produits">
+          {<h2 className="text-2xl md:text-3xl font-bold text-left">Products</h2>
+          /*<Link to="/produits">
             <button className="border border-black px-4 py-2 text-xs hover:bg-black hover:text-white transition-colors duration-200 self-start sm:self-auto">
               View all
             </button>
-          </Link>
+          </Link>*/}
         </div>
         
         {/* Grille de produits responsive avec animations */}
