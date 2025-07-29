@@ -1,9 +1,34 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import LegalModal from './LegalModal';
+import { legalContent } from '../data/legalContent';
 import Silk from './ReactbitsAnimations/Silk';
 import getImagePath from "./getImagePath";
 
 export default function Footer() {
+  // État pour gérer l'affichage des modales
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    title: '',
+    content: ''
+  });
+
+  // Fonction pour ouvrir une modale
+  const openModal = (title, content) => {
+    setModalState({
+      isOpen: true,
+      title,
+      content
+    });
+  };
+
+  // Fonction pour fermer la modale
+  const closeModal = () => {
+    setModalState(prev => ({ ...prev, isOpen: false }));
+  };
+
+  // Import du contenu légal depuis le fichier externe
+
   const footerRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -262,13 +287,33 @@ export default function Footer() {
                 &copy; {new Date().getFullYear()} La Marque Du Battant. Tous droits réservés.
               </div>
               <div className="flex flex-wrap justify-center gap-4 text-xs">
-                <Link to="/mentions-legales" className="hover:text-white transition-colors duration-200">Mentions légales</Link>
+                <button 
+                  onClick={() => openModal('Mentions Légales', legalContent.mentionsLegales)}
+                  className="hover:text-white transition-colors duration-200"
+                >
+                  Mentions légales
+                </button>
                 <span className="text-gray-600">•</span>
-                <Link to="/politique-confidentialite" className="hover:text-white transition-colors duration-200">Politique de confidentialité</Link>
+                <button 
+                  onClick={() => openModal('Politique de Confidentialité', legalContent.confidentialite)}
+                  className="hover:text-white transition-colors duration-200"
+                >
+                  Politique de confidentialité
+                </button>
                 <span className="text-gray-600">•</span>
-                <Link to="/cgv" className="hover:text-white transition-colors duration-200">CGV</Link>
+                <button 
+                  onClick={() => openModal('Conditions Générales de Vente', legalContent.cgv)}
+                  className="hover:text-white transition-colors duration-200"
+                >
+                  CGV
+                </button>
                 <span className="text-gray-600">•</span>
-                <Link to="/cookies" className="hover:text-white transition-colors duration-200">Préférences des cookies</Link>
+                <button 
+                  onClick={() => openModal('Préférences des Cookies', legalContent.cookies)}
+                  className="hover:text-white transition-colors duration-200"
+                >
+                  Préférences des cookies
+                </button>
               </div>
               
               <div className="mt-6 text-xs text-gray-500">
@@ -279,6 +324,14 @@ export default function Footer() {
           </div>
         </div>
       </div>
+      
+      {/* Modale pour les mentions légales et politiques */}
+      <LegalModal 
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        title={modalState.title}
+        content={modalState.content}
+      />
     </footer>
   );
 }
