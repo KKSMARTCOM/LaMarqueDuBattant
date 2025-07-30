@@ -30,7 +30,7 @@ const LegalModal = ({ isOpen, onClose, title, content }) => {
       
       <div 
         ref={modalRef}
-        className="relative w-full max-w-md bg-white border border-black shadow-xl pointer-events-auto transform transition-all duration-300 ease-in-out"
+        className="relative w-full max-w-md bg-gradient-to-br from-black/80 via-black/60 to-black/40 bg-opacity-40 backdrop-blur-3xl border border-white shadow-xl pointer-events-auto transform transition-all duration-300 ease-in-out"
         style={{
           maxHeight: '80vh',
           opacity: isOpen ? 1 : 0,
@@ -39,11 +39,11 @@ const LegalModal = ({ isOpen, onClose, title, content }) => {
       >
         {/* En-tête de la modale */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+          <h3 className="text-lg font-medium text-white/60">{title}</h3>
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-500 focus:outline-none"
+            className="text-white hover:text-gray-500 focus:outline-none"
           >
             <span className="sr-only">Fermer</span>
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -54,7 +54,7 @@ const LegalModal = ({ isOpen, onClose, title, content }) => {
 
         {/* Contenu de la modale */}
         <div className="p-4 overflow-y-auto" style={{ maxHeight: 'calc(80vh - 57px)' }}>
-          <div className="prose prose-sm text-gray-500">
+          <div className="prose prose-sm text-sm text-white/60 text-left">
             {content}
           </div>
         </div>
