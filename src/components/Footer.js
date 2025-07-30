@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import LegalModal from './LegalModal';
-import { legalContent } from '../data/legalContent';
+import getLegalContent from '../data/legalContent';
+import { getContactInfo, getBrandInfo } from '../services/brandService';
 import Silk from './ReactbitsAnimations/Silk';
 import getImagePath from "./getImagePath";
 
@@ -14,7 +15,8 @@ export default function Footer() {
   });
 
   // Fonction pour ouvrir une modale
-  const openModal = (title, content) => {
+  const openModal = async (title, type) => {
+    const content = await getLegalContent(type, closeModal);
     setModalState({
       isOpen: true,
       title,
@@ -31,6 +33,26 @@ export default function Footer() {
 
   const footerRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [contactInfo, setContactInfo] = useState(null);
+  const [brandInfo, setBrandInfo] = useState(null);
+
+  // Charger les données de contact et de la marque
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [contact, brand] = await Promise.all([
+          getContactInfo(),
+          getBrandInfo()
+        ]);
+        setContactInfo(contact);
+        setBrandInfo(brand);
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error);
+      }
+    };
+
+    loadData();
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -191,7 +213,7 @@ export default function Footer() {
           }`}>
 
             {/* Colonnes de liens */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 lg:gap-12 flex-1">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 flex-1">
               {/* Navigation Principale */}
               <div className={`transition-all duration-700 ease-out delay-400 ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
@@ -259,9 +281,9 @@ export default function Footer() {
                 <ul className="mt-4 space-y-3">
                   {[
                     { name: 'À propos', to: '/a-propos' },
-                    { name: 'Contact', to: '/contact' },
-                    { name: 'Livraison', to: '/livraison' },
-                    { name: 'Retours & Échanges', to: '/retours' },
+                    { name: 'Contact', to: '/apropos' },
+                    { name: 'Livraison', to: '/apropos' },
+                    { name: 'Retours & Échanges', to: '/apropos' },
                     { name: 'CGV', to: '/cgv' }
                   ].map((item) => (
                     <li key={item.name}>
@@ -271,6 +293,30 @@ export default function Footer() {
                       >
                         {item.name}
                       </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Liens sociaux */}
+              <div className={`transition-all duration-700 ease-out delay-700 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}>
+                <h3 className="text-white text-sm font-semibold uppercase tracking-wider mb-4 relative inline-block">
+                  Suivez-nous
+                  <span className="absolute -bottom-1.5 left-0 w-8 h-0.5 bg-gradient-to-r from-white to-transparent"></span>
+                </h3>
+                <ul className="mt-4 space-y-3">
+                  {contactInfo?.socialMedia && Object.entries(contactInfo.socialMedia).map(([platform, url]) => (
+                    <li key={platform}>
+                      <a 
+                        href={url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-sm text-gray-300 hover:text-white transition-colors duration-200"
+                      >
+                        {platform.charAt(0).toUpperCase() + platform.slice(1)}
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -288,31 +334,31 @@ export default function Footer() {
               </div>
               <div className="flex flex-wrap justify-center gap-4 text-xs">
                 <button 
-                  onClick={() => openModal('Mentions Légales', legalContent.mentionsLegales)}
-                  className="hover:text-white transition-colors duration-200"
+                  onClick={() => openModal('Mentions Légales', 'mentionsLegales')}
+                  className="text-sm hover:underline"
                 >
-                  Mentions légales
+                  Mentions Légales
                 </button>
                 <span className="text-gray-600">•</span>
                 <button 
-                  onClick={() => openModal('Politique de Confidentialité', legalContent.confidentialite)}
-                  className="hover:text-white transition-colors duration-200"
+                  onClick={() => openModal('Politique de Confidentialité', 'confidentialite')}
+                  className="text-sm hover:underline"
                 >
-                  Politique de confidentialité
+                  Politique de Confidentialité
                 </button>
                 <span className="text-gray-600">•</span>
                 <button 
-                  onClick={() => openModal('Conditions Générales de Vente', legalContent.cgv)}
-                  className="hover:text-white transition-colors duration-200"
+                  onClick={() => openModal('Conditions Générales de Vente', 'cgv')}
+                  className="text-sm hover:underline"
                 >
-                  CGV
+                  Conditions Générales de Vente
                 </button>
                 <span className="text-gray-600">•</span>
                 <button 
-                  onClick={() => openModal('Préférences des Cookies', legalContent.cookies)}
-                  className="hover:text-white transition-colors duration-200"
+                  onClick={() => openModal('Préférences des Cookies', 'cookies')}
+                  className="text-sm hover:underline"
                 >
-                  Préférences des cookies
+                  Préférences des Cookies
                 </button>
               </div>
               

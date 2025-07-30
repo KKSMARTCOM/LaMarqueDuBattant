@@ -35,6 +35,11 @@
     "mentionsLegales": {
       "editor": "La Marque Du Battant SAS",
       "publicationDirector": "John Doe",
+      "address": "123 Rue du Commerce",
+      "phone": "+33 1 23 45 67 89",
+      "email": "contact@lamarquedubattant.com",
+      "rcs": "Paris B 123 456 789",
+      "tvaIntracom": "FR 12 123456789",
       "hostingProvider": {
         "name": "Netlify",
         "address": "2325 3rd Street, Suite 215, San Francisco, California 94107, USA",
@@ -52,29 +57,37 @@
         "Droit d'effacement",
         "Droit à la portabilité",
         "Droit d'opposition"
-      ]
+      ],
+      "description": "La Marque Du Battant s'engage à protéger vos données personnelles. Nous utilisons vos informations uniquement pour traiter vos commandes et vous fournir le meilleur service possible."
     },
     "cgv": {
       "deliveryTime": "Sous 2 à 5 jours ouvrés",
       "shippingCosts": "Offerts à partir de 100€ d'achat",
       "returnPolicy": "14 jours pour changer d'avis",
-      "paymentMethods": ["Carte bancaire", "PayPal", "Virement bancaire"]
+      "paymentMethods": ["Carte bancaire", "PayPal", "Virement bancaire"],
+      "description": "Les présentes conditions générales de vente s'appliquent à toutes les commandes passées sur notre site. Le fait de passer commande implique l'acceptation sans réserve de ces conditions."
     },
     "cookies": {
-      "necessary": {
-        "name": "Cookies nécessaires",
-        "description": "Ces cookies sont essentiels pour le bon fonctionnement du site et ne peuvent pas être désactivés.",
-        "alwaysActive": true
-      },
-      "analytics": {
-        "name": "Cookies d'analyse",
-        "description": "Ces cookies nous permettent de comprendre comment les visiteurs interagissent avec notre site.",
-        "default": true
-      },
-      "marketing": {
-        "name": "Cookies marketing",
-        "description": "Ces cookies sont utilisés pour vous proposer des publicités personnalisées.",
-        "default": false
+      "description": "Ce site utilise des cookies pour améliorer votre expérience utilisateur. Vous pouvez accepter ou refuser les cookies non essentiels.",
+      "types": {
+        "necessary": {
+          "name": "Cookies nécessaires",
+          "description": "Ces cookies sont essentiels pour le bon fonctionnement du site et ne peuvent pas être désactivés.",
+          "default": true,
+          "required": true
+        },
+        "analytics": {
+          "name": "Cookies d'analyse",
+          "description": "Ces cookies nous permettent de comprendre comment les visiteurs interagissent avec notre site.",
+          "default": true,
+          "required": false
+        },
+        "marketing": {
+          "name": "Cookies marketing",
+          "description": "Ces cookies sont utilisés pour vous proposer des publicités personnalisées.",
+          "default": false,
+          "required": false
+        }
       }
     }
   },
