@@ -7,17 +7,18 @@
   },
   "contact": {
     "email": "contact@lamarquedubattant.com",
-    "phone": "+33 1 23 45 67 89",
+    "phone": "+229 01 56 14 14 38",
     "address": {
-      "street": "123 Rue du Commerce",
-      "city": "Paris",
+      "street": "Agla",
+      "city": "Cotonou",
       "postalCode": "75001",
-      "country": "France"
+      "country": "Benin"
     },
     "socialMedia": {
       "instagram": "https://instagram.com/lamarquedubattant",
       "facebook": "https://facebook.com/lamarquedubattant",
-      "pinterest": "https://pinterest.com/lamarquedubattant"
+      "linkedin": "https://linkedin.com/lamarquedubattant",
+      "whatsapp": "https://whatsapp.com/lamarquedubattant"
     }
   },
   "businessInfo": {
@@ -29,14 +30,16 @@
   "stats": {
     "customersSatisfied": 1500,
     "productsSold": 5000,
-    "yearsOfExperience": 5
+    "yearsOfExperience": 15,
+    "satisfactionRate": 95,
+    "ethicQuality": 100
   },
   "legal": {
     "mentionsLegales": {
       "editor": "La Marque Du Battant SAS",
       "publicationDirector": "John Doe",
       "address": "123 Rue du Commerce",
-      "phone": "+33 1 23 45 67 89",
+      "phone": "+229 01 56 14 14 38",
       "email": "contact@lamarquedubattant.com",
       "rcs": "Paris B 123 456 789",
       "tvaIntracom": "FR 12 123456789",

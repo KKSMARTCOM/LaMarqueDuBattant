@@ -58,7 +58,7 @@ export default function CartDrawer({ open, onClose }) {
                     Ajouter
                   </button>
                   <div className="text-xs font-thin mb-1 text-left">{acc.title}</div>
-                  <div className="text-xs text-red-500 font-thin text-left">{acc.price}€ <span className="text-gray-400 line-through ml-1">{acc.oldPrice}€</span></div>
+                  <div className="text-xs text-red-500 font-thin text-left">{acc.price} FCFA {acc.oldPrice ? <span className="text-gray-400 line-through ml-1">{acc.oldPrice} FCFA</span> : null}</div>
                 </div>
               ))}
             </div>
@@ -86,8 +86,8 @@ export default function CartDrawer({ open, onClose }) {
                           <div className="font-thin text-xs mb-0.5 text-left">{item.title}</div>
                           <div className="text-[10px] text-gray-500 mb-0.5 text-left">{item.size} {item.variant && `- ${item.variant}`}</div>
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-red-500 font-thin text-xs">{item.price}€</span>
-                            {item.oldPrice && <span className="text-gray-400 line-through text-[10px]">{item.oldPrice}€</span>}
+                            <span className="text-red-500 font-thin text-xs">{item.price} FCFA</span>
+                            {item.oldPrice && <span className="text-gray-400 line-through text-[10px]">{item.oldPrice} FCFA</span>}
                           </div>
                         </div>
                       </div>
@@ -119,8 +119,8 @@ export default function CartDrawer({ open, onClose }) {
                 </button>
               </div>
               <button className="bouttonCheckout" >
-              <span className="text">CHECKOUT -  {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)} ¥</span>
-              <span>Thanks! -  {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)} ¥</span>
+              <span className="text">CHECKOUT -  {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)} FCFA</span>
+              <span>Thanks! -  {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)} FCFA</span>
               </button>
               <div className="text-[10px] text-gray-500 mt-2 text-left">Vous pouvez bénéficier de la livraison gratuite</div>
             </div>

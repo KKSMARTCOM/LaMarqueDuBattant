@@ -101,8 +101,9 @@ export default function FilterBar({
       </div>
       
       {/* Catégories */}
-      <div className="mb-6">
-        <div className="text-left text-sm mb-2 font-semibold uppercase tracking-wider">CATÉGORIES</div>
+      <div className="mb-6 border-b border-black/10 py-2">
+        <details>
+        <summary className=" cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">CATÉGORIES</summary>
         <select
           className="w-full rounded-none border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black text-gray-600"
           value={categorie}
@@ -115,10 +116,14 @@ export default function FilterBar({
           <option value="pantalon" className="text-gray-500">Pantalon</option>
           <option value="accessoire" className="text-gray-500">Accessoire</option>
         </select>
+        </details>
       </div>
+
+
       {/* Prix */}
-      <div className="mb-6">
-        <div className="font-semibold uppercase tracking-wider text-left text-sm mb-2 flex items-center justify-between">PRIX</div>
+      <div className="mb-6 border-b border-black/10 py-2">
+        <details>
+        <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">PRIX</summary>
         <div className="grid grid-cols-2 border border-gray-300 divide-x divide-gray200 mb-2">
           <div className="flex items-center justify-center gap-1 py-2">
             <span className="text-lg">¥</span>
@@ -157,6 +162,7 @@ export default function FilterBar({
             />
           </div>
         </div>
+        
         {/* Slider double, chaque moitié gère sa poignée */}
         <div className="relative flex items-center h-8">
           {/* Barre de fond */}
@@ -235,10 +241,14 @@ export default function FilterBar({
             }
           `}</style>
         </div>
+      </details>
       </div>
+
+
       {/* Remise */}
-      <div className="mb-6">
-        <div className="font-semibold uppercase tracking-wider text-left text-sm mb-2">REMISE</div>
+      <div className="mb-6 border-b border-black/10 py-2">
+        <details>
+        <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">REMISE</summary>
         <div className="flex flex-wrap gap-5">
           <label className="flex items-center gap-2 text-sm text-gray-600">
             <input
@@ -273,10 +283,14 @@ export default function FilterBar({
             /> -30% et plus
           </label>
         </div>
+        </details>
       </div>
+
+
       {/* Taille */}
-      <div className="mb-6">
-        <div className="font-semibold uppercase tracking-wider text-left text-sm mb-2">TAILLE</div>
+      <div className="mb-6 border-b border-black/10 py-2">
+        <details>
+        <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">TAILLE</summary>
         <div className="flex flex-wrap gap-5">
           {['XS','S','M','L','XL'].map(size => (
             <label key={size} className="rounded-none flex items-center gap-1 text-sm text-gray-600">
@@ -284,10 +298,14 @@ export default function FilterBar({
             </label>
           ))}
         </div>
+        </details>
       </div>
+
+
       {/* Sexe */}
-      <div className="mb-6">
-        <div className="font-semibold uppercase tracking-wider text-left text-sm mb-2">SEXE</div>
+      <div className="mb-6 border-b border-black/10 py-2">
+        <details>
+        <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">SEXE</summary>
         <select
           className="flex-1 w-full rounded-none border justify-start justify-items-start border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black text-gray-600"
           value={sexe}
@@ -298,6 +316,7 @@ export default function FilterBar({
           <option value="Femme">Femme</option>
           <option value="Unisexe">Unisexe</option>
         </select>
+        </details>
       </div>
     </div>
   );

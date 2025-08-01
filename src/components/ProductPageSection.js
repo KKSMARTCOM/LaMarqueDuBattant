@@ -5,6 +5,7 @@ import FilterBar from "./FilterBar";
 import ProductCard from "./ProductCard";
 import { useSearchParams } from "react-router-dom";
 import useArticles from '../hooks/useArticles';
+import getImagePath from "./getImagePath";
 
 export default function ProductPageSection() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -198,9 +199,9 @@ export default function ProductPageSection() {
       <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-6 sticky top-0 z-20 bg-white">
         <div className="flex items-center gap-3">
           {/* Affichage dynamique des filtres actifs */}
-          <span className="text-2xl font-extrabold tracking-wide">
+          <span className="text-sm sm:text-2xl font-extrabold tracking-wide">
             {!filters.categorie ? (
-              <span><b>ALL</b> </span>
+              <span><b>TOUT</b> </span>
             ) : (
               <span><b>{filters.categorie.toUpperCase()}</b> </span>
             )}
@@ -221,16 +222,18 @@ export default function ProductPageSection() {
               </b></span>
             )}
           </span>
-          <span className="text-gray-400 text-lg font-light">• {filteredArticles.length} {filteredArticles.length !== 1 ? 'ITEMS' : 'ITEM'}</span>
+          <span className="text-gray-400 text-xs sm:text-lg font-light">• {filteredArticles.length} {filteredArticles.length !== 1 ? 'ITEMS' : 'ITEM'}</span>
         </div>
         <button
-            className="bg-black text-white px-6 py-2 text-xs font-semibold uppercase tracking-wider rounded-sm border border-transparent hover:bg-white hover:text-black hover:border-black hover:border-solid transition lg:hidden"
+            className="bg-transparent text-black mr-4 px-2 py-2 text-xs font-thin uppercase tracking-wider hover:bg-white hover:text-black  transition lg:hidden"
             onClick={() => setShowMobileFilter((prev) => !prev)}
           >
-            FILTRER
-          </button>
-          <button
-            className="bg-black text-white px-6 py-2 text-xs font-semibold uppercase tracking-wider rounded-sm border border-transparent hover:bg-white hover:text-black hover:border-black hover:border-solid transition hidden lg:block"
+            <svg class="w-6 h-6 text-gray-800 dark:text-black hover:text-black/40" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M18.796 4H5.204a1 1 0 0 0-.753 1.659l5.302 6.058a1 1 0 0 1 .247.659v4.874a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.124a1 1 0 0 1 .247-.659l5.302-6.059c.566-.646.106-1.658-.753-1.658Z"/>
+            </svg>
+        </button>
+        <button
+            className="bg-black text-white px-6 py-2 text-xs font-semibold uppercase tracking-wider border border-transparent hover:bg-white hover:text-black hover:border-black hover:border-solid transition hidden lg:block"
           onClick={() => setShowFilterBar((prev) => !prev)}
         >
           FILTRER
@@ -244,7 +247,7 @@ export default function ProductPageSection() {
           />
         )}
       {/* Grille + barre de filtre */}
-      <div className="flex w-full">
+      <div className="flex w-full border-b border-black/20 mb-16 pb-8 ">
         {/* Grille produits */}
         {filteredArticles.length > 0 ? (
           <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 ${showFilterBar ? 'lg:grid-cols-3' : 'lg:grid-cols-4'} gap-x-1 sm:gap-x-2 gap-y-4 flex-1 transition-all duration-300`}>
@@ -296,6 +299,19 @@ export default function ProductPageSection() {
               />
           </aside>
         )}
+      </div>
+      {/* Partie CTA */}
+      <div className="backdrop-blur-sm max-w-5xl mx-auto w-full border border-gray-300 my-8  h-80 sm:h-80 flex flex-col items-center text-center bg-black bg-no-repeat bg-center bg-cover"
+        style={{ backgroundImage: `url(${getImagePath('Clothing-Canyon.png', 'cover')})`,
+        filter: 'grayscale(100%)', }}
+      > 
+        <div className="bg-black/40 h-full flex flex-col items-center justify-center">
+        <h3 className=" text-white text-xl sm:text-2xl md:text-3xl font-semibold mb-2">Inscrivez-vous a notre newsletter pour être informé des dernières nouveautés. </h3>
+        <form className="flex flex-col justify-center sm:flex-row gap-3 sm:gap-4 w-full max-w-xs sm:max-w-none mx-auto px-4">
+          <input type="email" name="email" id="email" placeholder="Adresse e-mail" className=" bg-black/40 w-full sm:w-auto px-6 py-2 border border-gray-300 text-white font-medium hover:border-black transition" />
+          <button type="submit" className="w-full sm:w-auto px-6 py-2 bg-black text-white font-medium hover:bg-white hover:text-black hover:border transition">Envoyé</button>
+        </form>
+        </div>
       </div>
       
       <style jsx>{`

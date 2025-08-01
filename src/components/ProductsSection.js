@@ -59,7 +59,7 @@ export default function ProductsSection() {
     // Section principale de la grille de produits
     <section 
       ref={sectionRef}
-      className="w-full bg-white py-12 md:py-16 lg:py-20 px-4 sm:px-6 lg:px-8" 
+      className="w-full bg-white  py-12 md:py-16 lg:py-20 px-4 sm:px-6 lg:px-8" 
       style={{ fontFamily: 'Commissioner, sans-serif' }}
     >
       <div className="max-w-7xl mx-auto pb-8 md:pb-12">

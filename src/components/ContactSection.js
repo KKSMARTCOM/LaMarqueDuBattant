@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { getContactInfo } from "../services/brandService";
 
 // Section de contact modernisée avec un design épuré et professionnel
 export default function ContactSection() {
+  const [contactInfo, setContactInfo] = useState(null);
+
+  // Charger les informations de contact
+  useEffect(() => {
+    const loadContactInfo = async () => {
+      try {
+        const data = await getContactInfo();
+        setContactInfo(data);
+      } catch (error) {
+        console.error('Erreur lors du chargement des informations de contact:', error);
+      }
+    };
+
+    loadContactInfo();
+  }, []);
   return (
     <section className="w-full bg-black text-white py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto relative z-10">
@@ -26,8 +42,8 @@ export default function ContactSection() {
             </div>
             <h3 className="text-xl text-left font-semibold mb-2 text-white">Email</h3>
             <p className="text-gray-300 text-sm mb-4 text-left">Pour toute question, n'hésitez pas à nous écrire.</p>
-            <a href="mailto:contact@marquedubattant.com" className="inline-flex items-center text-white hover:text-gray-300 transition-colors text-sm font-medium w-full" >
-              contact@marquedubattant.com
+            <a href={`mailto:${contactInfo?.email || 'contact@lamarquedubattant.com'}`} className="inline-flex items-center text-white hover:text-gray-300 transition-colors text-sm font-medium w-full" >
+              {contactInfo?.email || 'contact@lamarquedubattant.com'}
               <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
               </svg>
@@ -44,10 +60,11 @@ export default function ContactSection() {
             <h3 className="text-xl text-left font-semibold mb-2 text-white">WhatsApp</h3>
             <p className="text-gray-300 text-sm mb-4 text-left">Contactez-nous directement pour une réponse rapide.</p>
             <a 
-              href="https://wa.me/33123456789" 
+              href={contactInfo?.socialMedia?.whatsapp ? `https://wa.me/${contactInfo.socialMedia.whatsapp.replace(/[^0-9+]/g, '')}` : '#'}
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center text-white hover:text-gray-300 transition-colors text-sm font-medium w-full"
+              disabled={!contactInfo?.socialMedia?.whatsapp}
             >
               Démarrer la conversation
               <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -65,8 +82,8 @@ export default function ContactSection() {
             </div>
             <h3 className="text-xl text-left font-semibold mb-2 text-white">Téléphone</h3>
             <p className="text-gray-300 text-sm mb-4 text-left">Appelez-nous pour toute assistance ou information.</p>
-            <a href="tel:+33123456789" className="inline-flex items-center text-white hover:text-gray-300 transition-colors text-sm font-medium w-full">
-              +33 1 23 45 67 89
+            <a href={`tel:${contactInfo?.phone || '+33123456789'}`} className="inline-flex items-center text-white hover:text-gray-300 transition-colors text-sm font-medium w-full">
+              {contactInfo?.phone || '+33 1 23 45 67 89'}
               <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
               </svg>
@@ -82,14 +99,18 @@ export default function ContactSection() {
               </svg>
             </div>
             <h3 className="text-xl text-left font-semibold mb-2 text-white">Bureau</h3>
-            <p className="text-gray-300 text-sm mb-4 text-left">Venez nous rencontrer à notre adresse à Paris.</p>
+            <p className="text-gray-300 text-sm mb-4 text-left">Venez nous rencontrer à notre adresse à Cotonou.</p>
             <a 
-              href="https://www.google.com/maps/search/?api=1&query=123+Rue+Exemple+Paris+75000" 
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                `${contactInfo?.address?.street || '123 Rue du Commerce'}, ${contactInfo?.address?.postalCode || '75001'} ${contactInfo?.address?.city || 'Paris'}`
+              )}`} 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center text-white hover:text-gray-300 transition-colors text-sm font-medium w-full"
             >
-              123 Rue Exemple, 75000 Paris
+              {contactInfo?.address ? 
+                `${contactInfo.address.street}, ${contactInfo.address.postalCode} ${contactInfo.address.city}` : 
+                '123 Rue du Commerce, 75001 Paris'}
               <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
               </svg>

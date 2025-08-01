@@ -172,7 +172,7 @@ export default function Header({ showCategoriesBar, opacity = 80 }) {
             </button>
           </Link>
           {/* Icône utilisateur */}
-          <span className="text-white text-2xl cursor-pointer p-2" onClick={() => setUserDrawerOpen(true)}><FiUser /></span>
+          <span className="text-white text-2xl font-sans cursor-pointer p-2" onClick={() => setUserDrawerOpen(true)}><FiUser /></span>
           {/* Icône panier + badge */}
           <CartIcon cartCount={cartCount} openCart={openCart} />
           {/* Menu mobile (hamburger) */}

@@ -28,7 +28,7 @@ export default function ProductCard({ article, isVisible, onEyeClick, index }) {
             className="w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] object-cover transition-transform duration-300 group-hover:scale-105"
           />
           {/* Overlay dégradé pour les tailles */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           {/* Overlay des tailles disponibles au survol */}
           <div className="absolute inset-0 flex flex-col items-center justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div className="bg-black bg-opacity-0  text-white pl-4  mb-2 flex flex-col items-center z-10">
@@ -58,8 +58,8 @@ export default function ProductCard({ article, isVisible, onEyeClick, index }) {
             <div className="text-[11px] md:text-xs font-semibold text-left mb-1 md:mb-0.5">
               <span className="block sm:inline">{article.title}</span>
               <div className="flex justify-between sm:float-right sm:ml-2 mt-1 sm:mt-0">
-                <span className="font-normal text-red-500 text-[10px] md:text-xs">${article.price}</span>
-                <span className="font-normal text-gray-500 line-through text-[10px] md:text-xs ml-2">${article.discount_price}</span>
+                <span className="font-normal text-red-500 text-[10px] md:text-xs">{article.price} FCFA</span>
+                <span className="font-normal text-gray-500 line-through text-[10px] md:text-xs ml-2">{article.discount_price} FCFA</span>
               </div>
             </div>
             {/* Variante ou description courte */}

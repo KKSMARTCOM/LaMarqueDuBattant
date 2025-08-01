@@ -39,7 +39,7 @@ export default function ProductDetailsSection({ product }) {
   // --- Rendu principal ---
   return (
     <section
-      className="w-full lg:mt-16 lg:h-screen flex flex-col lg:flex-row"
+      className="w-full mt-16 lg:mt-16 lg:h-screen flex flex-col lg:flex-row"
       onWheel={handleSectionWheel}
       style={{ overscrollBehavior: 'none' }}
     >
@@ -62,7 +62,7 @@ export default function ProductDetailsSection({ product }) {
         */}
         <div
           ref={scrollableRef}
-          className="w-full max-w-md mx-auto px-2 sm:px-4 py-4 sm:py-8 flex flex-col gap-3 sm:gap-4 lg:h-full lg:overflow-y-auto animate-fade-in-up"
+          className="w-full  px-2 sm:px-16 py-4 sm:py-8 flex flex-col gap-3 sm:gap-4 lg:h-full lg:overflow-y-auto animate-fade-in-up"
           style={{
             scrollbarWidth: 'none', // Masque la scrollbar sur Firefox
             msOverflowStyle: 'none', // Masque la scrollbar sur IE/Edge
@@ -74,22 +74,22 @@ export default function ProductDetailsSection({ product }) {
           </div>
 
           {/* --- Titre et catégorie --- */}
-          <div className="flex flex-col mt-10">
-            <span className="text-xs text-gray-400 text-left uppercase font-normal mb-1">{product.category}</span>
-            <span className="text-4xl text-left font-sans font-bold mb-0">{product.title}</span>
+          <div className="flex flex-col sm:mt-10">
+            <span className="text-xs sm:text-sm text-gray-400 text-left uppercase font-normal mb-1">{product.category}</span>
+            <span className="text-2xl sm:text-4xl text-left font-sans font-bold mb-0">{product.title}</span>
           </div>
 
           {/* --- Prix --- */}
           <div className="flex items-center  mb-2">
-            <span className="text-base font-extralight text-left">${product.price}</span>
+            <span className="text-sm sm:text-2xl font-extralight text-left">${product.price}</span>
           </div>
 
           {/* --- Description courte --- */}
-          <div className="text-gray-700 text-left mb-2">{product.summary}</div>
+          <div className="text-xs sm:text-sm text-gray-700 text-left mb-2">{product.summary}</div>
 
           {/* --- Sélecteurs de taille (checkbox stylisées) --- */}
           <div className="flex flex-col gap-2 mb-2">
-            <label className="text-sm font-semibold text-left">Taille</label>
+            <label className="text-sm sm:text-base font-semibold text-left">Taille</label>
             <div className="flex gap-2">
               {Array.isArray(product.sizes) && product.sizes.map(size => (
                 <label key={size} className="flex items-center cursor-pointer">
@@ -102,7 +102,7 @@ export default function ProductDetailsSection({ product }) {
                   <span className={
                     `px-3 py-1 border border-black bg-white text-black transition select-none
                     peer-checked:bg-black peer-checked:text-white
-                    flex items-center justify-center w-16 h-10 text-base font-medium`
+                    flex items-center justify-center w-12 h-8 sm:w-16 sm:h-10 text-base font-medium`
                   }>
                     {size}
                   </span>
@@ -117,11 +117,11 @@ export default function ProductDetailsSection({ product }) {
               type="number"
               min={1}
               defaultValue={1}
-              className="w-16 border border-gray-400 px-2 py-2"
+              className="w-12 h-8 sm:w-16 sm:h-10 border border-gray-400 px-2 py-2"
               id="details-qty-input"
             />
             <button
-              className={`flex-1 py-2 bg-black text-white font-semibold flex items-center justify-center gap-4 text-base uppercase tracking-wider ${!selectedSize ? 'opacity-60 cursor-not-allowed' : 'hover:bg-white hover:text-black hover:border hover:border-black cursor-pointer'}`}
+              className={`flex-1 w-12 h-8 sm:w-16 sm:h-10  bg-black text-white font-semibold flex items-center justify-center gap-4 text-xs sm:text-base uppercase tracking-wider ${!selectedSize ? 'opacity-60 cursor-not-allowed' : 'hover:bg-white hover:text-black hover:border hover:border-black cursor-pointer'}`}
               disabled={!selectedSize}
               onClick={async () => {
                 if (!selectedSize) return;
@@ -135,7 +135,7 @@ export default function ProductDetailsSection({ product }) {
               </span>
             </button>
           </div>
-          <button className="w-full py-2 border border-black text-black font-semibold mb-4">Acheter maintenant</button>
+          <button className=" font-semibold mb-4 w-full h-8 sm:h-full py-0 sm:py-2 bg-white border  border-black text-black hover:bg-black hover:text-white transition duration-200 ">Acheter maintenant</button>
 
           {/* --- Message livraison --- */}
           <div className="text-xs text-gray-500 mb-2">Livraison gratuite dès 50€</div>
@@ -158,7 +158,7 @@ export default function ProductDetailsSection({ product }) {
               </button>
             ))}
           </nav>
-          <div className="text-sm text-gray-800 mt-2 whitespace-pre-line">
+          <div className="text-xs sm:text-sm text-gray-800 mt-2 whitespace-pre-line">
             {tabContent[activeTab]}
           </div>
         </div>

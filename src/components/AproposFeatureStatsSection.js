@@ -1,15 +1,31 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import getImagePath from "./getImagePath";
+import { getStats } from "../services/brandService";
 
 export default function AproposFeatureStatsSection() {
+  const [statsInfo, setStatsInfo] = useState(null);
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
 
   const controls = useAnimation();
+
+  // Charger les données de la marque
+  useEffect(() => {
+    const loadStatsInfo = async () => {
+      try {
+        const data = await getStats();
+        setStatsInfo(data);
+      } catch (error) {
+        console.error('Erreur lors du chargement des informations de la marque:', error);
+      }
+    };
+
+    loadStatsInfo();
+  }, []);
 
   useEffect(() => {
     if (inView) {
@@ -66,7 +82,7 @@ export default function AproposFeatureStatsSection() {
             Découvrez les chiffres clés de notre marque
           </h2>
           <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-            La Marque des Battants est bien plus qu'une simple boutique en ligne : c'est une ode à la persévérance, à l'audace et à la passion de se dépasser chaque jour.
+            {statsInfo?.seo?.defaultDescription || "La Marque des Battants est bien plus qu'une simple boutique en ligne : c'est une ode à la persévérance, à l'audace et à la passion de se dépasser chaque jour."}
           </p>
         </motion.div>
 
@@ -83,7 +99,7 @@ export default function AproposFeatureStatsSection() {
             variants={item}
           >
             <div className="mt-auto">
-              <div className="text-5xl font-bold text-white mb-2">10+</div>
+              <div className="text-5xl font-bold text-white mb-2">{statsInfo?.yearsOfExperience || '5'}+</div>
               <h3 className="text-xl font-semibold text-white mb-1">Années d'expérience</h3>
               <p className="text-gray-300 text-sm">Dans l'industrie de la mode et du sport</p>
             </div>
@@ -107,7 +123,7 @@ export default function AproposFeatureStatsSection() {
             variants={item}
           >
             <div className="mt-auto">
-              <div className="text-5xl font-bold text-white mb-2">98%</div>
+              <div className="text-5xl font-bold text-white mb-2">{statsInfo?.satisfactionRate || '98'}%</div>
               <h3 className="text-xl font-semibold text-white mb-1">Clients satisfaits</h3>
               <p className="text-gray-300 text-sm">Qui portent fièrement nos créations</p>
             </div>
@@ -163,7 +179,7 @@ export default function AproposFeatureStatsSection() {
             variants={item}
           >
             <div className="mt-auto">
-              <div className="text-4xl font-bold text-white mb-2">10+</div>
+              <div className="text-4xl font-bold text-white mb-2">{statsInfo?.yearsOfExperience || '5'}+</div>
               <h3 className="text-lg font-semibold text-white mb-1">Années d'expérience</h3>
               <p className="text-gray-300 text-sm">Dans l'industrie de la mode et du sport</p>
             </div>
@@ -187,7 +203,7 @@ export default function AproposFeatureStatsSection() {
             variants={item}
           >
             <div className="mt-auto">
-              <div className="text-4xl font-bold text-white mb-2">98%</div>
+              <div className="text-4xl font-bold text-white mb-2">{statsInfo?.satisfactionRate || '98'}%</div>
               <h3 className="text-lg font-semibold text-white mb-1">Clients satisfaits</h3>
               <p className="text-gray-300 text-sm">Qui portent fièrement nos créations</p>
             </div>
@@ -211,7 +227,7 @@ export default function AproposFeatureStatsSection() {
             variants={item}
           >
             <div className="mt-auto">
-              <div className="text-4xl font-bold text-white mb-2">50K+</div>
+              <div className="text-4xl font-bold text-white mb-2">{statsInfo?.productsSold || '50'}K+</div>
               <h3 className="text-lg font-semibold text-white mb-1">Produits vendus</h3>
               <p className="text-gray-300 text-sm">À travers le monde entier</p>
             </div>
@@ -223,7 +239,7 @@ export default function AproposFeatureStatsSection() {
             variants={item}
           >
             <div className="mt-auto">
-              <div className="text-4xl font-bold text-white mb-2">100%</div>
+              <div className="text-4xl font-bold text-white mb-2">{statsInfo?.ethicAndQuality || '100'}%</div>
               <h3 className="text-lg font-semibold text-white mb-1">Éthique & Qualité</h3>
               <p className="text-gray-300 text-sm">Des matériaux soigneusement sélectionnés</p>
             </div>
