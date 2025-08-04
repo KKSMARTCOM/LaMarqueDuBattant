@@ -4,59 +4,223 @@
     "titre": "Concert Live 2024",
     "type": "Concert",
     "date": "2024-07-10",
-    "lieu": "Paris",
+    "lieu": "Paris, La Cigale",
     "image": "event2.jpg",
     "description": "Venez profiter d'une soirée inoubliable avec des artistes de renom.",
     "cta": "Voir événement",
     "placesLeft": 15,
-    "details": "Ouverture des portes à 19h. Prévoir une tenue élégante. Restauration sur place."
+    "details": "Ouverture des portes à 19h. Prévoir une tenue élégante. Restauration sur place.",
+    "schedule": "19h00 : Ouverture des portes\n20h30 : Début du concert\n23h00 : Fin de la soirée",
+    "price": "À partir de 45€",
+    "registrationLink": "https://example.com/inscription-concert",
+    "contributors": [
+      {
+        "name": "Jean Dupont",
+        "role": "Directeur Artistique",
+        "avatar": ""
+      },
+      {
+        "name": "Marie Martin",
+        "role": "Chef d'orchestre",
+        "avatar": ""
+      },
+      {
+        "name": "Sophie Lambert",
+        "role": "Productrice exécutive",
+        "avatar": ""
+      }
+    ],
+    "gallery": [
+      {
+        "image": "concert-gallery-1.jpg",
+        "caption": "Préparatifs du concert - Salle de répétition"
+      },
+      {
+        "image": "concert-gallery-2.jpg",
+        "caption": "Vue de la scène sous les projecteurs"
+      }
+    ],
+    "quote": "La musique est la langue des émotions. Ce concert est une célébration de cette puissance universelle qui nous rassemble tous.",
+    "quoteAuthor": "Jean Dupont, Directeur Artistique"
   },
   {
     "id": 2,
     "titre": "Festival de Musique",
     "type": "Festival",
     "date": "2024-08-15",
-    "lieu": "Lyon",
+    "lieu": "Lyon, Parc de la Tête d'Or",
     "image": "event3.jpg",
     "description": "Un week-end rempli de musique, de danse et de bonne humeur.",
+    "fullDescription": "Plongez dans une expérience musicale unique au cœur de Lyon. Notre festival réunit des artistes émergents et confirmés sur plusieurs scènes dans un cadre naturel exceptionnel. Trois jours de découvertes musicales, d'ateliers créatifs et de moments de partage inoubliables vous attendent.\n\nAvec des styles musicaux variés allant du jazz au rock en passant par l'électro, ce festival est l'occasion idéale de vivre une expérience culturelle complète en famille ou entre amis.",
     "cta": "Voir événement",
     "placesLeft": 42,
-    "details": "Festival sur 3 jours. Billet valable pour l'ensemble des représentations. Hébergement non inclus."
+    "details": "Festival sur 3 jours. Billet valable pour l'ensemble des représentations. Hébergement non inclus.",
+    "schedule": "Vendredi 19h-00h • Samedi 12h-00h • Dimanche 12h-22h",
+    "price": "Pass 3 jours : 89€ • Pass 1 jour : 39€",
+    "registrationLink": "https://example.com/inscription-festival",
+    "contributors": [
+      {
+        "name": "Thomas Leroy",
+        "role": "Directeur Artistique",
+        "avatar": ""
+      },
+        {
+        "name": "Julie Bernard",
+        "role": "Responsable Programmation",
+        "avatar": ""
+      },
+      {
+        "name": "Marc Dubois",
+        "role": "Coordinateur Technique",
+        "avatar": ""
+      }
+    ],
+    "gallery": [
+      {
+        "image": "festival-gallery-1.jpg",
+        "caption": "Scène principale du festival sous les étoiles"
+      },
+      {
+        "image": "festival-gallery-2.jpg",
+        "caption": "Atelier de découverte musicale pour enfants"
+      }
+    ],
+    "quote": "Ce festival est bien plus qu'un simple rassemblement musical, c'est une célébration de la diversité culturelle et de la créativité sous toutes ses formes.",
+    "quoteAuthor": "Thomas Leroy, Directeur Artistique"
   },
   {
     "id": 3,
     "titre": "Défilé de Mode Été",
     "type": "Défilé",
     "date": "2024-06-21",
-    "lieu": "Marseille",
+    "lieu": "Marseille, Palais du Pharo",
     "image": "event4.jpg",
     "description": "Découvrez les nouvelles tendances de la saison lors de notre défilé exclusif.",
+    "fullDescription": "Assistez à la présentation exclusive de la collection été 2024 dans un lieu d'exception en bord de mer. Nos créateurs vous dévoileront des pièces uniques alliant élégance et innovation, avec des matières légères et des couleurs éclatantes qui caractérisent l'été méditerranéen.\n\nCe défilé est l'occasion de découvrir en avant-première les tendances qui marqueront la saison, portées par des mannequets professionnels dans une mise en scène spectaculaire.",
     "cta": "Voir événement",
     "placesLeft": 0,
-    "details": "Événement complet. Liste d'attente disponible. Tenue de ville exigée."
+    "details": "Événement complet. Liste d'attente disponible. Tenue de ville exigée.",
+    "schedule": "Accueil à 18h30 • Défilé de 19h à 20h30 • Cocktail de clôture jusqu'à 22h",
+    "price": "Sur invitation uniquement",
+    "registrationLink": "https://example.com/liste-attente-defile",
+    "contributors": [
+      {
+        "name": "Sophie Laurent",
+        "role": "Directrice Artistique",
+        "avatar": ""
+      },
+      {
+        "name": "Julien Moreau",
+        "role": "Styliste en Chef",
+        "avatar": ""
+      },
+      {
+        "name": "Camille Petit",
+        "role": "Directrice de Production",
+        "avatar": ""
+      }
+    ],
+    "gallery": [
+      {
+        "image": "defile-gallery-1.jpg",
+        "caption": "Vue d'ensemble du podium du défilé"
+      },
+      {
+        "image": "defile-gallery-2.jpg",
+        "caption": "Détail d'une tenue de la collection été 2024"
+      }
+    ],
+    "quote": "La mode n'est pas simplement une question de vêtements. C'est une forme d'expression, une manière de vivre qui reflète notre époque et nos aspirations.",
+    "quoteAuthor": "Sophie Laurent, Directrice Artistique"
   },
   {
     "id": 4,
     "titre": "Atelier Créatif",
     "type": "Atelier",
     "date": "2024-09-05",
-    "lieu": "Bordeaux",
+    "lieu": "Bordeaux, Atelier des Capucins",
     "image": "event5.jpg",
     "description": "Participez à un atelier unique pour créer votre propre accessoire de mode.",
+    "fullDescription": "Laissez libre cours à votre créativité lors de cet atelier exceptionnel où vous apprendrez à concevoir et réaliser un accessoire de mode unique. Guidé par nos artisans experts, vous découvrirez les techniques de base de la maroquinerie et du travail du cuir.\n\nChaque participant repartira avec sa création personnalisée et les connaissances nécessaires pour reproduire l'expérience à la maison. Un moment convivial et enrichissant pour tous les amateurs de création manuelle.",
     "cta": "Voir événement",
     "placesLeft": 8,
-    "details": "Matériel fourni. Atelier de 3h. À partir de 16 ans. Inscription obligatoire."
+    "details": "Matériel fourni. Atelier de 3h. À partir de 16 ans. Inscription obligatoire.",
+    "schedule": "14h00 - 17h00 (accueil à partir de 13h45)",
+    "price": "65€ par personne (matériel inclus)",
+    "registrationLink": "https://example.com/inscription-atelier",
+    "contributors": [
+      {
+        "name": "Élodie Martin",
+        "role": "Artisane Maroquinière",
+        "avatar": ""
+      },
+      {
+        "name": "Antoine Dubois",
+        "role": "Designer Mode",
+        "avatar": ""
+      },
+      {
+        "name": "Laura Petit",
+        "role": "Assistante Créative",
+        "avatar": ""
+      }
+    ],
+    "gallery": [
+      {
+        "image": "atelier-gallery-1.jpg",
+        "caption": "Matériaux et outils mis à disposition pendant l'atelier"
+      },
+      {
+        "image": "atelier-gallery-2.jpg",
+        "caption": "Exemple de création réalisée lors d'un atelier précédent"
+      }
+    ],
+    "quote": "Créer de ses propres mains apporte une satisfaction inégalable. Notre objectif est de rendre la création accessible à tous, quel que soit votre niveau.",
+    "quoteAuthor": "Élodie Martin, Artisane Maroquinière"
   },
   {
     "id": 5,
     "titre": "Vente Privée Automne",
     "type": "Vente privée",
     "date": "2024-10-12",
-    "lieu": "Lille",
+    "lieu": "Lille, Showroom Privé",
     "image": "event6.jpg",
     "description": "Profitez d'offres exclusives sur la nouvelle collection automne.",
+    "fullDescription": "Accédez en avant-première et dans des conditions privilégiées à notre nouvelle collection automne-hiver. Cette vente privée est l'occasion unique de découvrir nos dernières créations avec des réductions exclusives allant jusqu'à -50%.\n\nDans une ambiance chaleureuse et conviviale, notre équipe de conseillers sera à votre disposition pour vous guider dans vos choix. Profitez de services exclusifs : essayages personnalisés, conseils de style sur mesure et emballages cadeaux gratuits.",
     "cta": "Voir événement",
     "placesLeft": 25,
-    "details": "Sur invitation uniquement. Carte d'identité requise. Paiement en espèces et CB acceptés."
+    "details": "Sur invitation uniquement. Carte d'identité requise. Paiement en espèces et CB acceptés.",
+    "schedule": "10h00 - 20h00 en continu (dernière entrée à 19h30)",
+    "price": "Accès gratuit sur présentation de l'invitation",
+    "registrationLink": "https://example.com/demande-invitation",
+    "contributors": [
+      {
+        "name": "Nathalie Lefebvre",
+        "role": "Responsable Commerciale",
+        "avatar": ""
+      },
+      {
+        "name": "Alexandre Garnier",
+        "role": "Responsable Collection Homme",
+        "avatar": ""
+      },
+      {
+        "name": "Claire Morel",
+        "role": "Responsable Collection Femme",
+        "avatar": ""
+      }
+    ],
+    "gallery": [
+      {
+        "image": "vente-gallery-1.jpg",
+        "caption": "Vue du showroom pendant une vente privée précédente"
+      },
+      {
+        "image": "vente-gallery-2.jpg",
+        "caption": "Sélection de pièces phares de la collection automne-hiver"
+      }
+    ],
+    "quote": "Nos ventes privées sont bien plus qu'une simple opportunité d'achat, c'est une expérience client privilégiée où chaque détail compte.",
+    "quoteAuthor": "Nathalie Lefebvre, Responsable Commerciale"
   }
 ]

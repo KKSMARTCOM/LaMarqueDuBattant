@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { loadCollections } from "../services/collectionService";
 
 export default function FilterBar({ 
   filters, 
@@ -13,8 +14,26 @@ export default function FilterBar({
     tailles = [], 
     sexe = '', 
     priceMin, 
-    priceMax 
+    priceMax,
+    nouveau = false
   } = filters || {};
+  
+  // État pour stocker les catégories de collection
+  const [collectionCategories, setCollectionCategories] = useState([]);
+  
+  // Charger les catégories de collection au montage du composant
+  useEffect(() => {
+    const fetchCollections = async () => {
+      try {
+        const { categories } = await loadCollections();
+        setCollectionCategories(categories || []);
+      } catch (error) {
+        console.error('Erreur lors du chargement des collections:', error);
+      }
+    };
+    
+    fetchCollections();
+  }, []);
   
   // Gestionnaires de changement de filtre
   const handleCategorieChange = (e) => {
@@ -63,6 +82,19 @@ export default function FilterBar({
     onFilterChange('priceMax', newMax);
   };
   
+  // Gestionnaire pour le filtre "Nouveau"
+  const handleShowNewOnlyChange = (e) => {
+    onFilterChange('nouveau', e.target.checked);
+  };
+  
+  // Gestionnaire pour le filtre "Collection"
+  const handleCollectionToggle = (collectionCategorie) => {
+    const newCollections = filters.collections?.includes(collectionCategorie)
+      ? filters.collections.filter(c => c !== collectionCategorie)
+      : [...(filters.collections || []), collectionCategorie];
+    onFilterChange('collections', newCollections);
+  };
+
   // Réinitialiser tous les filtres
   const resetFilters = () => {
     onFilterChange('categorie', '');
@@ -71,11 +103,15 @@ export default function FilterBar({
     onFilterChange('sexe', '');
     onFilterChange('priceMin', undefined);
     onFilterChange('priceMax', undefined);
+    onFilterChange('nouveau', false);
+    onFilterChange('collections', []);
   };
+
+  // Les états sont gérés par le composant parent via les props
 
   return (
     <div className="w-full bg-white/90 backdrop-blur-sm shadow-sm border border-gray-100 p-1 sm:p-3 mb-6 transition-all duration-300 hover:shadow-md">
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+      <div className="flex items-center justify-between mb-2 pb-4 border-b border-gray-100">
         <h3 className="text-2xl font-medium tracking-tight text-gray-900">Filtres</h3>
         <button 
           onClick={resetFilters}
@@ -99,9 +135,24 @@ export default function FilterBar({
           </span>
         </button>
       </div>
+
+      {/* Nouveaux  */}
+      <div className="mb-4 border-b border-black/10 py-2">
+        <div className="flex flex-col gap-5">
+          <label className="rounded-none flex items-center text-left gap-1 text-sm text-gray-600 cursor-pointer">
+            <input 
+              type="checkbox" 
+              className="w-5 h-5 rounded-none  accent-black" 
+              checked={nouveau || false}
+              onChange={handleShowNewOnlyChange}
+            />
+            Nouveautés (moins d'une semaine)
+          </label>
+        </div>
+      </div>
       
       {/* Catégories */}
-      <div className="mb-6 border-b border-black/10 py-2">
+      <div className="mb-4 border-b border-black/10 py-2">
         <details>
         <summary className=" cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">CATÉGORIES</summary>
         <select
@@ -121,7 +172,7 @@ export default function FilterBar({
 
 
       {/* Prix */}
-      <div className="mb-6 border-b border-black/10 py-2">
+      <div className="mb-4 border-b border-black/10 py-2">
         <details>
         <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">PRIX</summary>
         <div className="grid grid-cols-2 border border-gray-300 divide-x divide-gray200 mb-2">
@@ -246,7 +297,7 @@ export default function FilterBar({
 
 
       {/* Remise */}
-      <div className="mb-6 border-b border-black/10 py-2">
+      <div className="mb-4 border-b border-black/10 py-2">
         <details>
         <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">REMISE</summary>
         <div className="flex flex-wrap gap-5">
@@ -288,7 +339,7 @@ export default function FilterBar({
 
 
       {/* Taille */}
-      <div className="mb-6 border-b border-black/10 py-2">
+      <div className="mb-4 border-b border-black/10 py-2">
         <details>
         <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">TAILLE</summary>
         <div className="flex flex-wrap gap-5">
@@ -303,7 +354,7 @@ export default function FilterBar({
 
 
       {/* Sexe */}
-      <div className="mb-6 border-b border-black/10 py-2">
+      <div className="mb-4 border-b border-black/10 py-2">
         <details>
         <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">SEXE</summary>
         <select
@@ -318,6 +369,30 @@ export default function FilterBar({
         </select>
         </details>
       </div>
+
+      {/* Collection  */}
+      <div className="mb-4 border-b border-black/10 py-2">
+        <details>
+          <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">COLLECTION</summary>
+          <div className="flex flex-col gap-5">
+            {collectionCategories.length > 0 ? (
+              collectionCategories.map(category => (
+                <label key={category} className="rounded-none flex items-center gap-1 text-sm text-gray-600 cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="w-5 h-5 rounded-none accent-black"
+                    checked={filters.collections?.includes(category) || false}
+                    onChange={() => handleCollectionToggle(category)}
+                  />
+                  {category}
+                </label>
+              ))
+            ) : (
+              <p className="text-sm text-gray-500">Chargement des collections...</p>
+            )}
+          </div>
+        </details>
+      </div>
     </div>
   );
-} 
+}

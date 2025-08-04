@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import getImagePath from "./getImagePath";
+import { calculateDiscountedPrice, isNewProduct } from "../utils/priceUtils";
 
 // Composant carte d'article réutilisable
 export default function ProductCard({ article, isVisible, onEyeClick, index }) {
@@ -15,12 +16,17 @@ export default function ProductCard({ article, isVisible, onEyeClick, index }) {
       >
         {/* Image du produit avec tag de réduction et overlay des tailles */}
         <div className="relative mb-3 md:mb-4 overflow-hidden">
-          {/* Tag de réduction en haut à gauche */}
-          {article.discount_percent > 0 && (
-            <span className="absolute top-2 right-2 bg-white text-black text-[10px] md:text-[11px] font-bold px-2 py-1 z-10 shadow">
-              -{article.discount_percent}%
-            </span>
-          )}
+          {/* Tags en haut à droite */}
+          <div className="absolute top-2 right-2 flex flex-col items-end gap-1 z-10">
+            {(isNewProduct(article.dateAdded) || article.discount_percent > 0) && (
+              <span className="bg-white text-black text-[10px] md:text-[11px] font-bold px-2 py-1 shadow">
+                {(isNewProduct(article.dateAdded) && article.discount_percent > 0) ?
+                  "Nouveau | -" + article.discount_percent + "%" :
+                  (isNewProduct(article.dateAdded) ? "Nouveau" : `- ${article.discount_percent}%`)
+                }
+              </span>
+            )}
+          </div>
           {/* Image du produit */}
           <img
             src={getImagePath(article.image, "products")}
@@ -56,10 +62,22 @@ export default function ProductCard({ article, isVisible, onEyeClick, index }) {
           <div>
             {/* Nom du produit et prix */}
             <div className="text-[11px] md:text-xs font-semibold text-left mb-1 md:mb-0.5">
-              <span className="block sm:inline">{article.title}</span>
+                <span className="block sm:inline">{article.title}</span>
               <div className="flex justify-between sm:float-right sm:ml-2 mt-1 sm:mt-0">
-                <span className="font-normal text-red-500 text-[10px] md:text-xs">{article.price} FCFA</span>
-                <span className="font-normal text-gray-500 line-through text-[10px] md:text-xs ml-2">{article.discount_price} FCFA</span>
+                {article.discount_percent > 0 ? (
+                  <>
+                    <span className="font-normal text-red-500 text-[10px] md:text-xs">
+                      {calculateDiscountedPrice(article.price, article.discount_percent).toFixed(0)} FCFA
+                    </span>
+                    <span className="font-normal text-gray-500 line-through text-[10px] md:text-xs ml-2">
+                      {article.price} FCFA
+                    </span>
+                  </>
+                ) : (
+                  <span className="font-normal text-red-500 text-[10px] md:text-xs">
+                    {article.price} FCFA
+                  </span>
+                )}
               </div>
             </div>
             {/* Variante ou description courte */}

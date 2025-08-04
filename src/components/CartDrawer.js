@@ -58,7 +58,23 @@ export default function CartDrawer({ open, onClose }) {
                     Ajouter
                   </button>
                   <div className="text-xs font-thin mb-1 text-left">{acc.title}</div>
-                  <div className="text-xs text-red-500 font-thin text-left">{acc.price} FCFA {acc.oldPrice ? <span className="text-gray-400 line-through ml-1">{acc.oldPrice} FCFA</span> : null}</div>
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs font-thin text-black">
+                      {acc.discount_percent > 0 
+                        ? Math.round(acc.price * (1 - acc.discount_percent / 100)) 
+                        : acc.price} FCFA
+                    </span>
+                    {acc.discount_percent > 0 && (
+                      <>
+                        <span className="text-gray-400 line-through text-[10px]">
+                          {acc.price} FCFA
+                        </span>
+                        <span className="bg-red-100 text-red-800 text-[10px] font-medium px-1.5 py-0.5 rounded">
+                          -{acc.discount_percent}%
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -80,14 +96,25 @@ export default function CartDrawer({ open, onClose }) {
                 [...cartItems].reverse().map((item, idx) => (
                   <div key={item.id} className="flex flex-col mb-4 border-b pb-3">
                     <div className="flex flex-row mb-4">
-                      <img src={getImagePath(item.image, "products")} alt={item.title} className="w-32 h-36 object-cover mr-3 " />
+                      <div className="relative">
+                        <img src={getImagePath(item.image, "products")} alt={item.title} className="w-32 h-36 object-cover mr-3 " />
+                        {item.discountPercent > 0 && (
+                          <span className="absolute top-2 right-4 bg-black text-white text-[10px] font-medium px-1.5 py-0.5">
+                            -{item.discountPercent}%
+                          </span>
+                        )}
+                      </div>
                       <div className="flex-1 flex flex-col justify-between">
                         <div>
                           <div className="font-thin text-xs mb-0.5 text-left">{item.title}</div>
                           <div className="text-[10px] text-gray-500 mb-0.5 text-left">{item.size} {item.variant && `- ${item.variant}`}</div>
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="text-red-500 font-thin text-xs">{item.price} FCFA</span>
-                            {item.oldPrice && <span className="text-gray-400 line-through text-[10px]">{item.oldPrice} FCFA</span>}
+                            <span className="text-black font-thin text-xs">{item.price} FCFA</span>
+                            {item.oldPrice && (
+                              <>
+                                <span className="text-gray-400 line-through text-[10px]">{item.oldPrice} FCFA</span>
+                              </>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -118,10 +145,32 @@ export default function CartDrawer({ open, onClose }) {
                   <span className="text">APPLY</span>
                 </button>
               </div>
-              <button className="bouttonCheckout" >
-              <span className="text">CHECKOUT -  {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)} FCFA</span>
-              <span>Thanks! -  {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2)} FCFA</span>
-              </button>
+              {/* Calcul du total avec réductions */}
+              {(() => {
+                const subtotal = cartItems.reduce((sum, item) => {
+                  // item.price contient déjà le prix réduit (voir cartUtils.js)
+                  return sum + (item.price * item.quantity);
+                }, 0);
+                
+                // Calcul des économies totales (pour affichage optionnel)
+                const totalSavings = cartItems.reduce((sum, item) => {
+                  return item.oldPrice 
+                    ? sum + ((item.oldPrice - item.price) * item.quantity)
+                    : sum;
+                }, 0);
+                
+                return (
+                  <button className="bouttonCheckout">
+                    <span className="text">
+                      CHECKOUT - {subtotal.toLocaleString('fr-FR')} FCFA
+                    </span>
+                    <span className="text-xs font-normal mt-1">
+                      Thanks! - {subtotal.toLocaleString('fr-FR')} FCFA <br />
+                      Vous économisez {totalSavings > 0 ? totalSavings.toLocaleString('fr-FR') : 0} FCFA
+                    </span>
+                  </button>
+                );
+              })()}
               <div className="text-[10px] text-gray-500 mt-2 text-left">Vous pouvez bénéficier de la livraison gratuite</div>
             </div>
           </div>

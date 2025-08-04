@@ -84,9 +84,9 @@ export default function EvenementsSection() {
                 <div className="text-base sm:text-lg xl:text-xl 2xl:text-2xl font-bold text-black text-left">{event.titre}</div>
                 <div className="text-[10px] sm:text-xs xl:text-sm 2xl:text-base text-black text-left">{event.lieu}</div>
                 <div className="text-[10px] sm:text-xs xl:text-sm 2xl:text-base text-black font-light mb-2 sm:mb-3 xl:mb-4 2xl:mb-6 text-left">{event.description}</div>
-                <button className="text-[10px] sm:text-xs xl:text-sm 2xl:text-base text-black font-medium flex items-center gap-1 group w-fit text-left">
+                <Link to={`/events/${event.id}`} className="text-[10px] sm:text-xs xl:text-sm 2xl:text-base text-black font-medium flex items-center gap-1 group w-fit text-left">
                   {event.cta} <span className="text-sm sm:text-base xl:text-lg 2xl:text-xl group-hover:translate-x-1 transition">&gt;</span>
-                </button>
+                </Link>
               </div>
             </div>
           ))}

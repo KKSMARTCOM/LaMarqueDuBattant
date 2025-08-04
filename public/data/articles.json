@@ -7,10 +7,19 @@
     "link": "#",
     "price": 55,
     "discount_price": 39,
-    "discount_percent": 29,
+    "discount_percent": 10,
     "category": "Tshirt",
     "sizes": ["S", "M", "L"],
-    "sexe": "Homme"
+    "sexe": "Homme",
+    "dateAdded": "2025-08-01T10:30:00Z",
+    "collectionId": 1,
+    "availableColors": ["noir", "blanc", "rouge"],
+    "stockQuantity": 42,
+    "secondaryImages": [
+      "article1-1.webp",
+      "article1-2.webp",
+      "article1-3.webp"
+    ]
   },
   {
     "id": 2,
@@ -20,10 +29,18 @@
     "link": "#",
     "price": 60,
     "discount_price": 45,
-    "discount_percent": 25,
+    "discount_percent": 0,
     "category": "Sweat",
     "sizes": ["M", "L", "XL"],
-    "sexe": "Femme"
+    "sexe": "Femme",
+    "dateAdded": "2025-08-02T14:15:00Z",
+    "collectionId": 2,
+    "availableColors": ["noir", "gris", "bleu marine"],
+    "stockQuantity": 28,
+    "secondaryImages": [
+      "article2-1.webp",
+      "article2-2.webp"
+    ]
   },
   {
     "id": 3,
@@ -36,7 +53,17 @@
     "discount_percent": 30,
     "category": "Veste",
     "sizes": ["XS", "S", "M"],
-    "sexe": "Unisexe"
+    "sexe": "Unisexe",
+    "dateAdded": "2025-08-04T09:45:00Z",
+    "collectionId": 1,
+    "availableColors": ["noir", "kaki", "bleu"],
+    "stockQuantity": 15,
+    "secondaryImages": [
+      "article3-1.webp",
+      "article3-2.webp",
+      "article3-3.webp",
+      "article3-4.webp"
+    ]
   },
   {
     "id": 4,
@@ -48,8 +75,16 @@
     "discount_price": 64,
     "discount_percent": 20,
     "category": "Accessoire",
-    "sizes": ["L", "XL"],
-    "sexe": "Homme"
+    "sizes": ["S Unique"],
+    "sexe": "Unisexe",
+    "dateAdded": "2025-04-05T16:20:00Z",
+    "collectionId": 3,
+    "availableColors": ["noir", "marron", "beige"],
+    "stockQuantity": 63,
+    "secondaryImages": [
+      "article4-1.webp",
+      "article4-2.webp"
+    ]
   },
   {
     "id": 5,
@@ -62,7 +97,12 @@
     "discount_percent": 20,
     "category": "Tshirt",
     "sizes": ["S", "M", "XL"],
-    "sexe": "Femme"
+    "sexe": "Femme",
+    "dateAdded": "2025-01-20T11:20:00Z",
+    "collectionId": 1,
+    "availableColors": ["blanc", "rose", "jaune"],
+    "stockQuantity": 37,
+    "secondaryImages": ["article5-1.webp", "article5-2.webp"]
   },
   {
     "id": 6,
@@ -75,7 +115,12 @@
     "discount_percent": 20,
     "category": "Sweat",
     "sizes": ["XS", "S", "L"],
-    "sexe": "Unisexe"
+    "sexe": "Unisexe",
+    "dateAdded": "2025-02-05T09:15:00Z",
+    "collectionId": 2,
+    "availableColors": ["noir", "gris", "bleu"],
+    "stockQuantity": 24,
+    "secondaryImages": ["article6-1.webp"]
   },
   {
     "id": 7,
@@ -88,7 +133,12 @@
     "discount_percent": 20,
     "category": "Veste",
     "sizes": ["M", "L", "XL"],
-    "sexe": "Homme"
+    "sexe": "Homme",
+    "dateAdded": "2025-02-10T14:30:00Z",
+    "collectionId": 1,
+    "availableColors": ["noir", "marron", "vert militaire"],
+    "stockQuantity": 18,
+    "secondaryImages": ["article7-1.webp", "article7-2.webp"]
   },
   {
     "id": 8,
@@ -101,7 +151,12 @@
     "discount_percent": 20,
     "category": "Accessoire",
     "sizes": ["XS", "S"],
-    "sexe": "Femme"
+    "sexe": "Femme",
+    "dateAdded": "2025-02-15T10:45:00Z",
+    "collectionId": 3,
+    "availableColors": ["rose", "beige", "blanc"],
+    "stockQuantity": 52,
+    "secondaryImages": ["article8-1.webp", "article8-2.webp", "article8-3.webp"]
   },
   {
     "id": 9,
@@ -114,7 +169,12 @@
     "discount_percent": 20,
     "category": "Tshirt",
     "sizes": ["M", "L"],
-    "sexe": "Homme"
+    "sexe": "Homme",
+    "dateAdded": "2025-02-20T13:10:00Z",
+    "collectionId": 1,
+    "availableColors": ["noir", "blanc", "gris"],
+    "stockQuantity": 29,
+    "secondaryImages": ["article9-1.webp", "article9-2.webp"]
   },
   {
     "id": 10,
@@ -127,7 +187,12 @@
     "discount_percent": 20,
     "category": "Sweat",
     "sizes": ["XS", "XL"],
-    "sexe": "Femme"
+    "sexe": "Femme",
+    "dateAdded": "2025-02-25T15:30:00Z",
+    "collectionId": 2,
+    "availableColors": ["rose poudré", "beige", "blanc cassé"],
+    "stockQuantity": 21,
+    "secondaryImages": ["article10-1.webp"]
   },
   {
     "id": 11,
@@ -140,7 +205,12 @@
     "discount_percent": 20,
     "category": "Veste",
     "sizes": ["S", "M", "L"],
-    "sexe": "Unisexe"
+    "sexe": "Unisexe",
+    "dateAdded": "2025-03-01T10:15:00Z",
+    "collectionId": 1,
+    "availableColors": ["noir", "bleu marine", "kaki"],
+    "stockQuantity": 14,
+    "secondaryImages": ["article11-1.webp", "article11-2.webp"]
   },
   {
     "id": 12,
@@ -153,7 +223,12 @@
     "discount_percent": 20,
     "category": "Accessoire",
     "sizes": ["M", "XL"],
-    "sexe": "Homme"
+    "sexe": "Homme",
+    "dateAdded": "2025-03-05T11:45:00Z",
+    "collectionId": 3,
+    "availableColors": ["noir", "marron", "bleu marine"],
+    "stockQuantity": 38,
+    "secondaryImages": ["article12-1.webp"]
   },
   {
     "id": 13,
@@ -166,7 +241,12 @@
     "discount_percent": 20,
     "category": "Tshirt",
     "sizes": ["XS", "S", "L"],
-    "sexe": "Femme"
+    "sexe": "Femme",
+    "dateAdded": "2025-03-10T09:20:00Z",
+    "collectionId": 1,
+    "availableColors": ["blanc", "rose", "mauve"],
+    "stockQuantity": 31,
+    "secondaryImages": ["article13-1.webp", "article13-2.webp"]
   },
   {
     "id": 14,
@@ -179,7 +259,12 @@
     "discount_percent": 20,
     "category": "Sweat",
     "sizes": ["M", "L", "XL"],
-    "sexe": "Homme"
+    "sexe": "Homme",
+    "dateAdded": "2025-03-15T14:10:00Z",
+    "collectionId": 2,
+    "availableColors": ["noir", "gris foncé", "bleu marine"],
+    "stockQuantity": 22,
+    "secondaryImages": ["article14-1.webp"]
   },
   {
     "id": 15,
@@ -192,7 +277,12 @@
     "discount_percent": 20,
     "category": "Veste",
     "sizes": ["XS", "S", "M"],
-    "sexe": "Femme"
+    "sexe": "Femme",
+    "dateAdded": "2025-03-20T10:50:00Z",
+    "collectionId": 1,
+    "availableColors": ["beige", "camel", "blanc cassé"],
+    "stockQuantity": 16,
+    "secondaryImages": ["article15-1.webp", "article15-2.webp"]
   },
   {
     "id": 16,
@@ -205,7 +295,12 @@
     "discount_percent": 20,
     "category": "Accessoire",
     "sizes": ["L", "XL"],
-    "sexe": "Unisexe"
+    "sexe": "Unisexe",
+    "dateAdded": "2025-03-25T16:30:00Z",
+    "collectionId": 3,
+    "availableColors": ["noir", "marron", "taupe"],
+    "stockQuantity": 47,
+    "secondaryImages": ["article16-1.webp"]
   },
   {
     "id": 17,
@@ -218,7 +313,12 @@
     "discount_percent": 20,
     "category": "Tshirt",
     "sizes": ["S", "M", "XL"],
-    "sexe": "Homme"
+    "sexe": "Homme",
+    "dateAdded": "2025-03-28T11:15:00Z",
+    "collectionId": 1,
+    "availableColors": ["noir", "gris", "blanc"],
+    "stockQuantity": 33,
+    "secondaryImages": ["article17-1.webp"]
   },
   {
     "id": 18,
@@ -231,7 +331,12 @@
     "discount_percent": 20,
     "category": "Tshirt",
     "sizes": ["S", "M", "XL"],
-    "sexe": "Homme"
+    "sexe": "Homme",
+    "dateAdded": "2025-04-01T14:25:00Z",
+    "collectionId": 1,
+    "availableColors": ["bleu marine", "blanc", "rouge"],
+    "stockQuantity": 27,
+    "secondaryImages": ["article18-1.webp", "article18-2.webp"]
   },
   {
     "id": 19,
@@ -244,11 +349,16 @@
     "discount_percent": 20,
     "category": "Tshirt",
     "sizes": ["S", "M", "XL"],
-    "sexe": "Homme"
+    "sexe": "Homme",
+    "dateAdded": "2025-04-05T10:40:00Z",
+    "collectionId": 1,
+    "availableColors": ["noir", "blanc", "gris anthracite"],
+    "stockQuantity": 19,
+    "secondaryImages": ["article19-1.webp"]
   },
   {
     "id": 20,
-    "title": "Article Title 18",
+    "title": "Article Title 20",
     "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     "image": "hero.webp",
     "link": "#",
@@ -257,6 +367,11 @@
     "discount_percent": 20,
     "category": "Tshirt",
     "sizes": ["S", "M", "XL"],
-    "sexe": "Homme"
+    "sexe": "Homme",
+    "dateAdded": "2025-04-10T16:20:00Z",
+    "collectionId": 1,
+    "availableColors": ["noir", "blanc", "rouge bordeaux"],
+    "stockQuantity": 8,
+    "secondaryImages": ["article20-1.webp", "article20-2.webp"]
   }
 ] 

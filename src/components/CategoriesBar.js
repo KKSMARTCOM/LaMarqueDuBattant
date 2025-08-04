@@ -15,7 +15,7 @@ function generateCategoriesFromArticles(articles) {
   // Retourne un tableau d'objets { type, stock }
   const categories = Object.entries(map).map(([type, stock]) => ({ type, stock }));
   // Ajoute la catégorie ALL en premier
-  return [{ type: 'ALL', stock: articles.length }, ...categories];
+  return [{ type: 'Tout', stock: articles.length }, ...categories];
 }
 
 export default function CategoriesBar({ show }) {
@@ -40,7 +40,7 @@ export default function CategoriesBar({ show }) {
     }
     
     // Si ce n'est pas 'ALL', ajouter le paramètre categorie
-    if (categoryType && categoryType !== 'ALL') {
+    if (categoryType && categoryType !== 'Tout') {
       newSearchParams.set('categorie', categoryType.toLowerCase());
     }
     
@@ -62,7 +62,7 @@ export default function CategoriesBar({ show }) {
               key={cat.type}
               className={
                 "relative cursor-pointer text-xs sm:text-sm font-extralight transition-colors duration-200 " +
-                (currentCategory === cat.type.toLowerCase() || (!currentCategory && cat.type === 'ALL') 
+                (currentCategory === cat.type.toLowerCase() || (!currentCategory && cat.type === 'Tout') 
                   ? "text-white" 
                   : "text-gray-300 hover:text-white")
               }
@@ -70,7 +70,7 @@ export default function CategoriesBar({ show }) {
             >
               {cat.type}
               <span className="ml-1 text-[10px] text-gray-400 font-thin">{cat.stock}</span>
-              {(currentCategory === cat.type.toLowerCase() || (!currentCategory && cat.type === 'ALL')) && (
+              {(currentCategory === cat.type.toLowerCase() || (!currentCategory && cat.type === 'Tout')) && (
                 <span className="absolute left-0 -bottom-2 w-full h-0.5 bg-white rounded transition-all duration-200" />
               )}
             </li>

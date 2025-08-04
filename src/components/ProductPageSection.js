@@ -24,7 +24,9 @@ export default function ProductPageSection() {
     tailles: [],
     sexe: '',
     priceMin: undefined,
-    priceMax: undefined
+    priceMax: undefined,
+    nouveau: false,
+    collections: []
   });
   
   // Mise à jour d'un filtre spécifique et synchronisation avec l'URL
@@ -58,18 +60,29 @@ export default function ProductPageSection() {
   
   // Appliquer les filtres quand ils changent
   useEffect(() => {
-    if (articles && articles.length > 0) {
-      const filtered = filtrer({
-        categorie: filters.categorie,
-        remises: filters.remises,
-        tailles: filters.tailles,
-        sexe: filters.sexe,
-        prixMin: filters.priceMin,
-        prixMax: filters.priceMax
-      }, articles);
-      
-      setFilteredArticles(filtered);
-    }
+    const applyFilters = async () => {
+      if (articles && articles.length > 0) {
+        try {
+          const filtered = await filtrer({
+            categorie: filters.categorie,
+            remises: filters.remises,
+            tailles: filters.tailles,
+            sexe: filters.sexe,
+            prixMin: filters.priceMin,
+            prixMax: filters.priceMax,
+            nouveau: filters.nouveau || false,
+            collections: filters.collections || []
+          }, articles);
+          
+          setFilteredArticles(filtered);
+        } catch (error) {
+          console.error('Erreur lors du filtrage des articles:', error);
+          setFilteredArticles(articles); // En cas d'erreur, afficher tous les articles
+        }
+      }
+    };
+    
+    applyFilters();
   }, [filters, articles]);
   
   // Initialiser les filtres depuis l'URL au chargement
@@ -78,26 +91,26 @@ export default function ProductPageSection() {
     const params = new URLSearchParams(searchParams.toString());
     
     // Fonction pour parser les valeurs des paramètres
-    const parseParam = (value) => {
-      if (value === 'undefined' || value === '') return undefined;
-      if (value === 'true') return true;
-      if (value === 'false') return false;
-      if (!isNaN(Number(value))) return Number(value);
-      return value;
-    };
+    //const parseParam = (value) => {
+    //  if (value === 'undefined' || value === '') return undefined;
+    //  if (value === 'true') return true;
+    //  if (value === 'false') return false;
+    //  if (!isNaN(Number(value))) return Number(value);
+    //  return value;
+    //};
     
     // Mettre à jour les filtres avec les valeurs de l'URL
     const newFilters = { ...filters };
     let hasChanges = false;
     
     // Liste des clés de filtre valides
-    const validFilterKeys = ['categorie', 'sexe', 'remises', 'tailles', 'priceMin', 'priceMax'];
+    const validFilterKeys = ['categorie', 'sexe', 'remises', 'tailles', 'priceMin', 'priceMax', 'nouveau', 'collections'];
     
     // Mettre à jour chaque filtre valide présent dans l'URL
     validFilterKeys.forEach(key => {
       // Vérifier si le paramètre est présent dans l'URL (même s'il est vide)
       if (params.has(key)) {
-        if (key === 'remises' || key === 'tailles') {
+        if (key === 'remises' || key === 'tailles' || key === 'collections') {
           // Pour les tableaux, séparer par les virgules
           const newValue = params.get(key) ? params.get(key).split(',').map(v => v.trim()) : [];
           if (JSON.stringify(newValue) !== JSON.stringify(newFilters[key])) {
@@ -194,7 +207,7 @@ export default function ProductPageSection() {
 
   return (
     <>
-      <section ref={sectionRef} className="w-full border-t bg-white pl-2 pr-2 sm:pl-4 sm:pr-4 lg:pl-8 lg:pr-11 pt-8 pb-8 mt-24" style={{ fontFamily: 'Commissioner, sans-serif' }}>
+      <section ref={sectionRef} className="w-full border-t bg-white pl-2 pr-2 sm:pl-4 sm:pr-4 lg:pl-8 lg:pr-11 pt-8 pb-8 mt-8" style={{ fontFamily: 'Commissioner, sans-serif' }}>
       {/* Header section */}
       <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-6 sticky top-0 z-20 bg-white">
         <div className="flex items-center gap-3">
@@ -301,19 +314,35 @@ export default function ProductPageSection() {
         )}
       </div>
       {/* Partie CTA */}
-      <div className="backdrop-blur-sm max-w-5xl mx-auto w-full border border-gray-300 my-8  h-80 sm:h-80 flex flex-col items-center text-center bg-black bg-no-repeat bg-center bg-cover"
-        style={{ backgroundImage: `url(${getImagePath('Clothing-Canyon.png', 'cover')})`,
-        filter: 'grayscale(100%)', }}
+      <div className="w-full">
+      <div className=" backdrop-blur-sm max-w-5xl mx-auto w-full border border-gray-300 my-8  h-80 sm:h-80 flex flex-col items-center text-center bg-black bg-no-repeat bg-center bg-cover"
+            style={{
+              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${getImagePath('Clothing-Canyon.png', 'cover')})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              minHeight: '20rem',
+              filter: 'grayscale(40%)',
+            }}
       > 
-        <div className="bg-black/40 h-full flex flex-col items-center justify-center">
-        <h3 className=" text-white text-xl sm:text-2xl md:text-3xl font-semibold mb-2">Inscrivez-vous a notre newsletter pour être informé des dernières nouveautés. </h3>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 py-10 sm:py-14 lg:py-16">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+            Ne manquez rien de nos collections
+          </h2>
+          <p className="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
+            Inscrivez-vous à notre newsletter pour être informé en avant-première des nouvelles arrivées, offres exclusives et événements spéciaux.
+          </p>
         <form className="flex flex-col justify-center sm:flex-row gap-3 sm:gap-4 w-full max-w-xs sm:max-w-none mx-auto px-4">
-          <input type="email" name="email" id="email" placeholder="Adresse e-mail" className=" bg-black/40 w-full sm:w-auto px-6 py-2 border border-gray-300 text-white font-medium hover:border-black transition" />
+          <input type="email" name="email" id="email" placeholder="Adresse e-mail" className="bg-black/40 w-full sm:w-auto px-6 py-2 border border-gray-300 text-white font-medium hover:border-black transition" />
           <button type="submit" className="w-full sm:w-auto px-6 py-2 bg-black text-white font-medium hover:bg-white hover:text-black hover:border transition">Envoyé</button>
         </form>
+        <p className="mt-4 text-sm text-gray-300">
+          En vous inscrivant, vous acceptez notre politique de confidentialité.
+        </p>
         </div>
       </div>
-      
+      </div>      
       <style jsx>{`
         @keyframes fadeIn {
           from { opacity: 0; } to { opacity: 1; }

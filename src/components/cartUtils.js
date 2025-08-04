@@ -118,12 +118,20 @@ export async function addToCartById(id, size, quantity = 1) {
     const article = articles.find(a => a.id === id);
     if (!article) return "Article introuvable";
     if (!article.sizes || !article.sizes.includes(size)) return "Taille non disponible";
+    // Calculer le prix réduit si une réduction est appliquée
+    const hasDiscount = article.discount_percent > 0;
+    const discountedPrice = hasDiscount 
+      ? Math.round(article.price * (1 - article.discount_percent / 100))
+      : article.price;
+
     // Construire l'objet à ajouter
     const item = {
       id: article.id,
       title: article.title,
       image: article.image,
-      price: article.price,
+      price: discountedPrice, // Utiliser le prix réduit comme prix principal
+      oldPrice: hasDiscount ? article.price : null, // Stocker l'ancien prix si réduction
+      discountPercent: hasDiscount ? article.discount_percent : 0, // Pourcentage de réduction
       size,
     };
     // Lire le panier actuel

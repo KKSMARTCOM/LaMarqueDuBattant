@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ProductPageSection from "../components/ProductPageSection";
+import CTACollection from "../components/CTACollection";
 
 export default function Produit() {
   const [searchParams] = useSearchParams();
@@ -20,6 +21,7 @@ export default function Produit() {
         selectedCategory={categoryFromUrl} 
         onCategorySelect={handleCategorySelect} 
       />
+      <CTACollection />
       <ProductPageSection />
       <Footer />
     </div>

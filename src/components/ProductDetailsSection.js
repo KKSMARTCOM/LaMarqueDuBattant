@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react";
 import getImagePath from "./getImagePath";
 import { addToCartById } from "./cartUtils";
+import { isNewProduct } from "../utils/priceUtils";
 
 // --- Composant principal ---
 export default function ProductDetailsSection({ product }) {
@@ -44,15 +45,22 @@ export default function ProductDetailsSection({ product }) {
       style={{ overscrollBehavior: 'none' }}
     >
       {/* --- Colonne gauche : image produit (background cover) --- */}
-      <div
-        className="w-full lg:flex-[1.2] h-64 lg:h-full"
-        style={{
-          backgroundImage: `url(${getImagePath(images[currentImg], "products")})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat"
-        }}
-      ></div>
+      <div className="w-full lg:flex-[1.2] h-64 lg:h-full relative">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage: `url(${getImagePath(images[currentImg], "products")})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat"
+          }}
+        ></div>
+        {isNewProduct(product.dateAdded) && (
+          <div className="absolute top-4 right-4 bg-black text-white text-xs font-medium px-2 py-1">
+            NOUVEAU
+          </div>
+        )}
+      </div>
 
       {/* --- Colonne droite : détails produit --- */}
       <div className="flex-1 lg:h-full bg-white flex items-center justify-center overflow-hidden w-full">
@@ -79,9 +87,25 @@ export default function ProductDetailsSection({ product }) {
             <span className="text-2xl sm:text-4xl text-left font-sans font-bold mb-0">{product.title}</span>
           </div>
 
-          {/* --- Prix --- */}
-          <div className="flex items-center  mb-2">
-            <span className="text-sm sm:text-2xl font-extralight text-left">${product.price}</span>
+          {/* --- Prix avec réduction --- */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mb-2">
+            {product.discount_percent > 0 ? (
+              <div className="flex items-center gap-2">
+                <span className="text-xs sm:text-2xl font-extralight text-black">
+                  {Math.round(product.price * (1 - product.discount_percent / 100))} FCFA
+                </span>
+                <span className="text-xs sm:text-xl text-gray-500 line-through">
+                  {product.price} FCFA
+                </span>
+                <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded">
+                  -{product.discount_percent}%
+                </span>
+              </div>
+            ) : (
+              <span className="text-xs sm:text-2xl font-extralight">
+                {product.price} FCFA
+              </span>
+            )}
           </div>
 
           {/* --- Description courte --- */}
