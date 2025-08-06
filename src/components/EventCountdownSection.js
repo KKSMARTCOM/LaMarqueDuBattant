@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { FiCalendar, FiMapPin, FiArrowRight, FiClock, FiArrowLeft } from 'react-icons/fi';
 import getImagePath from './getImagePath';
-import { FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
 
 const calculateCountdown = (targetDate) => {
     const now = new Date().getTime();
@@ -21,100 +22,248 @@ const calculateCountdown = (targetDate) => {
   };
     
 
+const CountdownItem = ({ value, label }) => (
+  <div className="flex flex-col items-center">
+    <motion.div 
+      className="text-3xl md:text-4xl font-bold bg-transparent text-white w-20 h-20 md:w-24 md:h-24 flex items-center justify-center mb-2"
+      initial={{ scale: 0.9, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ type: 'spring', stiffness: 100 }}
+      key={value}
+    >
+      {String(value).padStart(2, '0')}
+    </motion.div>
+    <span className="text-sm text-white/80 font-medium">{label}</span>
+  </div>
+);
+
 const EventCountdownSection = ({ event = {} }) => {
-    const [countdown, setCountdown] = useState(calculateCountdown(event.date));
-  
-    useEffect(() => {
-      const timer = setInterval(() => {
-        setCountdown(calculateCountdown(event.date));
-      }, 1000);
-  
-      return () => clearInterval(timer);
-    }, [event.date]);
+  const [countdown, setCountdown] = useState(calculateCountdown(event.date));
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
-    return (
-    <section className="w-full min-h-screen flex items-center justify-center bg-white px-6 py-16 font-sans">
-      <div className="max-w-6xl w-full flex flex-col md:flex-row gap-10">
-        {/* Colonne gauche */}
-        <div className="flex-1 space-y-6 text-left">
-          <Link to="/events" className="text-sm text-gray-600 block text-left">&lt; Tous les événements</Link>
-          <h1 className="text-4xl font-bold text-left">{event.titre}</h1>
-          <p className="text-gray-700 text-left">{event.description}</p>
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown(calculateCountdown(event.date));
+    }, 1000);
 
-          <div className="flex items-center gap-4 justify-start">
-            <p className="font-semibold flex items-center gap-2">
-              <FaCalendarAlt className="mr-2" />
-              {new Date(event.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-              {event.placesLeft > 0 && (
-                <span className="bg-gray-200 text-sm font-bold px-2 py-1 rounded ml-2">
-                  {event.placesLeft} {event.placesLeft > 1 ? 'places restantes' : 'place restante'} !
-                </span>
-              )}
-            </p>
+    return () => clearInterval(timer);
+  }, [event.date]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!email) return;
+    
+    setIsSubmitting(true);
+    // Simuler une requête API
+    setTimeout(() => {
+      setIsSuccess(true);
+      setEmail('');
+      setIsSubmitting(false);
+      // Réinitialiser le message de succès après 5 secondes
+      setTimeout(() => setIsSuccess(false), 5000);
+    }, 1500);
+  };
+
+  const formatDate = (dateString) => {
+    const options = { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    return new Date(dateString).toLocaleDateString('fr-FR', options);
+  };
+
+  return (
+    <section className="w-full py-16 md:py-24 px-0 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50">
+      <div className=" mx-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 border border-gray-200">
+
+          {/* Colonne droite - Compte à rebours */}
+          <motion.div 
+            className="bg-black p-8  shadow-left-xl border border-gray-100 h-fit"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-4">
+                <FiClock className="text-white text-2xl" />
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">
+                {countdown.isPast ? "L'événement est terminé" : "L'événement commence dans"}
+              </h2>
+              <p className="text-white/80">
+                {countdown.isPast 
+                  ? 'Merci à tous les participants !' 
+                  : 'Ne manquez pas cet événement exceptionnel'}
+              </p>
+            </div>
+
+            {!countdown.isPast && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <CountdownItem value={countdown.days} label="Jours" />
+                <CountdownItem value={countdown.hours} label="Heures" />
+                <CountdownItem value={countdown.minutes} label="Minutes" />
+                <CountdownItem value={countdown.seconds} label="Secondes" />
+              </div>
+            )}
+
+            {countdown.isPast && (
+              <motion.div 
+                className="mt-8 p-4 bg-white/10 border border-white/20 text-white  text-center"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                <p className="font-medium">Cet événement est terminé</p>
+                <p className="text-sm mt-1 opacity-80">Restez à l'écoute pour nos prochains événements !</p>
+              </motion.div>
+            )}
+
+            {/* Image de l'événement */}
+            {event.image && (
+              <motion.div 
+                className="mt-8 overflow-hidden shadow-md"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <img
+                  src={getImagePath(event.image, 'events')}
+                  alt={event.titre}
+                  className="w-full h-64 md:h-80 object-cover"
+                />
+              </motion.div>
+            )}
+          </motion.div>
+
+          {/* Colonne gauche - Informations de l'événement */}
+          <div className="space-y-8 p-8">
+            <Link 
+              to="/events" 
+              className="inline-flex items-left justify-left text-left text-gray-600 hover:text-black transition-colors text-sm font-medium group"
+            >
+              <FiArrowLeft className="mr-2 text-left justify-left transition-transform group-hover:-translate-x-1" />
+              Retour aux événements
+            </Link>
+
+            <motion.div 
+              className="space-y-6 text-center "
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className=" justify-center items-center text-center w-full">
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+                  {event.titre}
+                </h1>
+                <p className="text-gray-600 mt-3 text-lg">
+                  {event.description}
+                </p>
+              </div>
+
+              <div className="space-y-4 text-center  justify-center items-center">
+                <div className="flex items-center space-x-3 justify-center">
+                  <div className="mt-1 text-gray-500 text-center flex flex-row">
+                    <FiCalendar size={20} />
+                    <p className="font-bold mx-1 text-gray-700 text-left">Date et heure :</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600 text-left">{formatDate(event.date)}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3 justify-center">
+                  <div className="mt-1 text-gray-500 flex flex-row">
+                    <FiMapPin size={20} />
+                    <p className="font-bold mx-1 text-gray-700 text-left">Lieu :</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600 text-left">{event.lieu}</p>
+                  </div>
+                </div>
+
+                {event.placesLeft > 0 && (
+                  <div className="flex items-center space-x-3 justify-center">
+                    <div className="mt-1 text-gray-500 flex flex-row">
+                      <FiCalendar size={20} />
+                      <p className="font-bold mx-1 text-gray-700 text-left">Places disponibles :</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600 text-left">
+                        <span className="font-semibold text-indigo-600">{event.placesLeft}</span> {event.placesLeft > 1 ? 'places restantes' : 'place restante'}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                <div className="flex items-center space-x-3 justify-center">
+                    <div>
+                      <p className="text-gray-600 text-center">
+                        <span className="font-semibold text-center text-gray-600">{event.schedule}</span> 
+                      </p>
+                    </div>
+                  </div>
+              </div>
+
+              {/* Formulaire de réservation */}
+              <div className="pt-4">
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Réservez votre place</h3>
+                
+                {isSuccess ? (
+                  <motion.div 
+                    className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    Votre demande de réservation a bien été enregistrée !
+                  </motion.div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Votre adresse email"
+                        className="w-full px-4 py-3 border border-gray-300  focus:ring-2 focus:ring-black focus:border-transparent transition"
+                        required
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className={`flex items-center justify-center w-full px-6 py-3 text-white font-medium transition-colors ${
+                        isSubmitting 
+                          ? 'bg-black cursor-not-allowed' 
+                          : 'bg-black hover:bg-black/80'
+                      }`}
+                    >
+                      {isSubmitting ? (
+                        'Traitement...'
+                      ) : (
+                        <>
+                          Réserver ma place
+                          <FiArrowRight className="ml-2" />
+                        </>
+                      )}
+                    </button>
+                  </form>
+                )}
+                
+                <p className="text-xs text-gray-600 mt-4">
+                  En cliquant sur Réservez ma place, vous confirmez que vous acceptez nos Conditions Générales.
+                </p>
+              </div>
+            </motion.div>
           </div>
-          <p className="font-semibold flex items-center gap-1 mt-2">
-            <FaMapMarkerAlt className="mr-2" />
-            {event.lieu}
-          </p>
 
-          {/* Compte à rebours */}
-          {/* Badge si événement passé */}
-          {countdown.isPast && (
-            <div className="inline-block px-3 py-1 text-sm bg-red-100 text-red-700 font-bold rounded">
-              Événement passé
-            </div>
-          )}
-
-          {/* Compte à rebours */}
-          <div className="flex items-center justify-between border border-gray-300 p-4 w-full max-w-md">
-            <div className="text-center px-2">
-              <p className="text-2xl font-bold">{String(countdown.days).padStart(2, '0')}</p>
-              <p className="text-sm text-gray-700">Jours</p>
-            </div>
-            <span className="text-gray-400">|</span>
-            <div className="text-center px-2">
-              <p className="text-2xl font-bold">{String(countdown.hours).padStart(2, '0')}</p>
-              <p className="text-sm text-gray-700">Heures</p>
-            </div>
-            <span className="text-gray-400">|</span>
-            <div className="text-center px-2">
-              <p className="text-2xl font-bold">{String(countdown.minutes).padStart(2, '0')}</p>
-              <p className="text-sm text-gray-700">Minutes</p>
-            </div>
-            <span className="text-gray-400">|</span>
-            <div className="text-center px-2">
-              <p className="text-2xl font-bold">{String(countdown.seconds).padStart(2, '0')}</p>
-              <p className="text-sm text-gray-700">Secondes</p>
-            </div>
-          </div>
-
-          {/* Formulaire */}
-          <div className="flex flex-col sm:flex-row gap-2 max-w-md">
-            <input
-              type="email"
-              placeholder="Entrez votre email"
-              className="border border-gray-300 px-4 py-2 w-full"
-            />
-            <button className="bg-black border border-black text-white px-6 py-2 whitespace-nowrap hover:bg-white hover:text-black  transition-colors duration-200">
-              Réservez ma place
-            </button>
-          </div>
-
-          <p className="text-xs text-gray-600 max-w-md">
-            En cliquant sur Réservez ma place, vous confirmez que vous acceptez nos Conditions Générales.
-          </p>
+          
         </div>
-
-        {/* Colonne droite */}
-        {event.image && (
-          <div className="flex-1">
-            <img
-              src={getImagePath(event.image, 'events')}
-              alt={event.titre || 'Événement'}
-              className="w-full h-full object-cover "
-            />
-          </div>
-        )}
       </div>
     </section>
   );

@@ -1,105 +1,204 @@
-import React from 'react';
+import React, { useState, useEffect, } from 'react';
+import getImagePath from './getImagePath';
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from 'react-icons/fa';
 
-const contributors = [
-  {
-    name: "Jean Dupont",
-    role: "Directeur Marketing, Marque X"
-  },
-  {
-    name: "Marie Curie",
-    role: "Responsable Événements, Marque Y"
-  },
-  {
-    name: "Paul Martin",
-    role: "Coordinateur de Projet"
-  }
-];
+const EventsDetailsSection = ({ event }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-const EventsDetailsSection = () => {
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === event.gallery.length - 1 ? prevIndex : prevIndex + 1
+    );
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === 0 ? 0 : prevIndex - 1
+    );
+  };
+
+  // Gestion du clavier pour la navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowRight') {
+        nextImage();
+      } else if (e.key === 'ArrowLeft') {
+        prevImage();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentImageIndex]);
+  if (!event) return null;
+  const contributors = event.contributors || [];
+  
   return (
-    <section className="w-full min-h-screen bg-white px-6 py-12 font-sans">
-      <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
-        {/* Contenu principal */}
-        <article className="md:col-span-2 space-y-8">
-          <div>
-            <h1 className="text-2xl font-bold mb-4 text-left">Description</h1>
-            <p className="text-gray-800 text-left mb-4">
-              Mi tincidunt elit, id quisque ligula ac diam, amet. Vel etiam suspendisse morbi eleifend faucibus eget
-              vestibulum felis. Cotiun quis montes, sit sit. Tellus aliquam enim urna, etiam. Mauris posuere vulputate arcu
-              amet, vitae nisi, tellus tincidunt. At feugiat sapien varius id.
-            </p>
-            <p className="text-gray-800 text-left">
-              Eget quis mi enim, leo lacinia pharetra, semper. Eget in volutpat mollis at volutpat lectus velit, sed auctor.
-              Porttitor fames arcu quis fusce augue enim. Quis at habitant diam at. Suscipit tristique risus, at donec. In
-              turpis vel et quam imperdiet. Ipsum molestie aliquet sodales id est ac volutpat.
-            </p>
-          </div>
-
-          {/* Image + légende */}
-          <div className="flex flex-col items-center    ">
-            <div className="w-full h-60 bg-gray-300 flex items-center justify-center">
-              <img src="" alt="" />
-            </div>
-            <p className="text-xs text-gray-500 text-left justify-start mt-1">| Image caption goes here</p>
-          </div>
-
-          {/* Blockquote */}
-          <blockquote className="border-l-4 border-gray-400 pl-4 italic font-bold text-gray-700">
-            “Ipsum sit mattis nulla quam nulla. Gravida id gravida ac enim mauris id. Non pellentesque congue eget consectetur turpis.
-            Sapien, dictum molestie sem tempor. Diam elit, orci, tincidunt aenean tempus.”
-          </blockquote>
-
-        </article>
-        {/* Sidebar */}
-        <aside className="space-y-10">
-          {/* Contributeurs */}
-          <div className="space-y-4">
-            <h3 className=" text-left text-lg font-semibold">Contributeurs</h3>
-            {contributors.map((person, idx) => (
-              <div key={idx} className="flex items-start gap-3">
-                <div className="w-10 h-10 bg-gray-200 rounded-full">
-                    <img src="" alt="" />
+    <section className="w-full bg-white py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          {/* Main Content */}
+          <article className="lg:col-span-2 space-y-10">
+            {/* Description Section */}
+            <div className="bg-white p-8 shadow-sm border border-gray-100">
+              <h2 className="text-3xl font-bold text-left text-gray-900 mb-6 pb-4 border-b border-gray-100">
+                À propos de l'événement
+              </h2>
+              {event.fullDescription ? (
+                <div className="prose prose-lg text-gray-600 max-w-none">
+                  {event.fullDescription.split('\n\n').map((paragraph, index) => (
+                    <p key={index} className="mb-6 leading-relaxed">
+                      {paragraph}
+                    </p>
+                  ))}
                 </div>
-                <div>
-                  <p className="font-medium text-left">{person.name}</p>
-                  <p className="text-sm text-left text-gray-600">{person.role}</p>
+              ) : (
+                <p className="text-gray-500 italic">Aucune description détaillée disponible pour cet événement.</p>
+              )}
+            </div>
+
+            {/* Gallery Section */}
+            {event.gallery && event.gallery.length > 0 && (
+              <div className="bg-white p-8 shadow-sm border border-gray-100">
+                <h3 className="text-3xl font-bold text-gray-900 mb-6 pb-4 border-b border-gray-100 text-left">Galerie</h3>
+                <div className="relative">
+                  {/* Image courante */}
+                  <div className="relative overflow-hidden  mb-4">
+                    <img
+                      src={getImagePath(event.gallery[currentImageIndex].image, 'events')}
+                      alt={event.gallery[currentImageIndex].caption || `Image ${currentImageIndex + 1} de la galerie`}
+                      className="w-full h-96 object-cover"
+                    />
+                    {event.gallery[currentImageIndex].caption && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-4">
+                        <p className="text-sm">{event.gallery[currentImageIndex].caption}</p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Navigation */}
+                  <div className="flex items-center justify-between mt-4">
+                    <button
+                      onClick={prevImage}
+                      disabled={currentImageIndex === 0}
+                      className={`p-2 rounded-full ${currentImageIndex === 0 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
+                      aria-label="Image précédente"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    
+                    {/* Pagination */}
+                    <div className="flex space-x-2">
+                      {event.gallery.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentImageIndex(index)}
+                          className={`h-2 w-2 rounded-full ${currentImageIndex === index ? 'bg-black' : 'bg-gray-300'}`}
+                          aria-label={`Aller à l'image ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+                    
+                    <button
+                      onClick={nextImage}
+                      disabled={currentImageIndex === event.gallery.length - 1}
+                      className={`p-2 rounded-full ${currentImageIndex === event.gallery.length - 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
+                      aria-label="Image suivante"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
+            )}
+
+            {/* Quote Section */}
+            {event.quote && (
+              <div className="bg-gradient-to-r from-black/10 to-black/5 p-8 border border-blue-100">
+                <blockquote className="text-xl italic text-gray-700 relative pl-8">
+                  <span className="absolute left-0 top-0 text-5xl text-black font-serif">"</span>
+                  <p className="relative z-10">{event.quote}</p>
+                  <span className="absolute ml-6 right-0 bottom-0 text-5xl text-black font-serif">"</span>
+                </blockquote>
+              </div>
+            )}
+          </article>
+          {/* Sidebar */}
+          <aside className="space-y-8">
+            {/* Contributeurs Card */}
+            <div className="bg-white p-6 shadow-sm border border-gray-100">
+              <h3 className="text-xl font-bold text-gray-900 mb-4 pb-3 border-b border-gray-100">
+                Équipe d'organisation
+              </h3>
+              {contributors.length > 0 ? (
+                <div className="space-y-4">
+                  {contributors.map((person, idx) => (
+                    <div key={idx} className="flex items-center gap-4 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                      <div className="flex-shrink-0 w-12 h-12 bg-gray-100 rounded-full overflow-hidden">
+                        <img 
+                          src={person.avatar ? getImagePath(person.avatar, 'events') : getImagePath('user.png', 'events')} 
+                          alt={person.name} 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = getImagePath('user.png', 'events');
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900 text-left">{person.name}</p>
+                        <p className="text-sm text-gray-500 text-left">{person.role}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-sm italic">Aucun contributeur renseigné.</p>
+              )}
+            </div>
 
           
 
-          {/* Partager */}
-          <div>
-            <h3 className="text-lg font-semibold mb-2 text-left">Partager</h3>
-            <div className="flex gap-4 text-gray-600 text-xl text-center">
-              <a href="#" className="text-white hover:text-gray-100">
-              <svg class="w-6 h-6 text-black dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M13.135 6H15V3h-1.865a4.147 4.147 0 0 0-4.142 4.142V9H7v3h2v9.938h3V12h2.021l.592-3H12V6.591A.6.6 0 0 1 12.592 6h.543Z" clip-rule="evenodd"/>
-              </svg>
-              </a>
-              <a href="#" className="text-white hover:text-gray-100">
-              <svg class="w-6 h-6 text-black dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M12.51 8.796v1.697a3.738 3.738 0 0 1 3.288-1.684c3.455 0 4.202 2.16 4.202 4.97V19.5h-3.2v-5.072c0-1.21-.244-2.766-2.128-2.766-1.827 0-2.139 1.317-2.139 2.676V19.5h-3.19V8.796h3.168ZM7.2 6.106a1.61 1.61 0 0 1-.988 1.483 1.595 1.595 0 0 1-1.743-.348A1.607 1.607 0 0 1 5.6 4.5a1.601 1.601 0 0 1 1.6 1.606Z" clip-rule="evenodd"/>
-                <path d="M7.2 8.809H4V19.5h3.2V8.809Z"/>
-              </svg>
-              </a>
-              <a href="#" className="text-white hover:text-gray-100">
-              <svg class="w-6 h-6 text-black dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <path fill="currentColor" fill-rule="evenodd" d="M3 8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8Zm5-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H8Zm7.597 2.214a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2h-.01a1 1 0 0 1-1-1ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z" clip-rule="evenodd"/>
-              </svg>
-              </a>
-              <a href="#" className="text-white hover:text-gray-100">
-              <svg class="w-6 h-6 text-black dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M13.795 10.533 20.68 2h-3.073l-5.255 6.517L7.69 2H1l7.806 10.91L1.47 22h3.074l5.705-7.07L15.31 22H22l-8.205-11.467Zm-2.38 2.95L9.97 11.464 4.36 3.627h2.31l4.528 6.317 1.443 2.02 6.018 8.409h-2.31l-4.934-6.89Z"/>
-              </svg>
-              </a>
+            {/* Partager Card */}
+            <div className="bg-white  p-6 shadow-sm border border-gray-100">
+              <h3 className="text-xl font-bold text-gray-900 mb-4 pb-3 border-b border-gray-100">
+                Partager l'événement
+              </h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Partagez cet événement avec vos amis et vos proches !
+              </p>
+              <div className="flex gap-3 items-center justify-center">
+                <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors" aria-label="Partager sur Facebook">
+                  <FaFacebookF className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-sky-500 text-white hover:bg-sky-600 transition-colors" aria-label="Partager sur Twitter">
+                  <FaTwitter className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-700 text-white hover:bg-blue-800 transition-colors" aria-label="Partager sur LinkedIn">
+                  <FaLinkedinIn className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-green-500 text-white hover:bg-green-600 transition-colors" aria-label="Partager sur WhatsApp">
+                  <FaWhatsapp className="w-4 h-4" />
+                </a>
+              </div>
             </div>
-          </div>
-        </aside>
 
-        
+            {/* CTA Card */}
+            <div className="bg-gradient-to-br from-black/50 to-black  p-6 text-white">
+              <h3 className="text-xl font-bold mb-3">Intéressé(e) ?</h3>
+              <p className="text-blue-100 text-sm mb-4">
+                Réservez votre place dès maintenant pour ne pas manquer cet événement exceptionnel.
+              </p>
+              <button className="w-full bg-white text-black font-semibold py-2 px-4  hover:bg-blue-50 transition-colors">
+                S'inscrire
+              </button>
+            </div>
+          </aside>
+        </div>
       </div>
     </section>
   );

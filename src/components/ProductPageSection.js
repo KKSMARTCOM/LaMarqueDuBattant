@@ -5,7 +5,6 @@ import FilterBar from "./FilterBar";
 import ProductCard from "./ProductCard";
 import { useSearchParams } from "react-router-dom";
 import useArticles from '../hooks/useArticles';
-import getImagePath from "./getImagePath";
 
 export default function ProductPageSection() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -90,75 +89,67 @@ export default function ProductPageSection() {
     // Créer un nouvel objet URLSearchParams à partir de searchParams
     const params = new URLSearchParams(searchParams.toString());
     
-    // Fonction pour parser les valeurs des paramètres
-    //const parseParam = (value) => {
-    //  if (value === 'undefined' || value === '') return undefined;
-    //  if (value === 'true') return true;
-    //  if (value === 'false') return false;
-    //  if (!isNaN(Number(value))) return Number(value);
-    //  return value;
-    //};
-    
-    // Mettre à jour les filtres avec les valeurs de l'URL
-    const newFilters = { ...filters };
-    let hasChanges = false;
-    
-    // Liste des clés de filtre valides
-    const validFilterKeys = ['categorie', 'sexe', 'remises', 'tailles', 'priceMin', 'priceMax', 'nouveau', 'collections'];
-    
-    // Mettre à jour chaque filtre valide présent dans l'URL
-    validFilterKeys.forEach(key => {
-      // Vérifier si le paramètre est présent dans l'URL (même s'il est vide)
-      if (params.has(key)) {
-        if (key === 'remises' || key === 'tailles' || key === 'collections') {
-          // Pour les tableaux, séparer par les virgules
-          const newValue = params.get(key) ? params.get(key).split(',').map(v => v.trim()) : [];
-          if (JSON.stringify(newValue) !== JSON.stringify(newFilters[key])) {
-            newFilters[key] = newValue;
+    // Utiliser la forme fonctionnelle de setFilters pour éviter la dépendance sur filters
+    setFilters(prevFilters => {
+      const newFilters = { ...prevFilters };
+      let hasChanges = false;
+      
+      // Liste des clés de filtre valides
+      const validFilterKeys = ['categorie', 'sexe', 'remises', 'tailles', 'priceMin', 'priceMax', 'nouveau', 'collections'];
+      
+      // Mettre à jour chaque filtre valide présent dans l'URL
+      validFilterKeys.forEach(key => {
+        // Vérifier si le paramètre est présent dans l'URL (même s'il est vide)
+        if (params.has(key)) {
+          if (key === 'remises' || key === 'tailles' || key === 'collections') {
+            // Pour les tableaux, séparer par les virgules
+            const newValue = params.get(key) ? params.get(key).split(',').map(v => v.trim()) : [];
+            if (JSON.stringify(newValue) !== JSON.stringify(prevFilters[key])) {
+              newFilters[key] = newValue;
+              hasChanges = true;
+            }
+          } else if (key === 'priceMin' || key === 'priceMax') {
+            // Pour les prix, convertir en nombre
+            const paramValue = params.get(key);
+            const newValue = paramValue !== null && paramValue !== '' ? Number(paramValue) : undefined;
+            if (newValue !== prevFilters[key]) {
+              newFilters[key] = newValue;
+              hasChanges = true;
+            }
+          } else if (key === 'categorie' || key === 'sexe') {
+            // Pour les chaînes simples
+            const newValue = params.get(key) || '';
+            if (newValue !== prevFilters[key]) {
+              newFilters[key] = newValue;
+              hasChanges = true;
+            }
+          }
+        } else if (key === 'categorie' || key === 'sexe') {
+          // Si le paramètre n'est pas présent dans l'URL, on le réinitialise
+          if (prevFilters[key] !== '') {
+            newFilters[key] = '';
+            hasChanges = true;
+          }
+        } else if (key === 'remises' || key === 'tailles') {
+          // Si le paramètre n'est pas présent dans l'URL, on réinitialise le tableau
+          if (prevFilters[key].length > 0) {
+            newFilters[key] = [];
             hasChanges = true;
           }
         } else if (key === 'priceMin' || key === 'priceMax') {
-          // Pour les prix, convertir en nombre
-          const paramValue = params.get(key);
-          const newValue = paramValue !== null && paramValue !== '' ? Number(paramValue) : undefined;
-          if (newValue !== newFilters[key]) {
-            newFilters[key] = newValue;
-            hasChanges = true;
-          }
-        } else if (key === 'categorie' || key === 'sexe') {
-          // Pour les chaînes simples
-          const newValue = params.get(key) || '';
-          if (newValue !== newFilters[key]) {
-            newFilters[key] = newValue;
+          // Si le paramètre n'est pas présent dans l'URL, on le réinitialise
+          if (prevFilters[key] !== undefined) {
+            newFilters[key] = undefined;
             hasChanges = true;
           }
         }
-      } else if (key === 'categorie' || key === 'sexe') {
-        // Si le paramètre n'est pas présent dans l'URL, on le réinitialise
-        if (newFilters[key] !== '') {
-          newFilters[key] = '';
-          hasChanges = true;
-        }
-      } else if (key === 'remises' || key === 'tailles') {
-        // Si le paramètre n'est pas présent dans l'URL, on réinitialise le tableau
-        if (newFilters[key].length > 0) {
-          newFilters[key] = [];
-          hasChanges = true;
-        }
-      } else if (key === 'priceMin' || key === 'priceMax') {
-        // Si le paramètre n'est pas présent dans l'URL, on le réinitialise
-        if (newFilters[key] !== undefined) {
-          newFilters[key] = undefined;
-          hasChanges = true;
-        }
-      }
+      });
+      
+      // Retourner les nouveaux filtres uniquement si nécessaire
+      return hasChanges ? newFilters : prevFilters;
     });
-    
-    // Mettre à jour les filtres uniquement si nécessaire
-    if (hasChanges) {
-      setFilters(newFilters);
-    }
-  }, [searchParams]);
+  }, [searchParams]); // On peut maintenant retirer filters des dépendances
+  
   // Ajout de l'état pour le QuickView
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [quickViewId, setQuickViewId] = useState(null);
@@ -207,7 +198,7 @@ export default function ProductPageSection() {
 
   return (
     <>
-      <section ref={sectionRef} className="w-full border-t bg-white pl-2 pr-2 sm:pl-4 sm:pr-4 lg:pl-8 lg:pr-11 pt-8 pb-8 mt-8" style={{ fontFamily: 'Commissioner, sans-serif' }}>
+      <section ref={sectionRef} className="w-full border-t bg-white pl-2 pr-2 sm:pl-4 sm:pr-4 lg:pl-8 lg:pr-11 pt-8 pb-16 mt-28" style={{ fontFamily: 'Commissioner, sans-serif' }}>
       {/* Header section */}
       <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-6 sticky top-0 z-20 bg-white">
         <div className="flex items-center gap-3">
@@ -260,7 +251,7 @@ export default function ProductPageSection() {
           />
         )}
       {/* Grille + barre de filtre */}
-      <div className="flex w-full border-b border-black/20 mb-16 pb-8 ">
+      <div className="flex w-full border-b border-black/20  pb-8 ">
         {/* Grille produits */}
         {filteredArticles.length > 0 ? (
           <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 ${showFilterBar ? 'lg:grid-cols-3' : 'lg:grid-cols-4'} gap-x-1 sm:gap-x-2 gap-y-4 flex-1 transition-all duration-300`}>
@@ -312,36 +303,6 @@ export default function ProductPageSection() {
               />
           </aside>
         )}
-      </div>
-      {/* Partie CTA */}
-      <div className="w-full">
-      <div className=" backdrop-blur-sm max-w-5xl mx-auto w-full border border-gray-300 my-8  h-80 sm:h-80 flex flex-col items-center text-center bg-black bg-no-repeat bg-center bg-cover"
-            style={{
-              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${getImagePath('Clothing-Canyon.png', 'cover')})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-              minHeight: '20rem',
-              filter: 'grayscale(40%)',
-            }}
-      > 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 py-10 sm:py-14 lg:py-16">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
-            Ne manquez rien de nos collections
-          </h2>
-          <p className="text-lg sm:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
-            Inscrivez-vous à notre newsletter pour être informé en avant-première des nouvelles arrivées, offres exclusives et événements spéciaux.
-          </p>
-        <form className="flex flex-col justify-center sm:flex-row gap-3 sm:gap-4 w-full max-w-xs sm:max-w-none mx-auto px-4">
-          <input type="email" name="email" id="email" placeholder="Adresse e-mail" className="bg-black/40 w-full sm:w-auto px-6 py-2 border border-gray-300 text-white font-medium hover:border-black transition" />
-          <button type="submit" className="w-full sm:w-auto px-6 py-2 bg-black text-white font-medium hover:bg-white hover:text-black hover:border transition">Envoyé</button>
-        </form>
-        <p className="mt-4 text-sm text-gray-300">
-          En vous inscrivant, vous acceptez notre politique de confidentialité.
-        </p>
-        </div>
-      </div>
       </div>      
       <style jsx>{`
         @keyframes fadeIn {

@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import EventsDetailsSection from "../components/EventsDetailsSection";
 import EventHero from "../components/EventHero";
 import EventCountdownSection from "../components/EventCountdownSection";
-import ImageGallerySection from "../components/ImageGallerySection";
+import Loader from "../components/Loader";
 import { useEventDetails } from "../hooks/useEventDetails";
 
 export default function DetailsEvent({ onCartClick }) {
@@ -12,11 +12,7 @@ export default function DetailsEvent({ onCartClick }) {
 
   // Affichage du chargement
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <Loader />;
   }
 
   // Affichage des erreurs
@@ -36,15 +32,14 @@ export default function DetailsEvent({ onCartClick }) {
 
   // Affichage principal
   return (
-    <div className="min-h-screen flex flex-col my-16">
+    <div className="min-h-screen flex flex-col mt-16">
       <Header opacity={100} onCartClick={onCartClick} />
       <main className="flex-grow">
         {event && (
           <>
-            {/* <EventHero event={event} /> */}
+            <EventHero event={event} />
             <EventCountdownSection event={event} />
             <EventsDetailsSection event={event} />
-            <ImageGallerySection />
           </>
         )}
       </main>

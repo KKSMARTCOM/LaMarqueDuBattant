@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import LegalModal from './LegalModal';
 import getLegalContent from '../data/legalContent';
-import { getContactInfo, getBrandInfo } from '../services/brandService';
+import { getContactInfo } from '../services/brandService';
 import Silk from './ReactbitsAnimations/Silk';
 import getImagePath from "./getImagePath";
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp , FaInstagram } from 'react-icons/fa';
+
 
 export default function Footer() {
   // État pour gérer l'affichage des modales
@@ -34,18 +36,17 @@ export default function Footer() {
   const footerRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const [contactInfo, setContactInfo] = useState(null);
-  const [brandInfo, setBrandInfo] = useState(null);
+ 
 
   // Charger les données de contact et de la marque
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [contact, brand] = await Promise.all([
+        const [contact] = await Promise.all([
           getContactInfo(),
-          getBrandInfo()
         ]);
         setContactInfo(contact);
-        setBrandInfo(brand);
+        
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error);
       }
@@ -145,23 +146,21 @@ export default function Footer() {
                   <h4 className="text-white text-sm font-medium mb-3 text-center">Suivez-nous</h4>
                   <div className="flex justify-center space-x-4">
                     {[
-                      { name: 'Instagram', icon: 'M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.9.2 2.3.4.5.2.8.4 1.2.8.4.4.6.7.8 1.2.2.4.3 1.1.4 2.3.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.9-.4 2.3-.2.5-.4.8-.8 1.2s-.7.6-1.2.8c-.4.2-1.1.3-2.3.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.9-.2-2.3-.4-.5-.2-.8-.4-1.2-.8s-.6-.7-.8-1.2c-.2-.4-.3-1.1-.4-2.3C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c.1-1.2.2-1.9.4-2.3.2-.5.4-.8.8-1.2.4-.4.7-.6 1.2-.8.4-.2 1.1-.3 2.3-.4C8.4 2.2 8.8 2.2 12 2.2zm0-2.2C8.7 0 8.3 0 7.1.1 5.9.2 5.1.3 4.5.5c-.7.2-1.3.5-1.8 1C2.2 2.2 1.9 2.8 1.7 3.5c-.2.6-.3 1.4-.4 2.6C1.2 8.3 1.2 8.7 1.2 12c0 3.3 0 3.7.1 4.9.1 1.2.2 2 .4 2.6.2.7.5 1.3 1 1.8s1.1.8 1.8 1c.6.2 1.4.3 2.6.4 1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c1.2-.1 2-.2 2.6-.4.7-.2 1.3-.5 1.8-1 .5-.5.8-1.1 1-1.8.2-.6.3-1.4.4-2.6.1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.1-1.2-.2-2-.4-2.6-.2-.7-.5-1.3-1-1.8-.5-.5-1.1-.8-1.8-1-.6-.2-1.4-.3-2.6-.4C15.7.2 15.3.2 12 .2z', path: 'M12 15.2c1.8 0 3.2-1.4 3.2-3.2S13.8 8 12 8s-3.2 1.4-3.2 3.2 1.4 3.2 3.2 3.2z' },
-                      { name: 'Facebook', icon: 'M17 2.1v3.2h2.3v3.1H17V24h-4.1V8.4h-2.1V5.3h2.1V3.7C12.9 1.2 14.1 0 16.2 0c.8 0 1.5.1 1.5.1v2z', path: '' },
-                      { name: 'Twitter', icon: 'M22.2 2.2c-.8.3-1.6.6-2.4.7.9-.5 1.6-1.3 1.9-2.3-.9.5-1.8.9-2.8 1.1-.8-.9-2-1.4-3.3-1.4-2.5 0-4.5 2-4.5 4.5 0 .3 0 .7.1 1-3.7-.2-7-2-9.2-4.7-.4.6-.6 1.3-.6 2.1 0 1.6.8 3 2 3.8-.7 0-1.4-.2-2-.5v.1c0 2.2 1.6 4 3.6 4.4-.4.1-.8.2-1.2.2-.3 0-.6 0-.9-.1.6 2 2.4 3.4 4.5 3.4-1.6 1.3-3.7 2-6 2-.4 0-.8 0-1.2-.1 2 1.3 4.4 2.1 7 2.1 8.4 0 13-7 13-13v-.6c.9-.6 1.7-1.4 2.4-2.3z', path: '' },
-                      { name: 'YouTube', icon: 'M23.5 6.2c-.3-1.2-1.2-2.1-2.4-2.4C19.1 3.2 12 3.2 12 3.2s-7.1 0-9.1.6c-1.2.3-2.1 1.2-2.4 2.4C0 8.2 0 12 0 12s0 3.8.5 5.8c.3 1.2 1.2 2.1 2.4 2.4 2 0 9.1.6 9.1.6s7.1 0 9.1-.6c1.2-.3 2.1-1.2 2.4-2.4.5-2 .5-5.8.5-5.8s0-3.8-.5-5.8zM9.5 15.5V8.5l6 3.5-6 3.5z', path: '' }
+                      { name: 'Instagram', icon: <FaInstagram className="w-5 h-5" />,link: 'https://www.instagram.com' },
+                      { name: 'Facebook', icon: <FaFacebookF className="w-5 h-5" />,link: 'https://www.facebook.com' },
+                      { name: 'Twitter', icon: <FaTwitter className="w-5 h-5" />,link: 'https://www.twitter.com' },
+                      { name: 'Linkedin', icon: <FaLinkedinIn className="w-5 h-5" />,link: 'https://www.linkedin.com' },
+                      { name: 'Whatsapp', icon: <FaWhatsapp className="w-5 h-5" />,link: 'https://www.whatsapp.com' },
                     ].map((social) => (
                       <a
                         key={social.name}
-                        href={`https://${social.name.toLowerCase()}.com`}
+                        href={social.link}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-gray-400 hover:text-white transition-colors duration-200"
                         aria-label={social.name}
                       >
-                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                          <path fillRule="evenodd" d={social.icon} clipRule="evenodd" />
-                          {social.path && <path d={social.path} />}
-                        </svg>
+                        {social.icon}
                       </a>
                     ))}
                   </div>
@@ -280,13 +279,13 @@ export default function Footer() {
                 </h3>
                 <ul className="mt-4 space-y-3">
                   {[
-                    { name: 'À propos', to: '/a-propos' },
+                    { name: 'À propos', to: '/apropos' },
                     { name: 'Contact', to: '/apropos' },
                     { name: 'Livraison', to: '/apropos' },
-                    { name: 'Retours & Échanges', to: '/apropos' },
-                    { name: 'CGV', to: '/cgv' }
+                    { name: 'Retours & Échanges', onClick: () => openModal('Conditions Générales de Vente', 'cgv') },
+                    { name: 'CGV', onClick: () => openModal('Conditions Générales de Vente', 'cgv')}
                   ].map((item) => (
-                    <li key={item.name}>
+                    <li key={item.name} onClick={item.onClick}>
                       <Link 
                         to={item.to} 
                         className="text-sm text-gray-300 hover:text-white transition-colors duration-200"

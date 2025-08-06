@@ -21,8 +21,8 @@ export default function Produit() {
         selectedCategory={categoryFromUrl} 
         onCategorySelect={handleCategorySelect} 
       />
-      <CTACollection />
       <ProductPageSection />
+      <CTACollection />
       <Footer />
     </div>
   );

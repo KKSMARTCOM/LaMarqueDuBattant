@@ -26,7 +26,7 @@ export default function MenuPrincipal({ handleMenuEnter, handleMenuLeave, megaMe
           ) : menu === 'EVENEMENTS' ? (
             <Link to="/events" className="block w-full h-full">{menu}</Link>
           ) : ( menu === 'SOLDE' ? (
-            <Link to="/produits?remises=-10%25%2C-20%25%2C-30%25+et+plus&tailles=&sexe=Femme" className="block w-full h-full">{menu}</Link>
+            <Link to="/produits?remises=-20%25%2C-30%25+et+plus%2C-10%25&tailles=&nouveau=false&collections=" className="block w-full h-full">{menu}</Link>
           ) : menu
           )}
         </li>

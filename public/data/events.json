@@ -7,6 +7,7 @@
     "lieu": "Paris, La Cigale",
     "image": "event2.jpg",
     "description": "Venez profiter d'une soirée inoubliable avec des artistes de renom.",
+    "fullDescription": "Plongez dans une expérience musicale exceptionnelle dans le cadre mythique de La Cigale à Paris. Ce concert unique rassemblera des artistes de renommée internationale pour une soirée mémorable. Découvrez des performances live époustouflantes, des mises en scène spectaculaires et une ambiance électrisante qui vous transporteront dans un univers musical inoubliable.\n\nQue vous soyez amateur de musique classique ou contemporaine, ce concert saura ravir vos oreilles et éveiller vos émotions les plus profondes.",
     "cta": "Voir événement",
     "placesLeft": 15,
     "details": "Ouverture des portes à 19h. Prévoir une tenue élégante. Restauration sur place.",
@@ -32,11 +33,11 @@
     ],
     "gallery": [
       {
-        "image": "concert-gallery-1.jpg",
+        "image": "event2.jpg",
         "caption": "Préparatifs du concert - Salle de répétition"
       },
       {
-        "image": "concert-gallery-2.jpg",
+        "image": "event2.jpg",
         "caption": "Vue de la scène sous les projecteurs"
       }
     ],
@@ -47,7 +48,7 @@
     "id": 2,
     "titre": "Festival de Musique",
     "type": "Festival",
-    "date": "2024-08-15",
+    "date": "2025-10-15",
     "lieu": "Lyon, Parc de la Tête d'Or",
     "image": "event3.jpg",
     "description": "Un week-end rempli de musique, de danse et de bonne humeur.",
@@ -64,7 +65,7 @@
         "role": "Directeur Artistique",
         "avatar": ""
       },
-        {
+      {
         "name": "Julie Bernard",
         "role": "Responsable Programmation",
         "avatar": ""
@@ -77,11 +78,11 @@
     ],
     "gallery": [
       {
-        "image": "festival-gallery-1.jpg",
+        "image": "event3.jpg",
         "caption": "Scène principale du festival sous les étoiles"
       },
       {
-        "image": "festival-gallery-2.jpg",
+        "image": "event3.jpg",
         "caption": "Atelier de découverte musicale pour enfants"
       }
     ],
@@ -92,13 +93,13 @@
     "id": 3,
     "titre": "Défilé de Mode Été",
     "type": "Défilé",
-    "date": "2024-06-21",
+    "date": "2025-11-21",
     "lieu": "Marseille, Palais du Pharo",
     "image": "event4.jpg",
     "description": "Découvrez les nouvelles tendances de la saison lors de notre défilé exclusif.",
     "fullDescription": "Assistez à la présentation exclusive de la collection été 2024 dans un lieu d'exception en bord de mer. Nos créateurs vous dévoileront des pièces uniques alliant élégance et innovation, avec des matières légères et des couleurs éclatantes qui caractérisent l'été méditerranéen.\n\nCe défilé est l'occasion de découvrir en avant-première les tendances qui marqueront la saison, portées par des mannequets professionnels dans une mise en scène spectaculaire.",
     "cta": "Voir événement",
-    "placesLeft": 0,
+    "placesLeft": 25,
     "details": "Événement complet. Liste d'attente disponible. Tenue de ville exigée.",
     "schedule": "Accueil à 18h30 • Défilé de 19h à 20h30 • Cocktail de clôture jusqu'à 22h",
     "price": "Sur invitation uniquement",
@@ -122,11 +123,11 @@
     ],
     "gallery": [
       {
-        "image": "defile-gallery-1.jpg",
+        "image": "event4.jpg",
         "caption": "Vue d'ensemble du podium du défilé"
       },
       {
-        "image": "defile-gallery-2.jpg",
+        "image": "event4.jpg",
         "caption": "Détail d'une tenue de la collection été 2024"
       }
     ],
@@ -167,11 +168,11 @@
     ],
     "gallery": [
       {
-        "image": "atelier-gallery-1.jpg",
+        "image": "event5.jpg",
         "caption": "Matériaux et outils mis à disposition pendant l'atelier"
       },
       {
-        "image": "atelier-gallery-2.jpg",
+        "image": "event5.jpg",
         "caption": "Exemple de création réalisée lors d'un atelier précédent"
       }
     ],
@@ -212,11 +213,11 @@
     ],
     "gallery": [
       {
-        "image": "vente-gallery-1.jpg",
+        "image": "event6.jpg",
         "caption": "Vue du showroom pendant une vente privée précédente"
       },
       {
-        "image": "vente-gallery-2.jpg",
+        "image": "event6.jpg",
         "caption": "Sélection de pièces phares de la collection automne-hiver"
       }
     ],
