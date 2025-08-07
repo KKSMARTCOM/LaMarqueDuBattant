@@ -96,7 +96,7 @@ export default function ProductsSection() {
         {/* Bouton Découvrir centré sous la grille avec animation */}
         <div className={`flex justify-center mt-8 md:mt-10 ${isVisible ? 'animate-fade-in-delay-4' : 'opacity-0'}`}>
           <Link to="/produits">
-            <button className="px-6 md:px-8 py-2 md:py-3 border border-black text-xs font-semibold hover:bg-black hover:text-white transition-colors duration-200">
+            <button className="px-6 md:px-8 py-2 md:py-3 rounded-md border border-black text-xs font-semibold hover:bg-black hover:text-white transition-colors duration-200">
               Découvrir plus <span>&gt;</span>
             </button>
           </Link>
