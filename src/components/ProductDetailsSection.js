@@ -6,9 +6,24 @@ import { isNewProduct } from "../utils/priceUtils";
 
 // --- Composant principal ---
 export default function ProductDetailsSection({ product }) {
-  // --- Gestion des images (prévu pour plusieurs images) ---
-  const images = product.images || [product.image];
-  const [currentImg] = useState(0);
+  // --- Gestion des images ---
+  const allImages = [product.image, ...(product.secondaryImages || [])];
+  const [currentImg, setCurrentImg] = useState(0);
+  
+  // Navigation entre les images
+  const nextImage = () => {
+    setCurrentImg((prev) => (prev === allImages.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevImage = () => {
+    setCurrentImg((prev) => (prev === 0 ? allImages.length - 1 : prev - 1));
+  };
+
+  // Gestion du clavier pour la navigation
+  const handleKeyDown = (e) => {
+    if (e.key === 'ArrowRight') nextImage();
+    if (e.key === 'ArrowLeft') prevImage();
+  };
 
   // --- Sélection de taille ---
   const [selectedSize, setSelectedSize] = useState(null);
@@ -44,22 +59,59 @@ export default function ProductDetailsSection({ product }) {
       onWheel={handleSectionWheel}
       style={{ overscrollBehavior: 'none' }}
     >
-      {/* --- Colonne gauche : image produit (background cover) --- */}
-      <div className="w-full lg:flex-[1.2] h-64 lg:h-full relative">
-        <div
-          className="w-full h-full"
-          style={{
-            backgroundImage: `url(${getImagePath(images[currentImg], "products")})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat"
-          }}
-        ></div>
-        {isNewProduct(product.dateAdded) && (
-          <div className="absolute top-4 right-4 bg-black text-white text-xs font-medium px-2 py-1">
-            NOUVEAU
-          </div>
-        )}
+      {/* --- Colonne gauche : galerie d'images --- */}
+      <div className="w-full lg:flex-[1.2] h-96 lg:h-full relative group">
+        <div className="w-full h-full relative" onKeyDown={handleKeyDown} tabIndex={0}>
+          {/* Contenu de la galerie */}
+          {/* Navigation */}
+          <button
+            onClick={prevImage}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/5 backdrop-blur-lg text-black p-2 rounded-full z-10 hover:bg-black/70"
+            aria-label="Image précédente"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          
+          {/* Image courante */}
+          <img
+            src={getImagePath(allImages[currentImg], 'products')}
+            alt={product.title}
+            className="w-full h-full object-cover"
+          />
+          
+          <button
+            onClick={nextImage}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/5 backdrop-blur-lg text-black p-2 rounded-full z-10 hover:bg-black/70"
+            aria-label="Image suivante"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+          
+          {/* Pagination */}
+          {allImages.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+              {allImages.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentImg(i)}
+                  className={`h-2  transition-all ${
+                    i === currentImg ? 'w-6 bg-black' : 'w-2 bg-black/50'
+                  }`}
+                  aria-label={`Image ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
+          {isNewProduct(product.dateAdded) && (
+            <div className="absolute top-4 right-4 bg-black text-white text-xs font-medium px-2 py-1">
+              NOUVEAU
+            </div>
+          )}
+        </div>
       </div>
 
       {/* --- Colonne droite : détails produit --- */}

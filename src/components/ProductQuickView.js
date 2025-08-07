@@ -31,15 +31,15 @@ export default function ProductQuickView({ articleId, open, onClose }) {
     >
       <div
         ref={wrapperRef}
-        className={`bg-white shadow-2xl h-full w-full max-w-full min-w-0 sm:max-w-[60vw] sm:min-w-[300px] lg:max-w-[33vw] lg:min-w-[400px] flex flex-col transition-transform duration-300  ${open ? "translate-x-0" : "translate-x-full"}`}
+        className={`bg-white shadow-2xl h-full w-full max-w-full min-w-0 sm:max-w-[60vw] sm:min-w-[300px] lg:max-w-[33vw] lg:min-w-[400px] flex flex-col transition-transform duration-300 text-sm sm:text-base ${open ? "translate-x-0" : "translate-x-full"}`}
         style={{
         boxShadow: "-8px 0 32px rgba(0,0,0,0.12)",
         }}
       >
         {/* Header fermeture */}
-        <div className="flex items-center justify-between px-2 pt-2 pb-4 border-b border-gray-300 sticky top-0 bg-white z-10">
-          <h2 className=" ml-6 text-3xl font-lightt- tracking-wide ">Vue Rapide </h2>
-          <button onClick={onClose} className="text-2xl p-2 hover:bg-gray-100 rounded-full">&times;</button>
+        <div className="flex items-center justify-between px-3 sm:px-4 pt-3 pb-3 sm:pb-4 border-b border-gray-300 sticky top-0 bg-white z-10">
+          <h2 className="text-lg sm:text-2xl font-light tracking-wide">Vue Rapide</h2>
+          <button onClick={onClose} className="text-xl sm:text-2xl p-1 sm:p-2 hover:bg-gray-100 rounded-full">&times;</button>
         </div>
         {/* Contenu */}
         <div className="flex-1 overflow-y-auto flex flex-col gap-4  pb-2 sm:pb-4 lg:pb-6">
@@ -61,14 +61,28 @@ export default function ProductQuickView({ articleId, open, onClose }) {
               />
               <div className="pb-4 px-2 sm:pb-6 sm:px-2 lg:px-6">
                 {/* Catégorie + titre */}
-                <div className="text-gray-400 text-left text-sm mb-1">{article.category}</div>
-                <div className="text-2xl font-semibold text-left mb-0">{article.title}</div>
+                <div className="text-gray-400 text-left text-xs sm:text-sm mb-1">{article.category}</div>
+                <div className="text-lg sm:text-xl font-semibold text-left mb-0">{article.title}</div>
                 {/* Prix */}
-                <div className="text-lg text-left font-light mb-4">€{article.price}</div>
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                  {article.discount_percent > 0 ? (
+                    <>
+                      <span className="text-sm sm:text-lg font-light line-through text-gray-400">{article.price} FCFA</span>
+                      <span className="text-sm sm:text-lg font-light">
+                        {(article.price * (1 - article.discount_percent / 100)).toFixed(2)} FCFA
+                      </span>
+                      <span className="bg-black text-white text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 ml-1 sm:ml-2">
+                        -{article.discount_percent}%
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-sm sm:text-lg font-light">{article.price} FCFA</span>
+                  )}
+                </div>
                 {/* Tailles */}
-                <div className="mb-4">
-                  <div className="text-left text-sm mb-1">Taille</div>
-                  <div className="flex gap-2 flex-wrap">
+                <div className="mb-3 sm:mb-4">
+                  <div className="text-left text-xs sm:text-sm mb-1">Taille</div>
+                  <div className="flex gap-1.5 sm:gap-2 flex-wrap">
                     {Array.isArray(article.sizes) && article.sizes.length > 0 ? (
                       article.sizes.map((size) => (
                         <label key={size} className="flex items-center cursor-pointer">
@@ -79,9 +93,9 @@ export default function ProductQuickView({ articleId, open, onClose }) {
                             onChange={() => setSelectedSize(size)}
                           />
                           <span className={
-                            `px-3 py-1 border border-gray-300 bg-white text-black transition select-none
+                            `px-2 sm:px-3 py-0.5 sm:py-1 border border-gray-300 bg-white text-black transition select-none
                             peer-checked:bg-black peer-checked:text-white
-                            flex items-center justify-center w-12 h-8 text-sm font-extralight`
+                            flex items-center justify-center w-10 sm:w-12 h-7 sm:h-8 text-xs sm:text-sm font-extralight`
                           }>
                             {size}
                           </span>
@@ -94,7 +108,7 @@ export default function ProductQuickView({ articleId, open, onClose }) {
                 </div>
                 {/* Bouton ajouter au panier (inactif pour l'instant) */}
                 <button
-                  className={`w-full py-3 bg-black text-white font-semibold mb-2 ${!selectedSize ? 'cursor-not-allowed opacity-60' : 'hover:bg-white hover:text-black hover:border hover:border-black cursor-pointer'}`}
+                  className={`w-full py-2 sm:py-3 bg-black text-white text-sm sm:text-base font-semibold mb-2 ${!selectedSize ? 'cursor-not-allowed opacity-60' : 'hover:bg-white hover:text-black hover:border hover:border-black cursor-pointer'}`}
                   disabled={!selectedSize}
                   onClick={async () => {
                     if (!selectedSize) return;

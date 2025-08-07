@@ -16,9 +16,9 @@
     "availableColors": ["noir", "blanc", "rouge"],
     "stockQuantity": 42,
     "secondaryImages": [
-      "article1-1.webp",
-      "article1-2.webp",
-      "article1-3.webp"
+      "bob.jpg",
+      "bob2.jpg",
+      "ca5.jpg"
     ]
   },
   {

@@ -282,6 +282,7 @@ export default function Header({ showCategoriesBar, opacity = 80 }) {
       text-align: center;
       text-decoration: none;
       border: 1px solid #fff;
+      border-radius: 3px;
       font-family: "Montserrat", sans-serif;
       overflow: hidden;
       cursor: pointer;

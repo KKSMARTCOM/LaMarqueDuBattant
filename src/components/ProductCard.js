@@ -15,11 +15,11 @@ export default function ProductCard({ article, isVisible, onEyeClick, index }) {
         }}
       >
         {/* Image du produit avec tag de réduction et overlay des tailles */}
-        <div className="relative mb-3 md:mb-4 overflow-hidden">
+        <div className="relative rounded-md mb-3 md:mb-4 overflow-hidden">
           {/* Tags en haut à droite */}
-          <div className="absolute top-2 right-2 flex flex-col items-end gap-1 z-10">
+          <div className="absolute top-2 rounded-md right-2 flex flex-col items-end gap-1 z-10">
             {(isNewProduct(article.dateAdded) || article.discount_percent > 0) && (
-              <span className="bg-white text-black text-[10px] md:text-[11px] font-bold px-2 py-1 shadow">
+              <span className="bg-white rounded-md text-black text-[10px] md:text-[11px] font-bold px-2 py-1 shadow">
                 {(isNewProduct(article.dateAdded) && article.discount_percent > 0) ?
                   "Nouveau | -" + article.discount_percent + "%" :
                   (isNewProduct(article.dateAdded) ? "Nouveau" : `- ${article.discount_percent}%`)
@@ -39,13 +39,13 @@ export default function ProductCard({ article, isVisible, onEyeClick, index }) {
           <div className="absolute inset-0 flex flex-col items-center justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div className="bg-black bg-opacity-0  text-white pl-4  mb-2 flex flex-col items-center z-10">
               <div className="flex items-center gap-4 pl-2">
-                <span className="text-ellipsis md:text-lg font-normal uppercase tracking-wide">
+                <span className="text-ellipsis text-xs sm:text-lg font-normal uppercase tracking-wide">
                   {Array.isArray(article.sizes) && article.sizes.length > 0
                     ? article.sizes.join(' | ').toUpperCase()
                     : 'Aucune taille'}
                 </span>
                 <button
-                  className="p-1 bg-black text-white hover:bg-white hover:text-black border border-black transition flex items-center justify-center"
+                  className="p-0 sm:p-1 bg-black text-white hover:bg-white hover:text-black border border-black transition flex items-center justify-center"
                   title="Voir les tailles"
                   onClick={e => { e.preventDefault(); onEyeClick(article.id); }}
                 >

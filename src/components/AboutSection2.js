@@ -48,8 +48,8 @@ export default function AboutSection2() {
             Découvrez notre histoire<br />et notre passion
           </h2>
           {/* Image principale à gauche avec texte en bas à gauche */}
-          <div className="relative w-full h-[300px] sm:h-[400px] md:h-[550px] xl:h-[650px] 2xl:h-[750px] mb-0">
-            <img src={getImagePath("cu2.jpg", "cover")} alt="about left" className="w-full h-full object-cover" />
+          <div className="relative rounded-md w-full h-[300px] sm:h-[400px] md:h-[550px] xl:h-[650px] 2xl:h-[750px] mb-0">
+            <img src={getImagePath("cu2.jpg", "cover")} alt="about left" className="w-full h-full rounded-md object-cover" />
             <span className="absolute bottom-3 sm:bottom-4 xl:bottom-6 2xl:bottom-8 left-3 sm:left-4 xl:left-6 2xl:left-8 text-white text-sm sm:text-base xl:text-lg 2xl:text-xl font-semibold bg-transparent bg-opacity-80 px-2 sm:px-3 xl:px-4 2xl:px-6 py-1 xl:py-2 2xl:py-3 rounded">
               | WOMEN'S COLLECTION
             </span>
@@ -59,8 +59,8 @@ export default function AboutSection2() {
         {/* Colonne de droite - animation depuis la droite */}
         <div className={`flex flex-col justify-start h-full ${isVisible ? 'animate-slide-in-right' : 'opacity-0 translate-x-[50px]'}`}>
           {/* Image en haut à droite avec texte en haut à droite */}
-          <div className="relative w-full h-[300px] sm:h-[400px] md:h-[550px] xl:h-[650px] 2xl:h-[750px] mb-6 sm:mb-8 xl:mb-10 2xl:mb-12">
-            <img src={getImagePath("ca5.jpg", "cover")} alt="about right" className="w-full h-full object-cover" />
+          <div className="relative rounded-md w-full h-[300px] sm:h-[400px] md:h-[550px] xl:h-[650px] 2xl:h-[750px] mb-6 sm:mb-8 xl:mb-10 2xl:mb-12">
+            <img src={getImagePath("ca5.jpg", "cover")} alt="about right" className="w-full h-full rounded-md object-cover" />
             <span className="absolute top-3 sm:top-4 xl:top-6 2xl:top-8 right-3 sm:right-4 xl:right-6 2xl:right-8 text-white text-sm sm:text-base xl:text-lg 2xl:text-xl font-semibold bg-transparent bg-opacity-80 px-2 sm:px-3 xl:px-4 2xl:px-6 py-1 xl:py-2 2xl:py-3 rounded">
               | MEN'S COLLECTION
             </span>
@@ -72,11 +72,11 @@ export default function AboutSection2() {
           {/* Boutons alignés à gauche */}
           <div className="flex flex-row gap-2 sm:gap-3 xl:gap-4 2xl:gap-6">
             {/* Bouton En savoir plus redirigeant vers la page À propos */}
-            <Link to="/apropos" className="px-4 sm:px-5 xl:px-6 2xl:px-8 py-1.5 xl:py-2 2xl:py-3 border border-white text-white bg-transparent transition hover:bg-white hover:text-black text-xs xl:text-sm 2xl:text-base font-medium text-center">
+            <Link to="/apropos" className="px-4 sm:px-5 xl:px-6 2xl:px-8 py-1.5 xl:py-2 2xl:py-3 rounded-md border border-white text-white bg-transparent transition hover:bg-white hover:text-black text-xs xl:text-sm 2xl:text-base font-medium text-center">
               En savoir plus
             </Link>
             {/* Bouton Contact redirigeant vers la page À propos */}
-            <Link to="/apropos" className="px-4 sm:px-5 xl:px-6 2xl:px-8 py-1.5 xl:py-2 2xl:py-3 border border-black text-black bg-white transition hover:bg-black hover:text-white hover:border-white text-xs xl:text-sm 2xl:text-base font-medium flex items-center gap-1 text-center">
+            <Link to="/apropos" className="px-4 sm:px-5 xl:px-6 2xl:px-8 py-1.5 xl:py-2 2xl:py-3 rounded-md border border-black text-black bg-white transition hover:bg-black hover:text-white hover:border-white text-xs xl:text-sm 2xl:text-base font-medium flex items-center gap-1 text-center">
               Contact <span className="text-sm sm:text-base xl:text-lg 2xl:text-xl">&gt;</span>
             </Link>
           </div>
