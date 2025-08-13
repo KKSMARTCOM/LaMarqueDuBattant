@@ -70,23 +70,11 @@ const MegaMenuItemCard = ({
                 <span className="text-gray-300 text-xs line-through">{item.price}€</span>
               </>
             ) : (
-              <span className="text-white text-sm font-bold">{item.price}€</span>
+              <span className="text-white text-sm font-light">{item.price}€</span>
             )}
           </div>
         )}
         
-        {/* Bouton d'action rapide */}
-        {onAddToCart && (
-          <button 
-            className="mt-3 bg-white text-black text-xs font-semibold py-2 px-4 w-full text-center hover:bg-gray-100 transition-colors duration-200"
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToCart(item);
-            }}
-          >
-            Voir 
-          </button>
-        )}
       </div>
       
       {/* Lien vers la page de détail */}

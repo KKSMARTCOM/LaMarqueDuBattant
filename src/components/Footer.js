@@ -1,3 +1,42 @@
+/**
+ * Footer.js
+ * 
+ * Description :
+ * Composant de pied de page global de l'application.
+ * Affiche les informations de contact, la navigation, les liens légaux et les réseaux sociaux.
+ * Gère également l'affichage des modales légales (CGV, mentions légales, etc.).
+ *
+ * Fonctionnalités principales :
+ * - Affichage des coordonnées de contact (téléphone, email, adresse)
+ * - Liens rapides vers les principales sections du site
+ * - Liens vers les pages légales (CGV, mentions légales, politique de confidentialité)
+ * - Intégration des réseaux sociaux avec icônes
+ * - Affichage dynamique des informations de marque (logo, nom, etc.)
+ * - Gestion des modales pour les contenus légaux
+ *
+ * État local :
+ * - modalState : Contrôle l'affichage et le contenu des modales légales
+ *   - isOpen (boolean) : Si la modale est ouverte
+ *   - title (string) : Titre de la modale
+ *   - content (ReactNode) : Contenu de la modale
+ *
+ * Données dynamiques :
+ * - Récupère les informations de contact via le service brandService
+ * - Charge les contenus légaux via getLegalContent
+ *
+ * Accessibilité :
+ * - Navigation clavier complète
+ * - Attributs ARIA appropriés
+ * - Liens d'évitement
+ *
+ * Responsive :
+ * - Adapte son affichage pour les mobiles, tablettes et desktop
+ * - Menu de navigation repliable sur mobile
+ *
+ * Exemple d'utilisation :
+ * <Footer />
+ */
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import LegalModal from './LegalModal';
@@ -5,7 +44,7 @@ import getLegalContent from '../data/legalContent';
 import { getContactInfo } from '../services/brandService';
 import Silk from './ReactbitsAnimations/Silk';
 import getImagePath from "./getImagePath";
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp , FaInstagram } from 'react-icons/fa';
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp, FaInstagram } from 'react-icons/fa';
 
 
 export default function Footer() {
@@ -106,12 +145,12 @@ export default function Footer() {
         </div>
         <div className="w-full space-y-8">
           {/* Conteneur pour la newsletter et la carte d'image */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 rounded-md">
             {/* Section newsletter - prend 2/3 de l'espace */}
-            <div className={`lg:col-span-2 transition-all duration-700 ease-out delay-300 ${
+            <div className={`lg:col-span-2 rounded-md transition-all duration-700 ease-out delay-300 ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
             }`}>
-            <div className="bg-gradient-to-br from-black/80 to-white/35 p-6 md:p-8 lg:p-10  border border-white/20 shadow-lg w-full">
+            <div className="bg-gradient-to-br from-black/80 to-white/35 rounded-md p-6 md:p-8 lg:p-10  border border-white/20 shadow-lg w-full">
               <div className="text-left mb-4">
                 <img src={getImagePath("LOGO_LMDB.svg", "logo")} alt="Logo" className="h-12 w-auto mx-2" />
               </div>
@@ -124,13 +163,13 @@ export default function Footer() {
                     <input 
                       type="email" 
                       placeholder="Votre adresse email" 
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20  text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent placeholder-gray-500"
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-md  text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent placeholder-gray-500"
                       required
                     />
                   </div>
                   <button 
                     type="submit" 
-                    className="w-full bg-white/90 text-black text-sm font-medium py-3 px-4    hover:bg-gray-100 transition duration-200 flex items-center justify-center gap-2"
+                    className="w-full bg-white/90 text-black text-sm font-medium py-3 px-4 rounded-md   hover:bg-gray-100 transition duration-200 flex items-center justify-center gap-2"
                   >
                     <span>S'abonner à la newsletter</span>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -170,12 +209,12 @@ export default function Footer() {
           </div>
 
           {/* Carte d'image - prend 1/3 de l'espace */}
-          <div className={`relative h-full min-h-[400px] overflow-hidden transition-all duration-700 ease-out delay-300 ${
+          <div className={`relative h-full min-h-[400px] rounded-md overflow-hidden transition-all duration-700 ease-out delay-300 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}>
             {/* Image d'arrière-plan */}
             <div 
-              className="absolute inset-0 z-0 transform transition-transform duration-1000 hover:scale-105"
+              className="absolute rounded-md inset-0 z-0 transform transition-transform duration-1000 hover:scale-105"
             >
               <img 
                 src="/assets/images/CoverImage/Serious Man Portrait.png"
@@ -186,7 +225,7 @@ export default function Footer() {
                   e.target.src = getImagePath('hero1.jpg', ''); // Fallback image
                 }}
               />
-              <div className="absolute inset-0 bg-white/10"></div>
+              <div className="absolute rounded-md inset-0 bg-white/10"></div>
             </div>
             
             {/* Contenu superposé */}
@@ -195,7 +234,7 @@ export default function Footer() {
               <p className="text-white/90 mb-6 max-w-md">Découvrez notre dernière collection printemps-été 2025</p>
               <Link 
                 to="/collection" 
-                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-3 border border-white/20 transition-all duration-300 hover:scale-105"
+                className="inline-flex items-center rounded-md gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-3 border border-white/20 transition-all duration-300 hover:scale-105"
               >
                 <span>Découvrir</span>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,6 +1,25 @@
-// CartContext.js
-// Contexte global pour la gestion de l'ouverture/fermeture du panier dans toute l'application
-// Permet d'éviter le passage de props (prop drilling) et de simplifier la logique UI
+/**
+ * CartContext.js
+ * 
+ * Description :
+ * Contexte global pour la gestion de l'état du panier dans toute l'application.
+ * Ce contexte permet de gérer l'ouverture/fermeture du panier depuis n'importe quel composant
+ * sans avoir à passer les props à travers plusieurs niveaux de composants (prop drilling).
+ *
+ * Fonctionnalités principales :
+ * - Fournit un état global pour l'ouverture/fermeture du panier
+ * - Expose des méthodes pour manipuler cet état (openCart, closeCart)
+ * - Simplifie l'accès à ces fonctionnalités via un hook personnalisé
+ *
+ * Structure :
+ * - CartProvider : Composant fournisseur du contexte
+ * - useCart : Hook personnalisé pour accéder au contexte
+ *
+ * Utilisation :
+ * 1. Envelopper l'application avec <CartProvider>
+ * 2. Dans n'importe quel composant :
+ *    const { cartOpen, openCart, closeCart } = useCart();
+ */
 
 import React, { createContext, useContext, useState } from 'react';
 

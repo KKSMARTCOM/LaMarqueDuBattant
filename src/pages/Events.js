@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import HeroEvents from "../components/HeroEvents";
 import EventSection from "../components/EventSection";
 import ImageGallerySection from "../components/ImageGallerySection";
+import CTACollection from "../components/CTACollection";
 
 export default function Events({onCartClick}) {
   return (
@@ -12,6 +13,7 @@ export default function Events({onCartClick}) {
       <HeroEvents />
       <EventSection/>
       <ImageGallerySection/>
+      <CTACollection/>
       <Footer />
     </div>
   );

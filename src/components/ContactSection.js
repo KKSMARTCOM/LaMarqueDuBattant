@@ -19,7 +19,9 @@ export default function ContactSection() {
     loadContactInfo();
   }, []);
   return (
-    <section className="w-full bg-black text-white py-16 px-4 sm:px-6 lg:px-8">
+    <section 
+    id="contact-section"
+    className="w-full bg-black text-white py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto relative z-10">
         {/* En-tête de la section */}
         <div className="max-w-3xl mb-16 text-left content-start">
@@ -34,7 +36,7 @@ export default function ContactSection() {
         {/* Grille de contacts */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* Bloc Email */}
-          <div className="group bg-white/5 hover:bg-white/10 p-6 transition-all duration-300 hover:shadow-lg border border-white/10 hover:border-white/15">
+          <div className="group bg-white/5 hover:bg-white/10 p-6 transition-all duration-300 hover:shadow-lg border border-white/10 hover:border-white/15 rounded-md">
             <div className="w-12 h-12 bg-white/0 backdrop-blur-md  flex items-center justify-center mb-5">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
@@ -51,7 +53,7 @@ export default function ContactSection() {
           </div>
 
           {/* Bloc WhatsApp */}
-          <div className="group bg-white/5  hover:bg-white/10 p-6 transition-all duration-300 hover:shadow-lg border  border-white/10 hover:border-white/15">
+          <div className="group bg-white/5  hover:bg-white/10 p-6 transition-all duration-300 hover:shadow-lg border  border-white/10 hover:border-white/15 rounded-md">
             <div className="w-12 h-12 bg-white/0 backdrop-blur-md flex items-center justify-center mb-5">
               <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M17.498 14.382a1 1 0 01.99 1.136 9.966 9.966 0 01-2.81 6.287 9.916 9.916 0 01-6.293 2.81 1 1 0 01-1.136-.99 1.05 1.05 0 01.058-.3 8.003 8.003 0 01-1.492-1.492 1.05 1.05 0 01-.3.058 1 1 0 01-1.136-.99 9.916 9.916 0 012.81-6.293A9.966 9.966 0 018.48 5.51a1 1 0 01.99 1.136 8.004 8.004 0 004.89 6.274 1 1 0 01.138.448zM12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12c0 1.6.376 3.112 1.043 4.453l-1.09 3.274a1 1 0 001.236 1.236l3.274-1.09A9.958 9.958 0 0012 22z"/>
@@ -74,7 +76,7 @@ export default function ContactSection() {
           </div>
 
           {/* Bloc Téléphone */}
-          <div className="group bg-white/5  hover:bg-white/10 p-6 transition-all duration-300 hover:shadow-lg border  border-white/10 hover:border-white/15">
+          <div className="group bg-white/5  hover:bg-white/10 p-6 transition-all duration-300 hover:shadow-lg border  border-white/10 hover:border-white/15 rounded-md">
             <div className="w-12 h-12 bg-white/0 flex items-center justify-center mb-5">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
@@ -91,7 +93,7 @@ export default function ContactSection() {
           </div>
 
           {/* Bloc Bureau */}
-          <div className="group bg-white/5  hover:bg-white/10 p-6 transition-all duration-300 hover:shadow-lg border  border-white/10 hover:border-white/15">
+          <div className="group bg-white/5  hover:bg-white/10 p-6 transition-all duration-300 hover:shadow-lg border  border-white/10 hover:border-white/15 rounded-md">
             <div className="w-12 h-12 bg-white/0 flex items-center justify-center mb-5">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>

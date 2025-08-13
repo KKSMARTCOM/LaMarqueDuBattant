@@ -1,3 +1,42 @@
+/**
+ * ProductPageSection.js
+ * 
+ * Description :
+ * Composant principal pour l'affichage de la page de liste des produits.
+ * Gère le chargement, le filtrage et l'affichage des articles avec une interface utilisateur complète.
+ *
+ * Fonctionnalités principales :
+ * - Chargement asynchrone des articles via un hook personnalisé
+ * - Filtrage avancé avec plusieurs critères (catégorie, taille, prix, etc.)
+ * - Gestion de l'interface utilisateur (barre de filtres, tri, vue rapide)
+ * - Pagination et affichage des résultats
+ * - Gestion des états de chargement et d'erreur
+ *
+ * Hooks personnalisés utilisés :
+ * - useArticles : Chargement des données des articles
+ * - useSearchParams : Gestion des paramètres d'URL pour les filtres
+ *
+ * Composants enfants :
+ * - FilterBar : Interface de filtrage des articles
+ * - ProductCard : Carte individuelle d'un produit
+ * - ProductQuickView : Aperçu rapide d'un produit
+ *
+ * État local :
+ * - filters : Stocke l'état des filtres actifs
+ * - filteredArticles : Liste des articles après application des filtres
+ * - showFilterBar : Contrôle l'affichage de la barre de filtres
+ * - isVisible : Gère les animations d'apparition
+ *
+ * Fonctionnalités avancées :
+ * - Persistance des filtres dans l'URL
+ * - Détection de la visibilité pour le chargement paresseux
+ * - Gestion des erreurs de chargement
+ * - Optimisation des performances avec useCallback et useMemo
+ *
+ * Exemple d'utilisation :
+ * <ProductPageSection />
+ */
+
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { filtrer } from "./filterArticles";
 import ProductQuickView from "./ProductQuickView";
@@ -202,6 +241,24 @@ export default function ProductPageSection() {
       {/* Header section */}
       <div className="flex items-center justify-between border-b border-gray-200 pb-4 mb-6 sticky top-0 z-20 bg-white">
         <div className="flex items-center gap-3">
+        <button
+            className="bg-black text-white p-1 md:p-2 rounded-md  lg:flex items-center justify-center hover:bg-gray-800 transition-colors"
+            onClick={() => {
+                // Réinitialiser tous les filtres
+                updateFilter('categorie', '');
+                updateFilter('remises', []);
+                updateFilter('tailles', []);
+                updateFilter('sexe', '');
+                updateFilter('priceMin', undefined);
+                updateFilter('priceMax', undefined);
+                updateFilter('nouveau', false);
+            }}
+            title="Réinitialiser les filtres"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
           {/* Affichage dynamique des filtres actifs */}
           <span className="text-sm sm:text-2xl font-extrabold tracking-wide">
             {!filters.categorie ? (
@@ -229,19 +286,21 @@ export default function ProductPageSection() {
           <span className="text-gray-400 text-xs sm:text-lg font-light">• {filteredArticles.length} {filteredArticles.length !== 1 ? 'ITEMS' : 'ITEM'}</span>
         </div>
         <button
-            className="bg-transparent text-black mr-4 px-2 py-2 text-xs font-thin uppercase tracking-wider hover:bg-white hover:text-black  transition lg:hidden"
+            className="bg-transparent text-black mr-0 px-2 py-2 text-xs font-thin uppercase tracking-wider hover:bg-white hover:text-black  transition lg:hidden"
             onClick={() => setShowMobileFilter((prev) => !prev)}
           >
             <svg class="w-6 h-6 text-gray-800 dark:text-black hover:text-black/40" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
               <path stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M18.796 4H5.204a1 1 0 0 0-.753 1.659l5.302 6.058a1 1 0 0 1 .247.659v4.874a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.124a1 1 0 0 1 .247-.659l5.302-6.059c.566-.646.106-1.658-.753-1.658Z"/>
             </svg>
         </button>
-        <button
-            className="bg-black text-white px-6 py-2 text-xs font-semibold uppercase tracking-wider border border-transparent hover:bg-white hover:text-black hover:border-black hover:border-solid transition hidden lg:block"
-          onClick={() => setShowFilterBar((prev) => !prev)}
-        >
-          FILTRER
-        </button>
+        <div className="flex items-center space-x-2">
+          <button
+            className="bg-black text-white px-6 py-2 rounded-md text-xs font-semibold uppercase tracking-wider border border-transparent hover:bg-white hover:text-black hover:border-black hover:border-solid transition hidden lg:block"
+            onClick={() => setShowFilterBar((prev) => !prev)}
+          >
+            FILTRER
+          </button>
+        </div>
       </div>
         {/* Barre de filtre mobile (bloc sous le header) */}
         {showMobileFilter && (
@@ -284,8 +343,9 @@ export default function ProductPageSection() {
                 updateFilter('sexe', '');
                 updateFilter('priceMin', undefined);
                 updateFilter('priceMax', undefined);
+                updateFilter('nouveau', false);
               }}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium  shadow-sm text-white bg-black hover:bg-gray-950 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-colors duration-200"
+              className="inline-flex items-center px-4 py-2 rounded-md border border-transparent text-sm font-medium  shadow-sm text-white bg-black hover:bg-gray-950 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-colors duration-200"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />

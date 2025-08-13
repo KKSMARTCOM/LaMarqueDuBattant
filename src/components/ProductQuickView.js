@@ -1,3 +1,42 @@
+/**
+ * ProductQuickView.js
+ * 
+ * Description :
+ * Composant modal d'aperçu rapide d'un produit, accessible depuis la liste des produits.
+ * Permet de visualiser rapidement les détails d'un produit et de l'ajouter au panier
+ * sans quitter la page courante.
+ *
+ * Fonctionnalités principales :
+ * - Affichage des informations essentielles du produit
+ * - Sélection de taille et d'options
+ * - Ajout direct au panier
+ * - Fermeture au clic en dehors ou avec la touche Échap
+ * - Animation fluide à l'ouverture/fermeture
+ *
+ * Props :
+ * - articleId (string/number) : Identifiant unique du produit à afficher
+ * - open (boolean) : Contrôle l'affichage de la modal
+ * - onClose (function) : Fonction appelée pour fermer la modal
+ *
+ * Hooks personnalisés :
+ * - useArticle : Récupère les données du produit depuis l'API
+ *
+ * État local :
+ * - selectedSize (string) : Taille sélectionnée par l'utilisateur
+ *
+ * Accessibilité :
+ * - Gestion du focus à l'intérieur de la modal
+ * - Fermeture avec la touche Échap
+ * - Attributs ARIA appropriés pour les lecteurs d'écran
+ *
+ * Exemple d'utilisation :
+ * <ProductQuickView 
+ *   articleId="123" 
+ *   open={isQuickViewOpen} 
+ *   onClose={() => setIsQuickViewOpen(false)} 
+ * />
+ */
+
 import React, { useEffect, useRef, useState } from "react";
 import { addToCartById } from "./cartUtils";
 import useArticle from '../hooks/useArticle';
@@ -67,11 +106,11 @@ export default function ProductQuickView({ articleId, open, onClose }) {
                 <div className="flex items-center gap-2 mb-3 sm:mb-4">
                   {article.discount_percent > 0 ? (
                     <>
-                      <span className="text-sm sm:text-lg font-light line-through text-gray-400">{article.price} FCFA</span>
+                      <span className="text-sm sm:text-lg font-extralight line-through text-gray-400">{article.price} FCFA</span>
                       <span className="text-sm sm:text-lg font-light">
                         {(article.price * (1 - article.discount_percent / 100)).toFixed(2)} FCFA
                       </span>
-                      <span className="bg-black text-white text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 ml-1 sm:ml-2">
+                      <span className="bg-black/60 rounded-md text-white text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 ml-1 sm:ml-2">
                         -{article.discount_percent}%
                       </span>
                     </>
@@ -93,7 +132,7 @@ export default function ProductQuickView({ articleId, open, onClose }) {
                             onChange={() => setSelectedSize(size)}
                           />
                           <span className={
-                            `px-2 sm:px-3 py-0.5 sm:py-1 border border-gray-300 bg-white text-black transition select-none
+                            `px-2 sm:px-3 py-0.5 sm:py-1 border border-gray-300 rounded-md  bg-white text-black transition select-none
                             peer-checked:bg-black peer-checked:text-white
                             flex items-center justify-center w-10 sm:w-12 h-7 sm:h-8 text-xs sm:text-sm font-extralight`
                           }>
@@ -108,7 +147,7 @@ export default function ProductQuickView({ articleId, open, onClose }) {
                 </div>
                 {/* Bouton ajouter au panier (inactif pour l'instant) */}
                 <button
-                  className={`w-full py-2 sm:py-3 bg-black text-white text-sm sm:text-base font-semibold mb-2 ${!selectedSize ? 'cursor-not-allowed opacity-60' : 'hover:bg-white hover:text-black hover:border hover:border-black cursor-pointer'}`}
+                  className={`w-full py-2 sm:py-3 bg-black rounded-md text-white text-sm sm:text-base font-semibold mb-2 ${!selectedSize ? 'cursor-not-allowed opacity-60' : 'hover:bg-white hover:text-black hover:border hover:border-black cursor-pointer'}`}
                   disabled={!selectedSize}
                   onClick={async () => {
                     if (!selectedSize) return;

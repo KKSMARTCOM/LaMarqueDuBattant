@@ -14,7 +14,7 @@
     "dateAdded": "2025-08-01T10:30:00Z",
     "collectionId": 1,
     "availableColors": ["noir", "blanc", "rouge"],
-    "stockQuantity": 42,
+    "stockQuantity": 0,
     "secondaryImages": [
       "bob.jpg",
       "bob2.jpg",

@@ -95,7 +95,7 @@ export default function AproposFeatureStatsSection() {
         >
           {/* Statistique 1 */}
           <motion.div 
-            className="col-span-4 bg-white/5 backdrop-blur-sm p-8 border border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col h-full"
+            className="col-span-4 bg-white/5 backdrop-blur-sm p-8 border rounded-md border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col h-full"
             variants={item}
           >
             <div className="mt-auto">
@@ -107,7 +107,7 @@ export default function AproposFeatureStatsSection() {
           
           {/* Image 1 */}
           <motion.div 
-            className="col-span-4 row-span-3 overflow-hidden"
+            className="col-span-4 row-span-3 overflow-hidden rounded-md"
             variants={imageItem}
           >
             <img
@@ -119,7 +119,7 @@ export default function AproposFeatureStatsSection() {
           
           {/* Statistique 2 */}
           <motion.div 
-            className="col-span-4 bg-white/5 backdrop-blur-sm p-8 border border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col h-full"
+            className="col-span-4 bg-white/5 backdrop-blur-sm p-8 border rounded-md border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col h-full"
             variants={item}
           >
             <div className="mt-auto">
@@ -131,7 +131,7 @@ export default function AproposFeatureStatsSection() {
           
           {/* Statistique 3 */}
           <motion.div 
-            className="col-span-4 bg-white/5 backdrop-blur-sm p-8 border border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col h-full"
+            className="col-span-4 bg-white/5 backdrop-blur-sm p-8 border rounded-md border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col h-full"
             variants={item}
           >
             <div className="mt-auto">
@@ -143,7 +143,7 @@ export default function AproposFeatureStatsSection() {
           
           {/* Image 2 */}
           <motion.div 
-            className="col-span-4 row-span-2 overflow-hidden"
+            className="col-span-4 row-span-2 overflow-hidden rounded-md"
             variants={imageItem}
           >
             <img
@@ -155,7 +155,7 @@ export default function AproposFeatureStatsSection() {
           
           {/* Statistique 4 */}
           <motion.div 
-            className="col-span-4 bg-white/5 backdrop-blur-sm p-8 border border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col h-full"
+            className="col-span-4 bg-white/5 backdrop-blur-sm p-8 border rounded-md border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col h-full"
             variants={item}
           >
             <div className="mt-auto">
@@ -175,7 +175,7 @@ export default function AproposFeatureStatsSection() {
         >
           {/* Version mobile - Statistique 1 */}
           <motion.div 
-            className="bg-white/5 backdrop-blur-sm p-6 border border-white/10 flex flex-col h-full"
+            className="bg-white/5 backdrop-blur-sm p-6 border rounded-md border-white/10 flex flex-col h-full"
             variants={item}
           >
             <div className="mt-auto">
@@ -187,19 +187,19 @@ export default function AproposFeatureStatsSection() {
           
           {/* Image 1 mobile */}
           <motion.div 
-            className="w-full h-48 overflow-hidden"
+            className="w-full h-48 overflow-hidden rounded-md"
             variants={imageItem}
           >
             <img
               src={getImagePath("ca2.jpg", "cover")}
               alt="Notre équipe"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-md"
             />
           </motion.div>
           
           {/* Version mobile - Statistique 2 */}
           <motion.div 
-            className="bg-white/5 backdrop-blur-sm p-6 border border-white/10 flex flex-col h-full"
+            className="bg-white/5 backdrop-blur-sm p-6 border rounded-md border-white/10 flex flex-col h-full"
             variants={item}
           >
             <div className="mt-auto">
@@ -211,19 +211,19 @@ export default function AproposFeatureStatsSection() {
           
           {/* Image 2 mobile */}
           <motion.div 
-            className="w-full h-48 overflow-hidden"
+            className="w-full h-48 overflow-hidden rounded-md"
             variants={imageItem}
           >
             <img
               src={getImagePath("cu1.jpg", "cover")}
               alt="Nos produits"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-md"
             />
           </motion.div>
           
           {/* Version mobile - Statistique 3 */}
           <motion.div 
-            className="bg-white/5 backdrop-blur-sm p-6 border border-white/10 flex flex-col h-full"
+            className="bg-white/5 backdrop-blur-sm p-6 border rounded-md border-white/10 flex flex-col h-full"
             variants={item}
           >
             <div className="mt-auto">
@@ -235,7 +235,7 @@ export default function AproposFeatureStatsSection() {
           
           {/* Version mobile - Statistique 4 */}
           <motion.div 
-            className="bg-white/5 backdrop-blur-sm p-6 border border-white/10 flex flex-col h-full"
+            className="bg-white/5 backdrop-blur-sm p-6 border rounded-md border-white/10 flex flex-col h-full"
             variants={item}
           >
             <div className="mt-auto">

@@ -92,6 +92,7 @@ export default function EventSection() {
   return (
     <section
       ref={sectionRef}
+      id="EventSection"
       className={`w-full bg-white pt-8 pb-16 px-4 md:px-16 mt-12 transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
     >
     <div>
@@ -161,7 +162,7 @@ export default function EventSection() {
               return (
                 <div
                   key={event.id || idx}
-                  className={`flex flex-col border border-black bg-white h-full transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                  className={`flex flex-col border border-black bg-white rounded-md h-full transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                   style={{ transitionDelay: isVisible ? `${idx * 80 + 100}ms` : '0ms' }}
                 >
                   {/* Image avec badge date en overlay */}

@@ -1,3 +1,43 @@
+/**
+ * LegalModal.js
+ * 
+ * Description :
+ * Composant de modale réutilisable pour afficher les contenus légaux (CGV, mentions légales, etc.).
+ * Offre une expérience utilisateur cohérente pour la consultation des documents juridiques.
+ *
+ * Fonctionnalités principales :
+ * - Affichage d'une modale centrée avec un fond semi-transparent
+ * - Fermeture au clic en dehors de la modale ou avec la touche Échap
+ * - Désactivation du défilement de la page lorsque la modale est ouverte
+ * - Animation fluide à l'ouverture/fermeture
+ * - Contenu personnalisable via les props
+ *
+ * Props :
+ * - isOpen (boolean) : Contrôle l'affichage de la modale
+ * - onClose (function) : Fonction appelée pour fermer la modale
+ * - title (string) : Titre affiché dans l'en-tête de la modale
+ * - content (ReactNode) : Contenu à afficher dans le corps de la modale
+ *
+ * Accessibilité :
+ * - Gestion du focus à l'intérieur de la modale
+ * - Fermeture avec la touche Échap
+ * - Attributs ARIA appropriés
+ * - Navigation clavier complète
+ *
+ * Utilisation typique :
+ * ```jsx
+ * const [isModalOpen, setIsModalOpen] = useState(false);
+ * 
+ * <button onClick={() => setIsModalOpen(true)}>Voir les mentions légales</button>
+ * <LegalModal 
+ *   isOpen={isModalOpen}
+ *   onClose={() => setIsModalOpen(false)}
+ *   title="Mentions Légales"
+ *   content={<p>Contenu des mentions légales...</p>}
+ * />
+ * ```
+ */
+
 import React, { useEffect, useRef } from 'react';
 
 const LegalModal = ({ isOpen, onClose, title, content }) => {

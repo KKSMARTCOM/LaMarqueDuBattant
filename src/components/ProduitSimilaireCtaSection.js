@@ -3,7 +3,7 @@ import ProductCard from "./ProductCard";
 import ProductQuickView from "./ProductQuickView";
 import { Link } from "react-router-dom";
 import useArticles from '../hooks/useArticles';
-import getImagePath from "./getImagePath";
+import CTACollection from "../components/CTACollection";
 
 function useResponsivePerPage() {
   const [perPage, setPerPage] = useState(4);
@@ -117,10 +117,10 @@ export default function ProduitSimilaireCtaSection({ currentProduct }) {
             <div className="text-left text-xs text-gray-400">Dimensions : S, M, L, XL</div>
           </div>
           <Link to="/produits">
-            <button className=" px-4 py-2 text-sm  border border-black text-black font-medium hover:bg-black  hover:text-white transition lg:block hidden">
+            <button className=" px-4 py-2 rounded-md text-sm  border border-black text-black font-medium hover:bg-black  hover:text-white transition lg:block hidden">
               Tous les produits
             </button>
-            <button className="px-4 py-2 text-xs flex items-center gap-1 lg:hidden" aria-label="View all">
+            <button className="px-4 py-2 rounded-md text-xs flex items-center gap-1 lg:hidden" aria-label="View all">
               Tous les produits
               <svg width="12" height="12" fill="#fff" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
             </button>
@@ -151,18 +151,7 @@ export default function ProduitSimilaireCtaSection({ currentProduct }) {
         </div>
       </div>
       {/* Partie CTA */}
-      <div className="backdrop-blur-sm max-w-5xl mx-auto w-full border border-gray-300 my-8  h-80 sm:h-80 flex flex-col items-center text-center bg-black bg-no-repeat bg-center bg-cover"
-        style={{ backgroundImage: `url(${getImagePath('Clothing-Canyon.png', 'cover')})`,
-        filter: 'grayscale(100%)', }}
-      > 
-        <div className="bg-black/40 h-full flex flex-col items-center justify-center">
-        <h3 className=" text-white text-xl sm:text-2xl md:text-3xl font-bold mb-2">Inscrivez-vous a notre newsletter pour être informé des dernières nouveautés. </h3>
-        <form className="flex flex-col justify-center sm:flex-row gap-3 sm:gap-4 w-full max-w-xs sm:max-w-none mx-auto px-4">
-          <input type="email" name="email" id="email" placeholder="Adresse e-mail" className=" bg-black/40 w-full sm:w-auto px-6 py-2 border border-gray-300 text-white font-medium hover:border-black transition" />
-          <button type="submit" className="w-full sm:w-auto px-6 py-2 bg-black text-white font-medium hover:bg-white hover:text-black hover:border transition">Envoyé</button>
-        </form>
-        </div>
-      </div>
+      <CTACollection />
       <style jsx>{`
         .hide-scrollbar {
           scrollbar-width: none;

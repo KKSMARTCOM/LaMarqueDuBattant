@@ -1,3 +1,39 @@
+/**
+ * Header.js
+ * 
+ * Description :
+ * Composant principal de l'en-tête du site. Gère l'affichage de la barre de navigation,
+ * du menu principal, du panier, de la barre de slogans animés et de la barre de catégories.
+ *
+ * Fonctionnalités principales :
+ * - Affichage d'une bannière avec slogan animé
+ * - Navigation principale avec menu déroulant (MegaMenu)
+ * - Intégration du panier et de l'authentification utilisateur
+ * - Affichage conditionnel de la barre de catégories
+ * - Gestion des états de menu (mobile/desktop)
+ *
+ * Composants enfants :
+ * - MegaMenu : Menu déroulant principal
+ * - SloganBar : Bannière avec slogans animés
+ * - CartIcon : Icône du panier avec compteur
+ * - MenuPrincipal : Navigation principale
+ * - UserAuthDrawer : Panneau d'authentification utilisateur
+ * - CategoriesBar : Barre de catégories (optionnelle)
+ *
+ * Props :
+ * - showCategoriesBar (boolean) : Affiche la barre de catégories si true
+ * - opacity (number) : Opacité du header (0-100)
+ *
+ * Hooks personnalisés :
+ * - useCart : Gestion du panier
+ * - useArticles : Récupération des données des articles
+ *
+ * Comportement :
+ * - Animation fluide des transitions
+ * - Adaptation responsive (mobile/desktop)
+ * - Gestion des événements de défilement
+ */
+
 import React, { useEffect, useState, useRef } from "react";
 import { FiUser, FiX, FiMenu } from "react-icons/fi";
 import { Link } from "react-router-dom";

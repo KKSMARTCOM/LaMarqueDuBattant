@@ -45,7 +45,7 @@ export default function FAQSection() {
           {faqs.map((faq, idx) => (
             <details 
               key={idx} 
-              className={`group p-6 text-left ${idx % 2 === 0 ? 'bg-black' : 'bg-white/10'}`}
+              className={`group p-6 rounded-md text-left ${idx % 2 === 0 ? 'bg-black' : 'bg-white/10'}`}
             >
               <summary className="flex justify-between items-center cursor-pointer font-normal text-base sm:text-lg text-left list-none focus:outline-none text-white hover:text-gray-300 transition-colors">
                 <span>{faq.question}</span>
@@ -72,7 +72,7 @@ export default function FAQSection() {
           <p className="mb-4 text-gray-300">N'hésitez pas à nous contacter!</p>
           <a
             href="#ContactSection"
-            className="inline-block border border-white px-4 py-2 bg-transparent text-white hover:bg-white/10 transition-colors"
+            className="inline-block rounded-md border border-white px-4 py-2 bg-transparent text-white hover:bg-white/10 transition-colors"
           >
             Contact
           </a>

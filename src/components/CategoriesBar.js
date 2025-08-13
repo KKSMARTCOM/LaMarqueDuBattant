@@ -1,3 +1,54 @@
+/**
+ * CategoriesBar.js
+ * 
+ * Description :
+ * Composant de barre de catégories pour filtrer les produits.
+ * Affiche les différentes catégories disponibles avec le nombre d'articles par catégorie.
+ *
+ * Fonctionnalités principales :
+ * - Affichage des catégories avec compteur d'articles
+ * - Filtrage des produits par catégorie
+ * - Catégorie "Tout" pour afficher tous les produits
+ * - Gestion de l'état de la catégorie sélectionnée via l'URL
+ *
+ * Props :
+ * - show (boolean) : Contrôle l'affichage de la barre de catégories
+ *
+ * Hooks utilisés :
+ * - useArticles : Récupère la liste des articles
+ * - useSearchParams : Gère les paramètres d'URL pour la catégorie sélectionnée
+ *
+ * Fonction utilitaire :
+ * - generateCategoriesFromArticles : Génère la liste des catégories à partir des articles
+ *   - Compte le nombre d'articles par catégorie
+ *   - Ajoute une catégorie "Tout" au début
+ *   - Retourne un tableau d'objets { type, stock }
+ *
+ * État local :
+ * - categories (array) : Liste des catégories avec leur stock
+ *
+ * Comportement :
+ * - Met à jour les catégories lorsque les articles changent
+ * - Met à jour l'URL lors de la sélection d'une catégorie
+ * - Surligne la catégorie sélectionnée
+ * - Affiche le nombre d'articles par catégorie
+ *
+ * Accessibilité :
+ * - Navigation au clavier
+ * - Libellés descriptifs
+ * - États visuels clairs pour la sélection
+ *
+ * Exemple d'utilisation :
+ * ```jsx
+ * <CategoriesBar show={true} />
+ * ```
+ * 
+ * Remarques :
+ * - Utilise les paramètres d'URL pour la persistance de la sélection
+ * - S'adapte automatiquement aux changements de la liste des articles
+ * - Style personnalisable via les classes Tailwind
+ */
+
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import useArticles from '../hooks/useArticles';

@@ -1,3 +1,53 @@
+/**
+ * Hero.js
+ * 
+ * Description :
+ * Composant de bannière principale (hero) avec diaporama d'images en arrière-plan.
+ * Affiche une série d'images avec des effets de transition fluides et des boutons d'appel à l'action.
+ *
+ * Fonctionnalités principales :
+ * - Diaporama automatique des images de fond
+ * - Effet de fondu entre les transitions
+ * - Boutons d'appel à l'action personnalisables
+ * - Affichage d'un texte d'accroche
+ * - Indicateurs de diapositive
+ *
+ * Configuration :
+ * - Les images sont définies dans le tableau `backgroundImages`
+ * - Délai entre les diapositives : 5 secondes
+ * - Durée de la transition de fondu : 1 seconde
+ *
+ * État local :
+ * - currentImageIndex (number) : Index de l'image actuellement affichée
+ * - isChanging (boolean) : État de la transition entre deux images
+ *
+ * Comportement :
+ * - Défilement automatique toutes les 5 secondes
+ * - Arrêt du défilement au survol
+ * - Navigation manuelle via les indicateurs
+ * - Réinitialisation du timer lors d'un changement manuel
+ *
+ * Accessibilité :
+ * - Texte alternatif pour les images
+ * - Navigation au clavier
+ * - Indicateurs de position cliquables
+ *
+ * Personnalisation :
+ * - Images : à placer dans le dossier public/images
+ * - Texte : modifiable directement dans le composant
+ * - Boutons : personnalisables dans la méthode render()
+ *
+ * Exemple d'utilisation :
+ * ```jsx
+ * <Hero />
+ * ```
+ * 
+ * Remarques :
+ * - Utilise la fonction getImagePath pour résoudre les chemins d'accès
+ * - Animation CSS personnalisée pour l'effet de fondu
+ * - Gestion des timeouts pour les animations
+ */
+
 import React, { useState, useEffect } from "react";
 import getImagePath from "./getImagePath";
 

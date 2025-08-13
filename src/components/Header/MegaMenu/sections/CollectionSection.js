@@ -27,29 +27,29 @@ const CollectionSection = ({
     { 
       label: 'Nouvelle collection', 
       value: 'nouvelle', 
-      onClick: () => onNavItemClick('new-collection') 
+      url: '/collection/nouvelle', 
     },
     { 
       label: 'Eté', 
       value: 'ete', 
-      onClick: () => onNavItemClick('summer-collection') 
+      url: '/collection/ete', 
     },
     { 
       label: 'Hiver', 
       value: 'hiver', 
-      onClick: () => onNavItemClick('winter-collection') 
+      url: '/collection/hiver', 
     },
     { 
       label: 'Automne', 
       value: 'automne', 
-      onClick: () => onNavItemClick('fall-collection') 
+      url: '/collection/automne', 
     },
     { 
       label: 'Printemps', 
       value: 'printemps', 
-      onClick: () => onNavItemClick('spring-collection') 
+      url: '/collection/printemps', 
     }
-  ], [onNavItemClick]);
+  ], []);
   
   // Sélectionne deux collections aléatoires de manière stable
   const selectedCollections = useMemo(() => {

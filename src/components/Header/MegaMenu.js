@@ -1,3 +1,37 @@
+/**
+ * MegaMenu.js
+ * 
+ * Description :
+ * Composant de menu déroulant avancé qui s'affiche au survol des catégories principales.
+ * Affiche un contenu riche avec des images, des liens et des sections organisées.
+ *
+ * Fonctionnalités principales :
+ * - Affichage conditionnel basé sur la catégorie sélectionnée
+ * - Chargement asynchrone des données
+ * - Navigation fluide avec gestion des états de chargement
+ * - Structure modulaire avec sous-composants spécialisés
+ *
+ * Structure du composant :
+ * - En-tête avec image de fond dynamique
+ * - Sections thématiques (Collections, Articles, Événements)
+ * - Pied de page avec liens secondaires
+ *
+ * Sous-composants :
+ * - CollectionSection : Affiche les collections phares
+ * - ArticlesSection : Affiche les articles en vedette
+ * - EventsSection : Affiche les événements à venir
+ *
+ * Données :
+ * - Utilise des images dynamiques via getImagePath
+ * - Reçoit les articles et l'état de chargement en props
+ * - Gère les interactions utilisateur (clics, survols)
+ *
+ * Accessibilité :
+ * - Gestion du focus clavier
+ * - Navigation au clavier
+ * - Attributs ARIA appropriés
+ */
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import getImagePath from '../getImagePath';
@@ -58,7 +92,7 @@ export default function MegaMenu({ menu, articles, loading, onClose }) {
    */
   const [collections, setCollections] = useState([]);
   const [collectionsLoading, setCollectionsLoading] = useState(false);
-  const [imageIndex, setImageIndex] = useState(0);
+  //const [imageIndex, setImageIndex] = useState(0);
   
   /**
    * Hook de navigation

@@ -42,7 +42,7 @@ export default function EvenementsSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-full bg-white py-12 sm:py-14 md:py-16 xl:py-20 2xl:py-24 px-4 sm:px-6 md:px-8 xl:px-12 2xl:px-16" style={{ fontFamily: 'Commissioner, sans-serif' }}>
+    <section ref={sectionRef} className="w-full bg-white pb-8 sm:pb-12 md:pb-16 xl:pb-20 2xl:pb-24 px-4 sm:px-6 md:px-8 xl:px-12 2xl:px-16" style={{ fontFamily: 'Commissioner, sans-serif' }}>
       <div className="w-full flex flex-col items-center">
         {/* Sous-titre avec animation */}
         <div className={`text-black text-xs xl:text-sm 2xl:text-base font-medium mb-2 sm:mb-3 xl:mb-4 2xl:mb-6 mt-2 text-center transition-all duration-700 ease-out ${
@@ -64,9 +64,9 @@ export default function EvenementsSection() {
         </p>
         
         {/* Grille des cartes responsive avec animations séquentielles */}
-        <div className="w-full min-h-0 h-full px-0 sm:px-2 md:px-4 xl:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 sm:mb-10 xl:mb-12 2xl:mb-16"> {/* 3 colonnes sur desktop, gap réduit, prend toute la largeur */}
+        <div className="w-full min-h-0 h-full rounded-md px-0 sm:px-2 md:px-4 xl:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 sm:mb-10 xl:mb-12 2xl:mb-16"> {/* 3 colonnes sur desktop, gap réduit, prend toute la largeur */}
             {events.map((event, idx) => (
-            <div key={event.id} className={`border border-gray-800 bg-white flex flex-col h-full  min-h-[280px] sm:min-h-[300px] xl:min-h-[400px] 2xl:min-h-[500px] overflow-hidden transition-all duration-700 ease-out ${idx === 0 ? 'delay-600' : 'delay-800'} ${
+            <div key={event.id} className={`border border-gray-800 bg-white flex flex-col h-full rounded-md  min-h-[280px] sm:min-h-[300px] xl:min-h-[400px] 2xl:min-h-[500px] overflow-hidden transition-all duration-700 ease-out ${idx === 0 ? 'delay-600' : 'delay-800'} ${
               isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
             }`}>
               <div className="relative">
@@ -96,7 +96,7 @@ export default function EvenementsSection() {
         {/* Utilisation de Link pour la redirection vers /events */}
         <Link
           to="/events"
-          className={`border border-gray-800 px-5 sm:px-6 xl:px-8 2xl:px-10 py-1.5 sm:py-2 xl:py-3 2xl:py-4 text-black text-xs sm:text-sm xl:text-base 2xl:text-lg font-medium hover:bg-black hover:text-white  mx-auto block transition-all duration-700 ease-out delay-1000 ${
+          className={`border border-gray-800 rounded-md px-5 sm:px-6 xl:px-8 2xl:px-10 py-1.5 sm:py-2 xl:py-3 2xl:py-4 text-black text-xs sm:text-sm xl:text-base 2xl:text-lg font-medium hover:bg-black hover:text-white  mx-auto block transition-all duration-700 ease-out delay-1000 ${
             isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
           }`}
         >

@@ -1,3 +1,52 @@
+/**
+ * Slider.js
+ * 
+ * Description :
+ * Composant de diaporama (carrousel) pour afficher une série d'images avec des légendes.
+ * Permet la navigation entre les diapositives avec des flèches et des indicateurs de position.
+ *
+ * Fonctionnalités principales :
+ * - Affichage en plein écran des images
+ * - Navigation fluide entre les diapositives
+ * - Boutons de navigation précédent/suivant
+ * - Indicateurs de position (points)
+ * - Légende avec titre et description pour chaque diapositive
+ * - Défilement automatique configurable
+ *
+ * Structure des données :
+ * Chaque diapositive est un objet avec :
+ * - image (string) : Nom du fichier image
+ * - name (string) : Titre de la diapositive
+ * - des (string) : Description ou sous-titre
+ *
+ * Comportement :
+ * - Défilement automatique toutes les 5 secondes
+ * - Arrêt du défilement au survol
+ * - Animation de transition fluide
+ * - Bouclage infini
+ *
+ * Accessibilité :
+ * - Navigation au clavier (flèches gauche/droite)
+ * - Boutons avec libellés explicites
+ * - Texte alternatif pour les images
+ * - Indicateurs de position cliquables
+ *
+ * Personnalisation :
+ * - Durée de transition : modifiable via la variable `transitionDuration`
+ * - Délai entre les diapositives : modifiable via `autoSlideInterval`
+ * - Images : à placer dans le dossier public/images
+ *
+ * Exemple d'utilisation :
+ * ```jsx
+ * <Slider />
+ * ```
+ * 
+ * Remarques :
+ * - Nécessite les icônes de react-icons/fa
+ * - Utilise la fonction getImagePath pour résoudre les chemins d'accès
+ * - Style personnalisé avec des animations CSS
+ */
+
 import React, { useRef, useEffect } from 'react';
 import getImagePath from './getImagePath';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';

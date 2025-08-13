@@ -1,3 +1,34 @@
+/**
+ * CartDrawer.js
+ * 
+ * Description :
+ * Composant de panier latéral qui s'affiche par-dessus l'interface principale.
+ * Gère l'affichage des articles du panier, la modification des quantités, la suppression d'articles
+ * et la suggestion d'accessoires complémentaires.
+ *
+ * Fonctionnalités principales :
+ * - Affichage des articles du panier avec image, nom, prix et quantité
+ * - Modification des quantités (incrémentation/décrémentation)
+ * - Suppression d'article du panier
+ * - Calcul du sous-total et du total
+ * - Affichage d'accessoires suggérés
+ * - Gestion des états de chargement et d'erreur
+ *
+ * Hooks personnalisés utilisés :
+ * - useCartItems : Gestion des articles du panier
+ *
+ * Props :
+ * - open (boolean) : Contrôle l'affichage du panier
+ * - onClose (function) : Fonction appelée pour fermer le panier
+ *
+ * Éléments d'interface :
+ * - Overlay semi-transparent
+ * - Panier coulissant depuis la droite
+ * - Boutons d'action (continuer les achats, procéder au paiement)
+ * - Liste des articles avec contrôles de quantité
+ * - Section d'accessoires suggérés
+ */
+
 import React, { useState, useEffect } from "react";
 import fetchData from "./fetchData";
 import getImagePath from "./getImagePath";
@@ -38,11 +69,11 @@ export default function CartDrawer({ open, onClose }) {
                   <img
                     src={getImagePath(acc.image, "products")}
                     alt={acc.title}
-                    className="w-full h-52 object-cover mb-1 "
+                    className="w-full h-52 object-cover mb-1 rounded-md "
                   />
                   {/* Bouton Ajouter au survol */}
                   <button
-                    className="absolute left-1/2 bottom-12 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-black text-white px-4 py-2 shadow transition-opacity duration-200 text-xs font-semibold"
+                    className="absolute rounded-md left-1/2 bottom-12 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-black text-white px-4 py-2 shadow transition-opacity duration-200 text-xs font-semibold"
                     style={{ zIndex: 2 }}
                     onClick={() => {
                       // Taille par défaut : première taille si disponible, sinon undefined
@@ -96,10 +127,10 @@ export default function CartDrawer({ open, onClose }) {
                 [...cartItems].reverse().map((item, idx) => (
                   <div key={item.id} className="flex flex-col mb-4 border-b pb-3">
                     <div className="flex flex-row mb-4">
-                      <div className="relative">
-                        <img src={getImagePath(item.image, "products")} alt={item.title} className="w-32 h-36 object-cover mr-3 " />
+                      <div className="relative rounded-md">
+                        <img src={getImagePath(item.image, "products")} alt={item.title} className="w-32 h-36 object-cover rounded-md mr-3 " />
                         {item.discountPercent > 0 && (
-                          <span className="absolute top-2 right-4 bg-black text-white text-[10px] font-medium px-1.5 py-0.5">
+                          <span className="absolute top-2 right-4 rounded-md bg-black text-white text-[10px] font-medium px-1.5 py-0.5">
                             -{item.discountPercent}%
                           </span>
                         )}
@@ -119,7 +150,7 @@ export default function CartDrawer({ open, onClose }) {
                         </div>
                       </div>
                     </div>
-                    {/* Bloc quantité style pro */}
+                    {/* Bloc quantité */}
                     <div className="w-full flex flex-row items-center gap-2 mb-4">
                       <span className="text-xs text-gray-700 w-20 font-light">Quantité</span>
                       <div className="flex flex-1 border border-gray-300 bg-white rounded justify-between items-center px-2 py-1">
@@ -140,8 +171,8 @@ export default function CartDrawer({ open, onClose }) {
             {/* Remise et total, toujours visible en bas */}
             <div className="border-t border-black p-4">
               <div className="flex items-center mb-2">
-                <input type="text" placeholder="Remise..." className="border border-gray-300 px-2 py-3 w-full text-xs mr-2 text-left" />
-                <button className="slice flex justify-center items-center border-[.1px] border-black  px-3 py-2 text-xs ml-2" style={{ minWidth: 70 }}>
+                <input type="text" placeholder="Remise..." className="border border-gray-300 rounded-md px-2 py-3 w-full text-xs mr-2 text-left" />
+                <button className="slice flex justify-center  items-center border-[.1px] border-black rounded-md  px-3 py-2 text-xs ml-2" style={{ minWidth: 70 }}>
                   <span className="text">APPLY</span>
                 </button>
               </div>
@@ -184,6 +215,7 @@ export default function CartDrawer({ open, onClose }) {
           position: relative;
           overflow: hidden;
           border: 1px solid #18181a;
+          border-radius: .4rem;
           color: #18181a;
           display: inline-block;
           font-size: 15px;

@@ -34,10 +34,10 @@ export default function HeroEvents() {
           Participez à nos événements exclusifs et vivez des expériences uniques avec notre marque.
         </p>
         <div className="flex flex-row gap-3 mb-6">
-          <button className="bg-black text-white px-4 py-2 text-xs font-medium">Explorer</button>
-          <button className="bg-white border border-black text-black px-4 py-2 text-xs font-medium">S'inscrire</button>
+          <a href="#EventSection" className="bg-black rounded-md hover:bg-black/20 hover:text-black transition-all duration-700 ease-out text-white px-4 py-2 text-xs font-medium">Explorer</a>
+          <a href="#cta-collection" className="bg-white border border-black rounded-md hover:bg-white/20 transition-all duration-700 ease-out text-black px-4 py-2 text-xs font-medium">S'inscrire</a>
         </div>
-        <div className="w-full mt-2">
+        <div className="w-full mt-2 rounded-md">
           <img
             src={getImagePath("event6.jpg", "events")}
             alt="Événement"

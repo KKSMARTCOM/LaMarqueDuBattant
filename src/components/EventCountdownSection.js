@@ -79,7 +79,9 @@ const EventCountdownSection = ({ event = {} }) => {
   };
 
   return (
-    <section className="w-full py-16 md:py-24 px-0 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50">
+    <section 
+    id="EventCountdownSection"
+    className="w-full py-16 md:py-24 px-0 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-gray-50">
       <div className=" mx-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 border border-gray-200">
 

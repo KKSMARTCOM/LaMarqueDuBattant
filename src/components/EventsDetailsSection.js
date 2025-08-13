@@ -1,21 +1,22 @@
-import React, { useState, useEffect, } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import getImagePath from './getImagePath';
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from 'react-icons/fa';
+import { FaFacebookF, FaLinkedinIn, FaWhatsapp } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 
 const EventsDetailsSection = ({ event }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     setCurrentImageIndex((prevIndex) => 
       prevIndex === event.gallery.length - 1 ? prevIndex : prevIndex + 1
     );
-  };
+  }, [event.gallery.length]);
 
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
     setCurrentImageIndex((prevIndex) => 
       prevIndex === 0 ? 0 : prevIndex - 1
     );
-  };
+  }, []);
 
   // Gestion du clavier pour la navigation
   useEffect(() => {
@@ -29,12 +30,14 @@ const EventsDetailsSection = ({ event }) => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentImageIndex]);
+  }, [currentImageIndex, nextImage, prevImage]);
   if (!event) return null;
   const contributors = event.contributors || [];
   
   return (
-    <section className="w-full bg-white py-16 px-4 sm:px-6 lg:px-8">
+    <section
+      id="EventsDetailsSection"
+      className="w-full bg-white py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Main Content */}
@@ -172,16 +175,16 @@ const EventsDetailsSection = ({ event }) => {
                 Partagez cet événement avec vos amis et vos proches !
               </p>
               <div className="flex gap-3 items-center justify-center">
-                <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors" aria-label="Partager sur Facebook">
+                <a href="https://www.facebook.com/" className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors" aria-label="Partager sur Facebook">
                   <FaFacebookF className="w-4 h-4" />
                 </a>
-                <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-sky-500 text-white hover:bg-sky-600 transition-colors" aria-label="Partager sur Twitter">
-                  <FaTwitter className="w-4 h-4" />
+                <a href="https://twitter.com/" className="w-10 h-10 flex items-center justify-center rounded-full bg-sky-500 text-white hover:bg-sky-600 transition-colors" aria-label="Partager sur Twitter">
+                  <FaXTwitter className="w-4 h-4" />
                 </a>
-                <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-700 text-white hover:bg-blue-800 transition-colors" aria-label="Partager sur LinkedIn">
+                <a href="https://www.linkedin.com/" className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-700 text-white hover:bg-blue-800 transition-colors" aria-label="Partager sur LinkedIn">
                   <FaLinkedinIn className="w-4 h-4" />
                 </a>
-                <a href="#" className="w-10 h-10 flex items-center justify-center rounded-full bg-green-500 text-white hover:bg-green-600 transition-colors" aria-label="Partager sur WhatsApp">
+                <a href="https://www.whatsapp.com/" className="w-10 h-10 flex items-center justify-center rounded-full bg-green-500 text-white hover:bg-green-600 transition-colors" aria-label="Partager sur WhatsApp">
                   <FaWhatsapp className="w-4 h-4" />
                 </a>
               </div>

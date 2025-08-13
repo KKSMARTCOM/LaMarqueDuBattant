@@ -1,3 +1,49 @@
+/**
+ * Loader.js
+ * 
+ * Description :
+ * Composant d'indicateur de chargement animé.
+ * Affiche une animation visuelle pendant le chargement des données ou des pages.
+ *
+ * Fonctionnalités principales :
+ * - Animation de carrés qui se déplacent de manière séquentielle
+ * - Texte "Chargement..." affiché à côté de l'animation
+ * - Animation CSS pure sans dépendances externes
+ * - Pleine hauteur d'écran pour un chargement de page complet
+ *
+ * Utilisation :
+ * - Pour les chargements de page complets
+ * - Pendant les appels API asynchrones
+ * - Lors du chargement de contenu lourd
+ *
+ * Accessibilité :
+ * - Texte lisible par les lecteurs d'écran
+ * - Animation non intrusive pour les utilisateurs sensibles aux mouvements
+ *
+ * Personnalisation :
+ * - Couleur : modifiable via les classes Tailwind
+ * - Taille : s'adapte au conteneur parent
+ * - Texte : personnalisable en modifiant le contenu textuel
+ *
+ * Exemple d'utilisation :
+ * ```jsx
+ * const MyComponent = () => {
+ *   const [isLoading, setIsLoading] = useState(true);
+ * 
+ *   if (isLoading) {
+ *     return <Loader />;
+ *   }
+ * 
+ *   return <div>Contenu chargé</div>;
+ * };
+ * ```
+ * 
+ * Remarque :
+ * - Utilise des animations CSS personnalisées pour un meilleur contrôle des performances
+ * - Ne nécessite pas de bibliothèque d'icônes externe
+ * - Compatible avec le mode sombre/clair du navigateur
+ */
+
 import React from 'react';
 
 const Loader = () => {
@@ -101,17 +147,17 @@ const Loader = () => {
           position: relative;
           width: 80px;
           height: 80px;
-          transform: rotate(45deg);
+          transform: rotate(0deg);
           }
 
           .loader-square {
           position: absolute;
           top: 0;
           left: 0;
-          width: 28px;
-          height: 28px;
-          margin: 2px;
-          border-radius: 0px;
+          width: 15px;
+          height: 15px;
+          margin: 0px;
+          border-radius: -20px;
            background: rgb(211, 211, 211);
           background-size: cover;
           background-position: center;

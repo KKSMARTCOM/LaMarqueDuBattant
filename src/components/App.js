@@ -1,4 +1,32 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+/**
+ * App.js
+ * 
+ * Description :
+ * Ce fichier est le composant racine de l'application React.
+ * Il configure le routeur principal et définit toutes les routes de l'application.
+ *
+ * Fonctionnalités principales :
+ * - Configuration du routeur React Router
+ * - Définition de toutes les routes de l'application
+ * - Intégration du panier d'achat
+ * - Gestion des états globaux via les Contextes
+ *
+ * Routes principales :
+ * - / : Page d'accueil
+ * - /produits : Liste des produits
+ * - /produit/:id : Détail d'un produit
+ * - /apropos : Page À propos
+ * - /events : Liste des événements
+ * - /events/:id : Détail d'un événement
+ * - /admin/* : Tableau de bord d'administration
+ *
+ * Composants clés :
+ * - Router : Fournit le contexte de routage à toute l'application
+ * - Routes/Route : Définit les chemins et les composants associés
+ * - CartDrawer : Panier d'achat glissant
+ */
+
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import React from "react";
 // Import des composants
 import Accueil from "../pages/Accueil";
@@ -10,6 +38,8 @@ import Apropos from "../pages/Apropos";
 import Events from "../pages/Events";
 import DetailsEvent from "../pages/DetailsEvent";
 import { useCart } from "./CartContext";
+// Import du tableau de bord d'administration
+import { Dashboard as AdminDashboard } from "../pages/admin";
 
 function App() {
   // On utilise le contexte global du panier
@@ -26,6 +56,12 @@ function App() {
           <Route path="/apropos" element={<Apropos />} />
           <Route path="/events" element={<Events />} />
           <Route path="/events/:id" element={<DetailsEvent />} />
+          
+          {/* Routes du tableau de bord d'administration */}
+          {/* <Route path="/admin/*" element={<AdminDashboard />} /> */}
+          
+          {/* Redirection pour les routes inconnues */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         {/* Le CartDrawer utilise le contexte pour s'ouvrir/se fermer */}
         <CartDrawer

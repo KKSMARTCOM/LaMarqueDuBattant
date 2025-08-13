@@ -1,3 +1,56 @@
+/**
+ * UserAuthDrawer.js
+ * 
+ * Description :
+ * Composant de tiroir (drawer) pour l'authentification utilisateur.
+ * Gère à la fois la connexion et l'inscription des utilisateurs avec un système d'onglets.
+ *
+ * Fonctionnalités principales :
+ * - Affichage en tiroir coulissant depuis la droite
+ * - Onglets pour basculer entre connexion et inscription
+ * - Formulaire de connexion avec email/mot de passe
+ * - Formulaire d'inscription avec validation
+ * - Sélecteur de date de naissance
+ * - Options "Se souvenir de moi" et "S'inscrire à la newsletter"
+ *
+ * Props :
+ * - open (boolean) : Contrôle l'affichage du tiroir
+ * - onClose (function) : Fonction appelée pour fermer le tiroir
+ *
+ * État local :
+ * - tab (string) : Onglet actif ('login' ou 'register')
+ * - rememberMe (boolean) : État de la case "Se souvenir de moi"
+ * - newsletter (boolean) : État de l'inscription à la newsletter
+ * - birthDate (Date|null) : Date de naissance sélectionnée
+ * - datePickerOpen (boolean) : État d'ouverture du sélecteur de date
+ * - formKey (number) : Clé pour forcer le remontage du formulaire
+ *
+ * Dépendances :
+ * - react-datepicker : Pour la sélection de la date de naissance
+ * - react-icons : Pour les icônes
+ *
+ * Accessibilité :
+ * - Gestion du focus à l'ouverture/fermeture
+ * - Navigation clavier complète
+ * - Libellés associés aux champs de formulaire
+ * - Messages d'erreur accessibles
+ *
+ * Responsive :
+ * - Pleine largeur sur mobile, largeur limitée sur desktop
+ * - Adapte la hauteur du sélecteur de date
+ *
+ * Exemple d'utilisation :
+ * ```jsx
+ * const [isAuthOpen, setIsAuthOpen] = useState(false);
+ * 
+ * <button onClick={() => setIsAuthOpen(true)}>Connexion</button>
+ * <UserAuthDrawer 
+ *   open={isAuthOpen}
+ *   onClose={() => setIsAuthOpen(false)}
+ * />
+ * ```
+ */
+
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -55,7 +108,7 @@ export default function UserAuthDrawer({ open, onClose }) {
                   Souvenez-vous de moi
                 </label>
                 <button type="submit" className="bg-black text-white py-2  font-semibold hover:bg-gray-900 transition">SE CONNECTER</button>
-                <a href="#" className="text-xs text-gray-600 underline text-center mt-2">Vous avez oublié votre mot de passe ?</a>
+                <a href="#MotDePasseOublie" className="text-xs text-gray-600 underline text-center mt-2">Vous avez oublié votre mot de passe ?</a>
               </form>
             </div>
           ) : (

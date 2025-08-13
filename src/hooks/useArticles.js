@@ -1,6 +1,46 @@
-// useArticles.js
-// Hook personnalisé pour charger la liste des articles (articles.json) avec gestion du cache, du loading et des erreurs
-// Permet d'éviter la duplication de logique dans tous les composants qui utilisent les articles
+/**
+ * useArticles.js
+ * 
+ * Description :
+ * Hook personnalisé pour charger et gérer la liste des articles depuis le fichier articles.json.
+ * Fournit une interface simple pour accéder aux articles avec gestion du chargement et des erreurs.
+ *
+ * Fonctionnalités principales :
+ * - Chargement asynchrone des articles depuis le fichier JSON
+ * - Gestion des états de chargement et d'erreur
+ * - Possibilité de forcer un rechargement des données
+ * - Nettoyage automatique des abonnements
+ *
+ * Valeur de retour (objet) :
+ * - articles {Array} : Tableau des articles chargés (vide par défaut)
+ * - loading {boolean} : État de chargement (true pendant le chargement)
+ * - error {Error|null} : Erreur éventuelle lors du chargement
+ * - reload {Function} : Fonction pour forcer un rechargement des données
+ *
+ * Gestion des erreurs :
+ * - En cas d'erreur lors du chargement, l'erreur est stockée dans l'état 'error'
+ * - Les composants utilisateurs doivent gérer l'affichage des erreurs
+ *
+ * Exemple d'utilisation :
+ * ```jsx
+ * const { articles, loading, error, reload } = useArticles();
+ * 
+ * if (loading) return <div>Chargement en cours...</div>;
+ * if (error) return <div>Erreur: {error.message}</div>;
+ * 
+ * return (
+ *   <div>
+ *     {articles.map(article => (
+ *       <ArticleCard key={article.id} article={article} />
+ *     ))}
+ *   </div>
+ * );
+ * ```
+ * 
+ * Optimisations :
+ * - Évite les fuites de mémoire avec le flag isMounted
+ * - Ne recharge pas les données si le composant est démonté
+ */
 
 import { useEffect, useState } from 'react';
 import fetchData from '../components/fetchData';

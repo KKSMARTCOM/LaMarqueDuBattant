@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { motion, useScroll, useTransform } from "framer-motion";
+import React, { useRef } from 'react';
+import { motion } from "framer-motion";
 import getImagePath from "./getImagePath";
 import { FiCalendar, FiMapPin, FiArrowDown } from 'react-icons/fi';
 
@@ -17,13 +17,8 @@ const formatDate = (dateStr) => {
 
 const EventHero = ({ event }) => {
   const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"]
-  });
   
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  
 
   if (!event) return null;
 
@@ -86,12 +81,12 @@ const EventHero = ({ event }) => {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
           >
-            <button className="px-8 py-3 bg-white text-black font-semibold  hover:bg-gray-100 transition-colors">
+            <a href="#EventCountdownSection" className="px-8 py-3 rounded-md bg-white text-black font-semibold  hover:bg-gray-100 transition-colors">
               Réserver maintenant
-            </button>
-            <button className="px-8 py-3 border-2 border-white text-white font-semibold  hover:bg-white/10 transition-colors">
+            </a>
+            <a href="#EventsDetailsSection" className="px-8 py-3 rounded-md border-2 border-white text-white font-semibold  hover:bg-white/10 transition-colors">
               En savoir plus
-            </button>
+            </a>
           </motion.div>
         </div>
       </div>

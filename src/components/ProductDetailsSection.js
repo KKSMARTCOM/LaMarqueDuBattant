@@ -1,4 +1,46 @@
-// --- Imports React et hooks ---
+/**
+ * ProductDetailsSection.js
+ * 
+ * Description :
+ * Composant principal pour l'affichage détaillé d'un produit.
+ * Gère la galerie d'images, la sélection des tailles, l'ajout au panier et l'affichage
+ * des informations détaillées du produit.
+ *
+ * Fonctionnalités principales :
+ * - Galerie d'images avec navigation et miniatures
+ * - Sélection de taille obligatoire avant ajout au panier
+ * - Affichage des détails du produit (prix, description, etc.)
+ * - Gestion des produits en rupture de stock
+ * - Affichage des badges (Nouveau, Réduction)
+ *
+ * Props :
+ * - product (Object) : Objet contenant les informations du produit
+ *   - id (string/number) : Identifiant unique du produit
+ *   - name (string) : Nom du produit
+ *   - price (number) : Prix de base
+ *   - discount_percent (number) : Pourcentage de réduction (optionnel)
+ *   - description (string) : Description détaillée
+ *   - image (string) : URL de l'image principale
+ *   - secondaryImages (Array) : Tableau d'URLs des images secondaires
+ *   - sizes (Array) : Tailles disponibles
+ *   - stock (number) : Quantité disponible
+ *
+ * État local :
+ * - currentImg (number) : Index de l'image actuellement affichée
+ * - selectedSize (string) : Taille sélectionnée
+ * - quantity (number) : Quantité sélectionnée
+ * - showSuccess (boolean) : Affiche le message de succès
+ *
+ * Fonctionnalités avancées :
+ * - Navigation clavier dans la galerie (flèches gauche/droite)
+ * - Validation du formulaire avant ajout au panier
+ * - Gestion des messages d'erreur et de succès
+ * - Affichage conditionnel des boutons selon la disponibilité
+ *
+ * Exemple d'utilisation :
+ * <ProductDetailsSection product={productData} />
+ */
+
 import React, { useState, useRef } from "react";
 import getImagePath from "./getImagePath";
 import { addToCartById } from "./cartUtils";
@@ -66,7 +108,7 @@ export default function ProductDetailsSection({ product }) {
           {/* Navigation */}
           <button
             onClick={prevImage}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/5 backdrop-blur-lg text-black p-2 rounded-full z-10 hover:bg-black/70"
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/5 backdrop-blur-lg text-white p-2 rounded-full z-10 hover:bg-black/70"
             aria-label="Image précédente"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,7 +125,7 @@ export default function ProductDetailsSection({ product }) {
           
           <button
             onClick={nextImage}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/5 backdrop-blur-lg text-black p-2 rounded-full z-10 hover:bg-black/70"
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/5 backdrop-blur-lg text-white p-2 rounded-full z-10 hover:bg-black/70"
             aria-label="Image suivante"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,13 +135,13 @@ export default function ProductDetailsSection({ product }) {
           
           {/* Pagination */}
           {allImages.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+            <div className="absolute bottom-4 rounded-full left-1/2 -translate-x-1/2 flex space-x-2">
               {allImages.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setCurrentImg(i)}
-                  className={`h-2  transition-all ${
-                    i === currentImg ? 'w-6 bg-black' : 'w-2 bg-black/50'
+                  className={`h-2 w-2 rounded-full border border-black/20 transition-all ${
+                    i === currentImg ? 'w-6 bg-white' : 'w-2 bg-white/50'
                   }`}
                   aria-label={`Image ${i + 1}`}
                 />
@@ -176,7 +218,7 @@ export default function ProductDetailsSection({ product }) {
                     onChange={() => setSelectedSize(size)}
                   />
                   <span className={
-                    `px-3 py-1 border border-black bg-white text-black transition select-none
+                    `px-3 py-1 border border-black rounded-md bg-white text-black transition select-none
                     peer-checked:bg-black peer-checked:text-white
                     flex items-center justify-center w-12 h-8 sm:w-16 sm:h-10 text-base font-medium`
                   }>
@@ -193,11 +235,11 @@ export default function ProductDetailsSection({ product }) {
               type="number"
               min={1}
               defaultValue={1}
-              className="w-12 h-8 sm:w-16 sm:h-10 border border-gray-400 px-2 py-2"
+              className="w-12 h-8 sm:w-16 sm:h-10 border border-gray-400 rounded-md px-2 py-2"
               id="details-qty-input"
             />
             <button
-              className={`flex-1 w-12 h-8 sm:w-16 sm:h-10  bg-black text-white font-semibold flex items-center justify-center gap-4 text-xs sm:text-base uppercase tracking-wider ${!selectedSize ? 'opacity-60 cursor-not-allowed' : 'hover:bg-white hover:text-black hover:border hover:border-black cursor-pointer'}`}
+              className={`flex-1 w-12 h-8 sm:w-16 sm:h-10 rounded-md  bg-black text-white font-semibold flex items-center justify-center gap-4 text-xs sm:text-base uppercase tracking-wider ${!selectedSize ? 'opacity-60 cursor-not-allowed' : 'hover:bg-white hover:text-black hover:border hover:border-black cursor-pointer'}`}
               disabled={!selectedSize}
               onClick={async () => {
                 if (!selectedSize) return;
@@ -211,7 +253,7 @@ export default function ProductDetailsSection({ product }) {
               </span>
             </button>
           </div>
-          <button className=" font-semibold mb-4 w-full h-8 sm:h-full py-0 sm:py-2 bg-white border  border-black text-black hover:bg-black hover:text-white transition duration-200 ">Acheter maintenant</button>
+          <button className=" font-semibold mb-4 w-full rounded-md h-8 sm:h-full py-0 sm:py-2 bg-white border  border-black text-black hover:bg-black hover:text-white transition duration-200 ">Acheter maintenant</button>
 
           {/* --- Message livraison --- */}
           <div className="text-xs text-gray-500 mb-2">Livraison gratuite dès 50€</div>

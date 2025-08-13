@@ -65,27 +65,27 @@ export default function AboutSection() {
 
   return (
     // Section avec hauteur automatique sur mobile et pleine hauteur sur desktop
-    <section className="w-full min-h-[80vh] md:h-screen bg-black flex items-stretch pt-16 md:pt-0 mt-0 md:mt-16">
-      <div className="flex flex-col md:flex-row w-full h-full pb-8 md:pb-14">
+    <section className="w-full min-h-[65vh] md:h-screen bg-black flex items-stretch pt-16 md:pt-0 mt-0 md:mt-16">
+      <div className="flex flex-col md:flex-row w-full h-full pb-2 md:pb-14">
         {/* Colonne texte : prend toute la hauteur disponible */}
         <div className="w-full md:w-1/2 p-4 md:p-8 flex flex-col justify-center">
           {/* Titre principal */}
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-left text-white">
             Découvrez notre univers
           </h2>
-          <p className="text-base text-gray-300 mb-8 text-left">
+          <p className="text-sm md:text-base text-gray-300 mb-8 text-left">
             Nous sommes passionnés par la création de produits de qualité qui allient
             design moderne et fonctionnalité. Notre équipe d'experts s'engage à vous
             fournir les meilleures solutions pour répondre à vos besoins.
           </p>
           {/* Boutons */}
           <div className="flex flex-row gap-4">
-            <button className="bg-white text-black px-6 py-2 font-semibold text-base hover:bg-gray-200 transition">Explorer</button>
-            <button className="bg-transparent border border-white text-white px-6 py-2 font-semibold text-base hover:bg-white/10 transition">S'inscrire</button>
+            <a href="#AproposFeatureSection" className="bg-white rounded-md text-black px-2 md:px-6 py-2 md:py-2 font-semibold text-sm md:text-base hover:bg-gray-200 transition">Explorer</a>
+            <a href="#contact-section" className="bg-transparent border border-white rounded-md text-white px-2 md:px-6 py-2 md:py-2 font-semibold text-sm md:text-base hover:bg-white/10 transition">Contactez-nous</a>
           </div>
         </div>
         {/* Colonne image+texte : prend toute la hauteur disponible */}
-        <div className="w-full md:w-1/2 flex flex-col h-full">
+        <div className="w-full md:w-1/2 hidden lg:flex flex-col h-full">
           {/* Partie haute : image, prend 70% de la hauteur */}
           <div className="flex-1 relative overflow-hidden">
             <img
@@ -112,11 +112,11 @@ export default function AboutSection() {
               </div>
               {/* Flèches navigation */}
               <div className="flex flex-row gap-2">
-                <button onClick={prevImage} className="w-8 h-8 flex items-center justify-center border border-gray-400 hover:bg-gray-100 transition">
+                <button onClick={prevImage} className="w-8 h-8 rounded-md flex items-center justify-center border border-gray-400 hover:bg-gray-100 transition">
                   <span className="sr-only">Précédent</span>
                   <svg width="18" height="18" fill="#fff" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
                 </button>
-                <button onClick={nextImage} className="w-8 h-8 flex items-center justify-center border border-gray-400 hover:bg-gray-100 transition">
+                <button onClick={nextImage} className="w-8 h-8 rounded-md flex items-center justify-center border border-gray-400 hover:bg-gray-100 transition">
                   <span className="sr-only">Suivant</span>
                   <svg width="18" height="18" fill="#fff" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
                 </button>

@@ -1,3 +1,59 @@
+/**
+ * FilterBar.js
+ * 
+ * Description :
+ * Composant de barre de filtres pour la page des produits.
+ * Permet aux utilisateurs de filtrer les articles selon différents critères (catégorie, prix, tailles, etc.).
+ *
+ * Fonctionnalités principales :
+ * - Filtrage par catégorie de collection
+ * - Filtrage par plage de prix avec curseur
+ * - Filtrage par tailles disponibles
+ * - Filtrage par promotions
+ * - Filtrage par nouveautés
+ * - Réinitialisation des filtres
+ *
+ * Props :
+ * - filters (Object) : État actuel des filtres
+ *   - categorie (string) : Catégorie sélectionnée
+ *   - remises (Array) : Tableau des remises sélectionnées
+ *   - tailles (Array) : Tableau des tailles sélectionnées
+ *   - sexe (string) : Genre sélectionné
+ *   - priceMin (number) : Prix minimum
+ *   - priceMax (number) : Prix maximum
+ *   - nouveau (boolean) : Filtre des nouveaux produits
+ * - onFilterChange (Function) : Callback appelé lorsqu'un filtre est modifié
+ * - minPossible (number) : Prix minimum possible (par défaut: 0)
+ * - maxPossible (number) : Prix maximum possible (par défaut: 500)
+ *
+ * État local :
+ * - collectionCategories (Array) : Liste des catégories de collection chargées
+ *
+ * Données dynamiques :
+ * - Charge les catégories de collection via le service collectionService
+ *
+ * Accessibilité :
+ * - Libellés associés aux champs de formulaire
+ * - Navigation clavier complète
+ * - Messages d'état pour les filtres actifs
+ *
+ * Responsive :
+ * - Adapte son affichage pour les mobiles, tablettes et desktop
+ * - Menu déroulant pour les petits écrans
+ *
+ * Exemple d'utilisation :
+ * ```jsx
+ * const [filters, setFilters] = useState({});
+ * 
+ * <FilterBar 
+ *   filters={filters}
+ *   onFilterChange={(newFilters) => setFilters(newFilters)}
+ *   minPossible={0}
+ *   maxPossible={1000}
+ * />
+ * ```
+ */
+
 import React, { useState, useEffect } from "react";
 import { loadCollections } from "../services/collectionService";
 
@@ -139,10 +195,10 @@ export default function FilterBar({
       {/* Nouveaux  */}
       <div className="mb-4 border-b border-black/10 py-2">
         <div className="flex flex-col gap-5">
-          <label className="rounded-none flex items-center text-left gap-1 text-sm text-gray-600 cursor-pointer">
+          <label className="rounded-2xl flex items-center text-left gap-1 text-sm text-gray-600 cursor-pointer">
             <input 
               type="checkbox" 
-              className="w-5 h-5 rounded-none  accent-black" 
+              className="w-5 h-5 rounded-md  accent-black" 
               checked={nouveau || false}
               onChange={handleShowNewOnlyChange}
             />
@@ -156,7 +212,7 @@ export default function FilterBar({
         <details>
         <summary className=" cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">CATÉGORIES</summary>
         <select
-          className="w-full rounded-none border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black text-gray-600"
+          className="w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black text-gray-600"
           value={categorie}
           onChange={handleCategorieChange}
         >
@@ -175,7 +231,7 @@ export default function FilterBar({
       <div className="mb-4 border-b border-black/10 py-2">
         <details>
         <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">PRIX</summary>
-        <div className="grid grid-cols-2 border border-gray-300 divide-x divide-gray200 mb-2">
+        <div className="grid grid-cols-2 border rounded-md border-gray-300 divide-x divide-gray200 mb-2">
           <div className="flex items-center justify-center gap-1 py-2">
             <span className="text-lg">¥</span>
             <input
@@ -191,7 +247,7 @@ export default function FilterBar({
               value={priceMin !== undefined ? priceMin : ""}
               placeholder={minPossible}
               onChange={handlePriceMinChange}
-              className="w-20 text-center border-none outline-none bg-transparent text-lg"
+              className="w-20 text-center  border-none outline-none bg-transparent text-lg"
             />
           </div>
           <div className="flex items-center justify-center gap-1 py-2">
@@ -262,6 +318,7 @@ export default function FilterBar({
               width: 18px;
               height: 18px;
               background: #000;
+              border-radius: 15%;
               cursor: pointer;
               border: none;
               margin-top: -7.5px;
@@ -301,34 +358,34 @@ export default function FilterBar({
         <details>
         <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">REMISE</summary>
         <div className="flex flex-wrap gap-5">
-          <label className="flex items-center gap-2 text-sm text-gray-600">
+          <label className="flex items-center rounded-md gap-2 text-sm text-gray-600">
             <input
               type="checkbox"
-              className="w-5 h-5 rounded-none accent-black"
+              className="w-5 h-5 rounded-2xl accent-black"
               checked={remises.includes('Sans remise')}
               onChange={() => handleRemiseToggle('Sans remise')}
             /> Sans remise
           </label>
-          <label className="flex items-center gap-2 text-sm text-gray-600">
+          <label className="flex items-center rounded-md gap-2 text-sm text-gray-600">
             <input
               type="checkbox"
-              className="w-5 h-5 rounded-none accent-black"
+              className="w-5 h-5 rounded-md accent-black"
               checked={remises.includes('-10%')}
               onChange={() => handleRemiseToggle('-10%')}
             /> -10%
           </label>
-          <label className="flex items-center gap-2 text-sm text-gray-600">
+          <label className="flex items-center rounded-md gap-2 text-sm text-gray-600">
             <input
               type="checkbox"
-              className="w-5 h-5 rounded-none accent-black"
+              className="w-5 h-5 rounded-md accent-black"
               checked={remises.includes('-20%')}
               onChange={() => handleRemiseToggle('-20%')}
             /> -20%
           </label>
-          <label className="flex items-center gap-2 text-sm text-gray-600">
+          <label className="flex items-center rounded-md gap-2 text-sm text-gray-600">
             <input
               type="checkbox"
-              className="w-5 h-5 rounded-none accent-black"
+              className="w-5 h-5 rounded-md accent-black"
               checked={remises.includes('-30% et plus')}
               onChange={() => handleRemiseToggle('-30% et plus')}
             /> -30% et plus
@@ -344,8 +401,8 @@ export default function FilterBar({
         <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">TAILLE</summary>
         <div className="flex flex-wrap gap-5">
           {['XS','S','M','L','XL'].map(size => (
-            <label key={size} className="rounded-none flex items-center gap-1 text-sm text-gray-600">
-              <input type="checkbox" className="w-5 h-5 rounded-none accent-black" checked={tailles.includes(size)} onChange={() => handleTailleToggle(size)} /> {size}
+            <label key={size} className="rounded-md flex items-center gap-1 text-sm text-gray-600">
+              <input type="checkbox" className="w-5 h-5 rounded-md accent-black" checked={tailles.includes(size)} onChange={() => handleTailleToggle(size)} /> {size}
             </label>
           ))}
         </div>
@@ -358,7 +415,7 @@ export default function FilterBar({
         <details>
         <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">SEXE</summary>
         <select
-          className="flex-1 w-full rounded-none border justify-start justify-items-start border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black text-gray-600"
+          className="flex-1 w-full rounded-md border justify-start justify-items-start border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black text-gray-600"
           value={sexe}
           onChange={e => handleSexeChange(e.target.value)}
         >
@@ -377,10 +434,10 @@ export default function FilterBar({
           <div className="flex flex-col gap-5">
             {collectionCategories.length > 0 ? (
               collectionCategories.map(category => (
-                <label key={category} className="rounded-none flex items-center gap-1 text-sm text-gray-600 cursor-pointer">
+                <label key={category} className="rounded-md flex items-center gap-1 text-sm text-gray-600 cursor-pointer">
                   <input 
                     type="checkbox" 
-                    className="w-5 h-5 rounded-none accent-black"
+                    className="w-5 h-5 rounded-md accent-black"
                     checked={filters.collections?.includes(category) || false}
                     onChange={() => handleCollectionToggle(category)}
                   />

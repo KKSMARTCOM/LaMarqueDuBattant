@@ -1,3 +1,59 @@
+/**
+ * CollectionsSection.js
+ * 
+ * Description :
+ * Composant de section présentant les collections de produits de manière visuelle.
+ * Affiche une grille de cartes de collections avec des effets d'animation au défilement.
+ *
+ * Fonctionnalités principales :
+ * - Affichage des collections avec image de fond, titre et lien
+ * - Animation d'apparition au défilement (Intersection Observer)
+ * - Chargement dynamique de la police Commissioner
+ * - Effets de survol sur les cartes de collection
+ *
+ * Structure des données :
+ * Les collections sont définies dans un tableau d'objets avec :
+ * - id (string) : Identifiant unique de la collection
+ * - title (string) : Titre de la collection
+ * - image (string) : Nom du fichier image
+ * - link (string) : Lien vers la collection
+ *
+ * Hooks utilisés :
+ * - useState : Gère l'état de visibilité de la section
+ * - useRef : Référence à l'élément DOM de la section
+ * - useEffect : Configuration de l'Intersection Observer
+ *
+ * État local :
+ * - isVisible (boolean) : Indique si la section est visible à l'écran
+ *
+ * Comportement :
+ * - Charge la police Commissioner de manière dynamique
+ * - Anime l'apparition de la section lors du défilement
+ * - Applique des effets de survol sur les cartes de collection
+ * - Optimise les performances avec un seul observateur d'intersection
+ *
+ * Accessibilité :
+ * - Texte alternatif pour les images
+ * - Navigation au clavier
+ * - Contraste des couleurs vérifié
+ * - Taille de police adaptative
+ *
+ * Personnalisation :
+ * - Police : Commissioner (chargée depuis Google Fonts)
+ * - Couleurs : Variables CSS personnalisées (--primary, --secondary, etc.)
+ * - Animations : Transition d'opacité et de transformation
+ *
+ * Exemple d'utilisation :
+ * ```jsx
+ * <CollectionsSection />
+ * ```
+ * 
+ * Remarques :
+ * - Utilise l'API Intersection Observer pour les animations de défilement
+ * - Charge la police de manière conditionnelle pour éviter les doublons
+ * - Style responsive avec grille CSS
+ */
+
 import React, { useEffect, useRef, useState } from "react";
 import getImagePath from "./getImagePath";
 
@@ -41,7 +97,7 @@ export default function CollectionsSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-full bg-white py-12 sm:py-14 md:py-16 xl:py-20 2xl:py-24 px-4 sm:px-6 md:px-9 xl:px-12 2xl:px-16" style={{ fontFamily: 'Commissioner, sans-serif' }}>
+    <section ref={sectionRef} className="w-full bg-white py-8 sm:py-12 md:py-16 xl:py-20 2xl:py-24 px-4 sm:px-6 md:px-9 xl:px-12 2xl:px-16" style={{ fontFamily: 'Commissioner, sans-serif' }}>
       <div className="max-w-6xl mx-auto w-full flex flex-col items-center">
         {/* Sous-titre avec animation */}
         <div className={`text-black text-xs xl:text-sm 2xl:text-base font-medium mb-2 sm:mb-3 xl:mb-4 2xl:mb-6 mt-2 transition-all duration-700 ease-out ${

@@ -1,3 +1,43 @@
+/**
+ * ProductCard.js
+ * 
+ * Description :
+ * Composant de carte produit réutilisable qui affiche un aperçu d'un article.
+ * Utilisé dans les listes de produits, les suggestions et les pages de catégorie.
+ *
+ * Fonctionnalités principales :
+ * - Affichage de l'image du produit avec effet de survol
+ * - Gestion des réductions et des badges "Nouveau"
+ * - Affichage des informations essentielles (nom, prix, catégorie)
+ * - Animation d'apparition progressive
+ * - Affichage des tailles disponibles au survol
+ *
+ * Props :
+ * - article (Object) : Objet contenant les informations du produit
+ * - isVisible (boolean) : Contrôle l'animation d'apparition
+ * - onEyeClick (Function) : Callback pour le clic sur l'icône d'aperçu rapide
+ * - index (number) : Index pour le délai d'animation
+ *
+ * Fonctionnalités visuelles :
+ * - Badges "Nouveau" et réduction en superposition
+ * - Effet de zoom sur l'image au survol
+ * - Affichage des tailles disponibles au survol
+ * - Animation d'apparition avec délai progressif
+ *
+ * Accessibilité :
+ * - Liens sémantiques avec description claire
+ * - Attributs alt pour les images
+ * - Contraste des couleurs vérifié
+ *
+ * Exemple d'utilisation :
+ * <ProductCard 
+ *   article={product} 
+ *   isVisible={true} 
+ *   onEyeClick={handleQuickView}
+ *   index={index}
+ * />
+ */
+
 import React from "react";
 import { Link } from "react-router-dom";
 import getImagePath from "./getImagePath";
