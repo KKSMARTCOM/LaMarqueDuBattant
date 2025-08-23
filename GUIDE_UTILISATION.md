@@ -71,12 +71,30 @@ Ce guide explique comment gérer les informations du site via l'interface d'admi
 1. Connectez-vous à l'interface d'administration
 2. Accédez à la section "Informations du site" dans le menu de navigation
 
+## Gestion des images
+
+### Dépôt des fichiers
+Les images doivent être placées manuellement dans les dossiers appropriés :
+
+- **Logo de la marque** : `public/assets/images/Logo/`
+- **Images des produits** : `public/assets/images/ProductsImages/`
+- **Événements** : `public/assets/images/EventsImages/`
+- **Collections** : `public/assets/images/CoverImage/Collection/`
+- **Images de couverture et autres** : `public/assets/images/CoverImage/`
+
+### Bonnes pratiques
+- Utilisez des noms de fichiers descriptifs et en minuscules (ex: `chemise-blanche.jpg`)
+- Évitez les espaces et caractères spéciaux dans les noms de fichiers
+- Formats recommandés : JPG, PNG, WebP
+- Taille maximale : 2 Mo par image
+
 ## Modification des informations
 
 ### Édition des champs
 1. Naviguez entre les différentes sections à l'aide du menu latéral
 2. Modifiez les champs souhaités
-3. Les modifications sont automatiquement enregistrées en temps réel
+3. Pour les images, entrez uniquement le nom du fichier avec son extension (ex: `logo.png`)
+4. Les modifications sont automatiquement enregistrées en temps réel
 
 ### Téléchargement d'images
 1. Cliquez sur "Parcourir" ou glissez-déposez une image

@@ -36,12 +36,26 @@ const SiteInfoForm = () => {
         }
         const data = await response.json();
         
-        // Fusionner avec des valeurs par défaut pour s'assurer que toutes les propriétés nécessaires existent
-        setFormData(prev => ({
-          ...prev,
+        // Construire les URLs complètes pour les images
+        const processedData = {
           ...data,
+          brand: {
+            ...data.brand,
+            // Si c'est juste un nom de fichier, construire l'URL complète pour l'affichage
+            logo: data.brand.logo && !data.brand.logo.startsWith('http') && !data.brand.logo.startsWith('blob:') 
+              ? `/images/${data.brand.logo}` 
+              : data.brand.logo,
+            favicon: data.brand.favicon && !data.brand.favicon.startsWith('http') && !data.brand.favicon.startsWith('blob:') 
+              ? `/images/${data.brand.favicon}` 
+              : data.brand.favicon
+          },
           lastUpdated: new Date().toISOString().split('T')[0],
           version: '1.0.0'
+        };
+        
+        setFormData(prev => ({
+          ...prev,
+          ...processedData
         }));
       } catch (error) {
         console.error('Erreur:', error);
@@ -69,14 +83,18 @@ const SiteInfoForm = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Créer une URL de prévisualisation
+    // Créer une URL de prévisualisation pour l'affichage
     const fileUrl = URL.createObjectURL(file);
+    // Stocker uniquement le nom du fichier
+    const fileName = file.name;
     
+    // Mettre à jour l'état avec l'URL pour la prévisualisation
     setFormData(prev => ({
       ...prev,
       [section]: {
         ...prev[section],
-        [field]: fileUrl
+        [field]: fileUrl, // Pour l'affichage
+        [`${field}File`]: fileName // Pour la sauvegarde (ex: 'logo' devient 'logoFile')
       }
     }));
   };
@@ -88,7 +106,36 @@ const SiteInfoForm = () => {
     setSaveStatus({ type: '', message: '' });
     
     try {
-      const result = await saveSiteInfo(formData);
+      // Préparer les données pour l'envoi
+      const dataToSave = {
+        ...formData,
+        brand: {
+          ...formData.brand,
+          // Remplacer les URLs par les noms de fichiers
+          logo: formData.brand.logoFile || formData.brand.logo?.split('/').pop() || '',
+          favicon: formData.brand.faviconFile || formData.brand.favicon?.split('/').pop() || ''
+        }
+      };
+      
+      // Supprimer les champs temporaires
+      delete dataToSave.brand.logoFile;
+      delete dataToSave.brand.faviconFile;
+      
+      const result = await saveSiteInfo(dataToSave);
+      
+      // Mettre à jour l'état avec les données renvoyées par le serveur
+      if (result.data) {
+        setFormData(prev => ({
+          ...prev,
+          ...result.data,
+          // Conserver les URLs de prévisualisation
+          brand: {
+            ...result.data.brand,
+            logo: formData.brand.logo,
+            favicon: formData.brand.favicon
+          }
+        }));
+      }
       
       setSaveStatus({ 
         type: result.success ? 'success' : 'error',

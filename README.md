@@ -2,6 +2,23 @@
 
 Plateforme e-commerce complète pour La Marque Du Battant, développée avec React 19 et une architecture moderne. Le projet inclut une gestion avancée des produits, des événements et une interface d'administration complète.
 
+## 📁 Structure des dossiers d'images
+
+Le projet utilise une structure de dossiers spécifique pour organiser les médias :
+
+```
+public/
+├── assets/
+│   └── images/
+│       ├── ProductsImages/    # Images des produits
+│       ├── EventsImages/      # Images des événements
+│       ├── Logo/              # Logos de la marque
+│       └── CoverImage/        # Images de couverture
+│           └── Collection/    # Images des collections
+```
+
+Consultez le [Guide d'Utilisation](./GUIDE_UTILISATION.md) pour plus de détails sur la gestion des images.
+
 ## 🚀 Fonctionnalités Principales
 
 ### Frontend

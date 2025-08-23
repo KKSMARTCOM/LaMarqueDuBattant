@@ -2,8 +2,8 @@
   "brand": {
     "name": "La Marque Du Battant",
     "slogan": "L'excellence à portée de main",
-    "logo": "logo.png",
-    "favicon": "favicon.ico"
+    "logo": "/images/logo.png",
+    "favicon": "/favicon.ico"
   },
   "contact": {
     "email": "contact@lamarquedubattant.com",
