@@ -1,7 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function MenuPrincipal({ handleMenuEnter, handleMenuLeave, megaMenuOpen, activeMenu }) {
+  const navigate = useNavigate();
   return (
     <ul className="hidden lg:flex space-x-4 text-white font-light uppercase text-xs">
       {['HOMMES', 'FEMMES', 'COLLECTION', 'EVENEMENTS', 'SOLDE'].map((menu, idx) => (
@@ -18,15 +20,15 @@ export default function MenuPrincipal({ handleMenuEnter, handleMenuLeave, megaMe
           }
         >
           {menu === 'HOMMES' ? (
-            <Link to="/produits?remises=&tailles=&sexe=Homme" className="block w-full h-full">{menu}</Link>
+            <button onClick={() => navigate('/produits?remises=&tailles=&sexe=Homme')}>{menu}</button>
           ) : menu === 'FEMMES' ? (
-            <Link to="/produits?remises=&tailles=&sexe=Femme" className="block w-full h-full">{menu}</Link>
+            <button onClick={() => navigate('/produits?remises=&tailles=&sexe=Femme')}>{menu}</button>
           ) : menu === 'COLLECTION' ? (
-            <Link to="/produits" className="block w-full h-full">{menu}</Link>
+            <button onClick={() => navigate('/produits')}>{menu}</button>
           ) : menu === 'EVENEMENTS' ? (
-            <Link to="/events" className="block w-full h-full">{menu}</Link>
+            <button onClick={() => navigate('/events')}>{menu}</button>
           ) : ( menu === 'SOLDE' ? (
-            <Link to="/produits?remises=-20%25%2C-30%25+et+plus%2C-10%25&tailles=&nouveau=false&collections=" className="block w-full h-full">{menu}</Link>
+            <button onClick={() => navigate('/produits?remises=-20%25%2C-30%25+et+plus%2C-10%25&tailles=&nouveau=false&collections=')}>{menu}</button>
           ) : menu
           )}
         </li>

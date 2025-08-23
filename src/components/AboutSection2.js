@@ -75,10 +75,6 @@ export default function AboutSection2() {
             <Link to="/apropos" className="px-4 sm:px-5 xl:px-6 2xl:px-8 py-1.5 xl:py-2 2xl:py-3 rounded-md border border-white text-white bg-transparent transition hover:bg-white hover:text-black text-xs xl:text-sm 2xl:text-base font-medium text-center">
               En savoir plus
             </Link>
-            {/* Bouton Contact redirigeant vers la page À propos */}
-            <Link to="/apropos" className="px-4 sm:px-5 xl:px-6 2xl:px-8 py-1.5 xl:py-2 2xl:py-3 rounded-md border border-black text-black bg-white transition hover:bg-black hover:text-white hover:border-white text-xs xl:text-sm 2xl:text-base font-medium flex items-center gap-1 text-center">
-              Contact <span className="text-sm sm:text-base xl:text-lg 2xl:text-xl">&gt;</span>
-            </Link>
           </div>
         </div>
       </div>

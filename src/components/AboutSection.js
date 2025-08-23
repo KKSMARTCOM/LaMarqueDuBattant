@@ -87,11 +87,11 @@ export default function AboutSection() {
         {/* Colonne image+texte : prend toute la hauteur disponible */}
         <div className="w-full md:w-1/2 hidden lg:flex flex-col h-full">
           {/* Partie haute : image, prend 70% de la hauteur */}
-          <div className="flex-1 relative overflow-hidden">
+          <div className="mb-4 rounded-md flex-1 relative overflow-hidden">
             <img
               src={getImagePath(slides[current].image, "cover")}
               alt={slides[current].title}
-              className={`w-full h-full object-cover transition-opacity duration-200 ${fade ? 'opacity-0' : 'opacity-100'}`}
+              className={`w-full h-full rounded-md object-cover transition-opacity duration-200 ${fade ? 'opacity-0' : 'opacity-100'}`}
               key={current}
             />
           </div>

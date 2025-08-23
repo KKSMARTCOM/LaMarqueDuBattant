@@ -7,21 +7,21 @@ import React from 'react';
  * @param {string} props.imageUrl - URL de l'image à afficher
  * @param {string} props.altText - Texte alternatif pour l'image
  * @param {string} props.buttonText - Texte du bouton (défaut: "DÉCOUVREZ")
- * @param {Function} props.onButtonClick - Fonction appelée lors du clic sur le bouton
+ * @param {string} props.clickurl - URL de destination lors du clic sur le bouton
  * @returns {JSX.Element} Le composant MegaMenuRightColumn rendu
  */
 const MegaMenuRightColumn = ({ 
   imageUrl, 
   altText = "Mega menu", 
   buttonText = "DÉCOUVREZ", 
-  onButtonClick 
+  clickurl 
 }) => {
   return (
     <div 
       className="absolute right-0 top-0 h-full w-[340px] flex-shrink-0 animate-mega-menu-image"
       style={{ animationDelay: '0.4s' }}
     >
-      <div className="relative w-full h-full">
+      <div className="relative rounded-md w-full h-full">
         {/* Image d'arrière-plan */}
         <img
           src={imageUrl}
@@ -31,8 +31,8 @@ const MegaMenuRightColumn = ({
         
         {/* Bouton d'action principal */}
         <button 
-          className="absolute left-1/2 bottom-12 -translate-x-1/2 bg-white text-black px-8 py-3 font-semibold uppercase shadow text-[15px] tracking-wider z-20 hover:bg-gray-100 transition-colors"
-          onClick={onButtonClick}
+          className="absolute left-1/2 bottom-12 -translate-x-1/2 bg-white rounded-md text-black px-8 py-3 font-semibold uppercase shadow text-[15px] tracking-wider z-20 hover:bg-gray-100 transition-colors"
+          onClick={() => window.location.href = clickurl}
         >
           {buttonText}
         </button>

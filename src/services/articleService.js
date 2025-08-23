@@ -1,26 +1,54 @@
 /**
  * articleService.js
  * 
- * Service pour gérer les opérations CRUD sur les articles
- * Utilise le fichier public/data/articles.json comme source de données
+ * Description:
+ *  Service HTTP pour gérer les opérations CRUD sur les articles côté serveur
+ *  (API Node `server/`). Les lectures ne proviennent plus directement de
+ *  `public/data/articles.json` mais via l'API.
  * 
- * Méthodes disponibles :
- * - getAll() : Récupère tous les articles
- * - getById(id) : Récupère un article par son ID
- * - create(article) : Crée un nouvel article
- * - update(id, article) : Met à jour un article existant
- * - delete(id) : Supprime un article
+ * Points clés:
+ *  - Toutes les méthodes sont asynchrones et utilisent `fetch`.
+ *  - Les erreurs réseau ou HTTP non-OK lèvent une exception (à gérer par l'appelant).
+ *  - `applyBatch` supporte les retours 200 (succès total) et 207 (succès partiel).
+ * 
+ * Méthodes principales:
+ *  - getAllArticles(): Promise<Array>
+ *  - getArticleById(id): Promise<Object|null>
+ *  - createArticle(article): Promise<Object>
+ *  - updateArticle(id, articleData): Promise<Object>
+ *  - deleteArticle(id): Promise<boolean>
+ *  - getNextArticleId(): Promise<number>
+ *  - applyBatch(changes): Promise<{success:boolean, results:Array, total:number}>
+ * 
+ * Exemple d'usage:
+ *  ```js
+ *  import { getAllArticles, updateArticle } from '@/services/articleService';
+ *  const articles = await getAllArticles();
+ *  await updateArticle(12, { title: 'Nouveau titre' });
+ *  ```
  */
 
-const ARTICLES_PATH = '/data/articles.json';
+/**
+ * Base URL de l'API serveur.
+ * Ajuster via variables d'environnement si nécessaire.
+ * @type {string}
+ */
+const API_BASE_URL = 'http://localhost:5000/api';
 
 /**
- * Récupère tous les articles
- * @returns {Promise<Array>} Liste des articles
+ * Clé de stockage local pour le panier de changements (voir `ChangesCartContext`).
+ * Utilisée ici pour calculer le prochain ID en tenant compte des créations en attente.
+ */
+const CART_STORAGE_KEY = 'lmdb_changes_cart';
+
+/**
+ * Récupère tous les articles.
+ * @returns {Promise<Array<Object>>} Liste des articles.
+ * @throws {Error} En cas d'échec réseau/HTTP.
  */
 export const getAllArticles = async () => {
   try {
-    const response = await fetch(ARTICLES_PATH);
+    const response = await fetch(`${API_BASE_URL}/articles`);
     if (!response.ok) {
       throw new Error('Erreur lors de la récupération des articles');
     }
@@ -32,22 +60,45 @@ export const getAllArticles = async () => {
 };
 
 /**
- * Récupère un article par son ID
- * @param {number} id - ID de l'article
- * @returns {Promise<Object>} Article correspondant
+ * Applique un lot de changements (create/update/delete) côté serveur.
+ * @param {Array<{type:'create'|'update'|'delete', payload?:Object, targetId?:number|string}>} changes
+ * @returns {Promise<{success:boolean, results:Array, total:number}>}
+ * @throws {Error} En cas d'échec réseau/HTTP.
+ */
+export const applyBatch = async (changes) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/articles/batch`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ changes })
+    });
+
+    // 200 OK means full success; 207 means partial success. Treat both as OK but inspect body
+    if (!response.ok && response.status !== 207) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || 'Erreur lors de l\'application du batch');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Erreur dans applyBatch:', error);
+    throw error;
+  }
+};
+
+/**
+ * Récupère un article par son ID.
+ * @param {number|string} id ID de l'article.
+ * @returns {Promise<Object|null>} Article ou null si non trouvé.
+ * @throws {Error} En cas d'échec réseau/HTTP.
  */
 export const getArticleById = async (id) => {
   try {
-    console.log(`Recherche de l'article avec l'ID:`, id, '(type:', typeof id, ')');
     const articles = await getAllArticles();
-    console.log('Articles chargés:', articles);
-    
-    // Convertir l'ID en nombre pour la comparaison
     const articleId = typeof id === 'string' ? parseInt(id, 10) : id;
-    const article = articles.find(article => article.id === articleId);
-    
-    console.log('Article trouvé:', article);
-    return article || null;
+    return articles.find(article => article.id === articleId) || null;
   } catch (error) {
     console.error(`Erreur dans getArticleById(${id}):`, error);
     throw error;
@@ -55,20 +106,27 @@ export const getArticleById = async (id) => {
 };
 
 /**
- * Crée un nouvel article
- * @param {Object} article - Nouvel article à créer
- * @returns {Promise<Object>} Article créé avec son nouvel ID
+ * Crée un nouvel article.
+ * @param {Object} article Données du nouvel article.
+ * @returns {Promise<Object>} Article créé (incluant son ID).
+ * @throws {Error} En cas d'échec réseau/HTTP.
  */
 export const createArticle = async (article) => {
   try {
-    const articles = await getAllArticles();
-    // Génère un nouvel ID (max + 1)
-    const newId = Math.max(...articles.map(a => a.id), 0) + 1;
-    const newArticle = { ...article, id: newId };
+    const response = await fetch(`${API_BASE_URL}/articles`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(article)
+    });
     
-    // En production, on enverrait une requête au serveur
-    // Pour la démo, on simule juste la création
-    return newArticle;
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Erreur lors de la création de l\'article');
+    }
+    
+    return await response.json();
   } catch (error) {
     console.error('Erreur dans createArticle:', error);
     throw error;
@@ -76,25 +134,29 @@ export const createArticle = async (article) => {
 };
 
 /**
- * Met à jour un article existant
- * @param {number} id - ID de l'article à mettre à jour
- * @param {Object} article - Nouvelles données de l'article
- * @returns {Promise<Object>} Article mis à jour
+ * Met à jour un article existant.
+ * @param {number|string} id ID de l'article à mettre à jour.
+ * @param {Object} articleData Nouvelles données de l'article.
+ * @returns {Promise<Object>} Article mis à jour.
+ * @throws {Error} En cas d'échec réseau/HTTP.
  */
-export const updateArticle = async (id, article) => {
+export const updateArticle = async (id, articleData) => {
   try {
-    const articles = await getAllArticles();
-    const index = articles.findIndex(a => a.id === id);
+    const articleId = typeof id === 'string' ? parseInt(id, 10) : id;
+    const response = await fetch(`${API_BASE_URL}/articles/${articleId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(articleData)
+    });
     
-    if (index === -1) {
-      throw new Error(`Article avec l'ID ${id} non trouvé`);
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || `Erreur lors de la mise à jour de l'article ${id}`);
     }
     
-    const updatedArticle = { ...articles[index], ...article, id };
-    
-    // En production, on enverrait une requête au serveur
-    // Pour la démo, on retourne simplement l'article mis à jour
-    return updatedArticle;
+    return await response.json();
   } catch (error) {
     console.error(`Erreur dans updateArticle(${id}):`, error);
     throw error;
@@ -102,21 +164,23 @@ export const updateArticle = async (id, article) => {
 };
 
 /**
- * Supprime un article
- * @param {number} id - ID de l'article à supprimer
- * @returns {Promise<boolean>} true si la suppression a réussi
+ * Supprime un article.
+ * @param {number|string} id ID de l'article à supprimer.
+ * @returns {Promise<boolean>} true si la suppression a réussi.
+ * @throws {Error} En cas d'échec réseau/HTTP.
  */
 export const deleteArticle = async (id) => {
   try {
-    const articles = await getAllArticles();
-    const index = articles.findIndex(a => a.id === id);
+    const articleId = typeof id === 'string' ? parseInt(id, 10) : id;
+    const response = await fetch(`${API_BASE_URL}/articles/${articleId}`, {
+      method: 'DELETE'
+    });
     
-    if (index === -1) {
-      throw new Error(`Article avec l'ID ${id} non trouvé`);
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || `Erreur lors de la suppression de l'article ${id}`);
     }
     
-    // En production, on enverrait une requête au serveur
-    // Pour la démo, on simule juste la suppression
     return true;
   } catch (error) {
     console.error(`Erreur dans deleteArticle(${id}):`, error);
@@ -124,10 +188,66 @@ export const deleteArticle = async (id) => {
   }
 };
 
-export default {
+/**
+ * Récupère le prochain ID disponible pour un nouvel article.
+ *
+ * Stratégie:
+ *  - lit la liste actuelle des articles (API) pour obtenir `maxExistingId`;
+ *  - lit le panier local (localStorage) pour trouver le plus grand ID déjà
+ *    alloué aux créations en attente (`type === 'create'`) -> `maxCartCreateId`;
+ *  - retourne `Math.max(maxExistingId, maxCartCreateId) + 1`.
+ *
+ * @returns {Promise<number>} Prochain ID disponible.
+ * @throws {Error} En cas d'échec de lecture des articles.
+ */
+export const getNextArticleId = async () => {
+  try {
+    // 1) Max des IDs existants côté serveur/API
+    const articles = await getAllArticles();
+    const maxExistingId = articles.length > 0
+      ? Math.max(...articles.map(a => Number(a.id) || 0))
+      : 0;
+
+    // 2) Max des IDs déjà attribués aux créations en attente dans le panier (localStorage)
+    let maxCartCreateId = 0;
+    try {
+      const raw = typeof window !== 'undefined' ? window.localStorage.getItem(CART_STORAGE_KEY) : null;
+      if (raw) {
+        const items = JSON.parse(raw);
+        if (Array.isArray(items)) {
+          for (const it of items) {
+            if (it && it.type === 'create') {
+              const pid = it.payload?.id;
+              const num = Number(pid);
+              if (!Number.isNaN(num)) {
+                maxCartCreateId = Math.max(maxCartCreateId, num);
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {
+      // Si parsing/accès échoue, on ignore simplement la contribution du panier
+      maxCartCreateId = 0;
+    }
+
+    // 3) Calcul final
+    return Math.max(maxExistingId, maxCartCreateId) + 1;
+  } catch (error) {
+    console.error('Erreur dans getNextArticleId:', error);
+    throw error;
+  }
+};
+
+// Export par défaut pour la rétrocompatibilité
+const articleService = {
   getAllArticles,
   getArticleById,
   createArticle,
   updateArticle,
-  deleteArticle
+  deleteArticle,
+  getNextArticleId,
+  applyBatch,
 };
+
+export default articleService;

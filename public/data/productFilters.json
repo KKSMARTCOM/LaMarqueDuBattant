@@ -1,0 +1,50 @@
+{
+  "categories": [
+    "Tshirt",
+    "Pantalon",
+    "Veste",
+    "Chaussure",
+    "Accessoire",
+    "Bijou"
+  ],
+  "collections": [
+    { "id": 1, "name": "Été 2024" },
+    { "id": 2, "name": "Collection Limitée" },
+    { "id": 3, "name": "Nouveautés" },
+    { "id": 4, "name": "Meilleures Ventes" }
+  ],
+  "couleurs": [
+    { "name": "noir", "code": "#000000" },
+    { "name": "blanc", "code": "#FFFFFF" },
+    { "name": "gris", "code": "#808080" },
+    { "name": "bleu", "code": "#0000FF" },
+    { "name": "rouge", "code": "#FF0000" },
+    { "name": "vert", "code": "#008000" },
+    { "name": "rose", "code": "#FFC0CB" },
+    { "name": "jaune", "code": "#FFFF00" },
+    { "name": "violet", "code": "#8A2BE2" },
+    { "name": "orange", "code": "#FFA500" }
+  ],
+  "remises": [
+    "Sans remise",
+    "-10%",
+    "-20%",
+    "-30%",
+    "-40%",
+    "-50%"
+  ],
+  "tailles": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "XXL",
+    "XXXL"
+  ],
+  "sexe": [
+    "Homme",
+    "Femme",
+    "Unisexe"
+  ]
+}

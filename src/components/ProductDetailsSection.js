@@ -45,6 +45,7 @@ import React, { useState, useRef } from "react";
 import getImagePath from "./getImagePath";
 import { addToCartById } from "./cartUtils";
 import { isNewProduct } from "../utils/priceUtils";
+import { generateProductWhatsAppMessage } from "../utils/whatsappUtils";
 
 // --- Composant principal ---
 export default function ProductDetailsSection({ product }) {
@@ -253,7 +254,16 @@ export default function ProductDetailsSection({ product }) {
               </span>
             </button>
           </div>
-          <button className=" font-semibold mb-4 w-full rounded-md h-8 sm:h-full py-0 sm:py-2 bg-white border  border-black text-black hover:bg-black hover:text-white transition duration-200 ">Acheter maintenant</button>
+          <button 
+            className={`font-semibold mb-4 w-full rounded-md h-8 sm:h-full py-0 sm:py-2 bg-black text-white ${!selectedSize ? 'opacity-60 cursor-not-allowed' : 'hover:bg-white hover:text-black hover:border hover:border-black cursor-pointer'}`}
+            disabled={!selectedSize}
+            onClick={() => {
+              const whatsappUrl = generateProductWhatsAppMessage(product, selectedSize);
+              window.open(whatsappUrl, '_blank');
+            }}
+          >
+            ACHETER MAINTENANT
+          </button>
 
           {/* --- Message livraison --- */}
           <div className="text-xs text-gray-500 mb-2">Livraison gratuite dès 50€</div>

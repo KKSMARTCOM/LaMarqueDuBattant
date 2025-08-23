@@ -1,7 +1,19 @@
 /**
- * Service pour charger les collections depuis le fichier JSON
+ * collectionService.js
+ * 
+ * Description:
+ *  Service pour charger les collections et exposer des utilitaires
+ *  à partir de `public/data/collection.json`.
+ * 
+ * Points clés:
+ *  - `loadCollections` renvoie la liste des collections et les catégories uniques.
+ *  - `getCollectionById` lit via `loadCollections` et effectue une recherche par id.
  */
 
+/**
+ * Charge les collections depuis le JSON public.
+ * @returns {Promise<{collections:Array<Object>, categories:Array<string>}>}
+ */
 export const loadCollections = async () => {
   try {
     const response = await fetch('/data/collection.json');
@@ -24,6 +36,11 @@ export const loadCollections = async () => {
   }
 };
 
+/**
+ * Récupère une collection par son identifiant.
+ * @param {number} id Identifiant numérique de la collection.
+ * @returns {Promise<Object|null>} La collection ou null si non trouvée.
+ */
 export const getCollectionById = async (id) => {
   try {
     const { collections } = await loadCollections();

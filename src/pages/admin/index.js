@@ -26,3 +26,5 @@ export { default as Dashboard } from './Dashboard';
 export { default as DashboardHome } from './DashboardHome';
 export { default as ArticlesList } from './ArticlesList';
 export { default as ArticleForm } from './ArticleForm';
+export { default as EventsList } from './EventsList';
+export { default as EventForm } from './EventForm';

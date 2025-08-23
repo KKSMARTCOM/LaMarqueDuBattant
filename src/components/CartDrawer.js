@@ -33,6 +33,7 @@ import React, { useState, useEffect } from "react";
 import fetchData from "./fetchData";
 import getImagePath from "./getImagePath";
 import useCartItems from '../hooks/useCartItems';
+import { generateCartWhatsAppMessage } from '../utils/whatsappUtils';
 
 export default function CartDrawer({ open, onClose }) {
   // Utilisation du hook useCartItems pour gérer le panier
@@ -191,13 +192,19 @@ export default function CartDrawer({ open, onClose }) {
                 }, 0);
                 
                 return (
-                  <button className="bouttonCheckout">
+                  <button 
+                    className="bouttonCheckout"
+                    disabled={cartItems.length === 0}
+                    onClick={() => {
+                      const whatsappUrl = generateCartWhatsAppMessage(cartItems);
+                      window.open(whatsappUrl, '_blank');
+                    }}
+                  >
                     <span className="text">
-                      CHECKOUT - {subtotal.toLocaleString('fr-FR')} FCFA
+                      COMMANDER VIA WHATSAPP - {subtotal.toLocaleString('fr-FR')} FCFA
                     </span>
                     <span className="text-xs font-normal mt-1">
-                      Thanks! - {subtotal.toLocaleString('fr-FR')} FCFA <br />
-                      Vous économisez {totalSavings > 0 ? totalSavings.toLocaleString('fr-FR') : 0} FCFA
+                      {totalSavings > 0 ? `Économies: ${totalSavings.toLocaleString('fr-FR')} FCFA` : ''}
                     </span>
                   </button>
                 );

@@ -42,7 +42,7 @@ const ArticlesSection = ({
         { label: 'Chaussures', url: '/produits?sexe=homme&categorie=chaussures' },
         { label: 'Accessoires', url: '/produits?sexe=homme&categorie=accessoires' },
         { label: 'Collection', url: '/produits?collection=true' },
-        { label: 'Tous les produits', url: '/produits?sexe=homme' }
+        { label: 'Produits hommes', url: '/produits?sexe=homme' }
       ];
     }
     
@@ -53,7 +53,7 @@ const ArticlesSection = ({
       { label: 'Chaussures', url: '/produits?sexe=femme&categorie=chaussures' },
       { label: 'Accessoires', url: '/produits?sexe=femme&categorie=accessoires' },
       { label: 'Collection', url: '/produits?collection=true' },
-      { label: 'Tous les produits', url: '/produits?sexe=femme' }
+      { label: 'Produits femmes', url: '/produits?sexe=femme' }
     ];
   }, [title]);
 
@@ -90,17 +90,7 @@ const ArticlesSection = ({
           imageUrl={rightColumnImage}
           buttonText="VOIR TOUT"
           altText={title}
-          onButtonClick={(e) => {
-            e.preventDefault();
-            const basePath = title.toLowerCase();
-            const url = (basePath === 'soldes' || basePath === 'sale') 
-              ? '/soldes' 
-              : `/${basePath}`;
-            if (onFooterLinkClick) {
-              onFooterLinkClick({ preventDefault: () => {}, target: { dataset: { url } } });
-            }
-          }}
-          data-url={title.toLowerCase() === 'soldes' || title.toLowerCase() === 'sale' ? '/soldes' : `/${title.toLowerCase()}`}
+          clickurl='/produits'
         />
       </div>
 

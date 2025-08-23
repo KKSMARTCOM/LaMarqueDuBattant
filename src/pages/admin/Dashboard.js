@@ -34,6 +34,7 @@ import {
   FiTag, 
   FiUsers, 
   FiSettings, 
+  FiFileText,
   FiChevronLeft, 
   FiChevronRight,
   FiInstagram,
@@ -47,11 +48,16 @@ import DashboardHome from './DashboardHome';
 import ArticlesList from './ArticlesList';
 import ArticleForm from './ArticleForm';
 import ProductSheet from './ProductSheet';
+import useChangesCart from '../../hooks/useChangesCart';
+import EventsList from './EventsList';
+import EventForm from './EventForm';
+import SiteInfoForm from './SiteInfoForm';
 
 // Composant Sidebar pour la navigation
 const Sidebar = ({ isCollapsed, toggleSidebar }) => {
   const location = useLocation();
   const [activePath, setActivePath] = useState('');
+  const { count, openModal } = useChangesCart();
 
   useEffect(() => {
     setActivePath(location.pathname);
@@ -60,10 +66,10 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
   const menuItems = [
     { path: '/admin', icon: <FiHome className="h-5 w-5" />, label: 'Tableau de bord' },
     { path: '/admin/articles', icon: <FiShoppingBag className="h-5 w-5" />, label: 'Articles' },
-    { path: '/admin/categories', icon: <FiTag className="h-5 w-5" />, label: 'Catégories' },
-    { path: '/admin/clients', icon: <FiUsers className="h-5 w-5" />, label: 'Clients' },
-    { path: '/admin/parametres', icon: <FiSettings className="h-5 w-5" />, label: 'Paramètres' },
-  ];
+    { path: '/admin/events', icon: <FiUsers className="h-5 w-5" />, label: 'Événements' },
+    { path: '/admin/collections', icon: <FiTag className="h-5 w-5" />, label: 'Collections' },
+    { path: '/admin/site-info', icon: <FiFileText className="h-5 w-5" />, label: 'Site Infos' },
+    ];
 
   return (
     <div 
@@ -99,7 +105,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
       </div>
       
       {/* Bouton Nouvel article */}
-      <div className={`border-b border-gray-700 px-4 py-3 ${isCollapsed ? 'px-2' : 'px-4'}`}>
+      <div className={`border-b mb-4 border-gray-700 px-4 py-3 ${isCollapsed ? 'px-2' : 'px-4'}`}>
         <Link
           to="/admin/articles/nouveau"
           className={`flex items-center justify-center w-full px-3 py-3 text-sm font-medium text-black bg-white rounded-md  hover:bg-white/80 transition-colors duration-300 ${
@@ -112,14 +118,38 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
           </svg>
           {!isCollapsed && 'Nouvel article'}
         </Link>
+        {/* Bouton Panier de modifications */}
+        <button
+          onClick={openModal}
+          className={`mt-3 relative flex items-center justify-center w-full px-3 py-3 text-sm font-medium rounded-md border border-white/20 text-white hover:bg-white/10 transition-colors duration-300 ${
+            isCollapsed ? 'justify-center p-2' : 'px-4'
+          }`}
+          title="Ouvrir le panier de modifications"
+        >
+          <span className={`inline-flex items-center ${!isCollapsed ? 'mr-2' : ''}`}>
+            {/* simple icon */}
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 6h15l-1.5 9h-12z" />
+              <path d="M6 6l-2 0" />
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="18" cy="21" r="1" />
+            </svg>
+          </span>
+          {!isCollapsed && 'Panier de modifications'}
+          {count > 0 && (
+            <span className="absolute -top-2 -right-2 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-white bg-red-600 rounded-full">
+              {count}
+            </span>
+          )}
+        </button>
       </div>
       
-    <nav className="flex-1 space-y-1 mt-2">
+    <nav className="flex-1 space-y-1 mt-1">
             {menuItems.map((item) => (
             <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center  px-2 py-4 mx-4 rounded-md  transition-colors group ${
+                className={`flex items-center  px-2 py-2 mx-4 rounded-md  transition-colors group ${
                 activePath === item.path 
                     ? 'bg-white bg-opacity-15 backdrop-blur-2xl text-white' 
                     : 'text-gray-300 hover:bg-white/5 hover:text-white'
@@ -132,9 +162,26 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
                 {!isCollapsed && <span className="ml-3 text-sm">{item.label}</span>}
             </Link>
             ))}
+            <div className="h-12 mx-4 mt-6  border-gray-700 border-b"></div>
+            <Link
+                key={"/admin/parametres"}
+                to={"/admin/parametres"}
+                className={`flex items-center  px-2 py-4  mx-4 rounded-md  transition-colors group ${
+                activePath === "/admin/parametres" 
+                    ? 'bg-white bg-opacity-15 backdrop-blur-2xl text-white' 
+                    : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                } ${isCollapsed ? 'justify-center' : ''}`}
+                title={isCollapsed ? "Paramètres" : ''}
+            >
+                <span className={activePath === "/admin/parametres" ? 'text-white' : 'text-gray-300 group-hover:text-white'}>
+                {React.cloneElement(<FiSettings className="h-5 w-5" />, { className: 'h-4 w-4' })}
+                </span>
+                {!isCollapsed && <span className="ml-3 text-sm">Paramètres</span>}
+            </Link>
     </nav>
-      <div className="pt-4 border-t border-gray-700 mt-auto">
-        <div className={`flex ${isCollapsed ? 'flex-col items-center space-y-3' : 'flex-row justify-center space-x-4'} p-3`}>
+    
+      <div className={`pt-4 rounded-md bg-white/20 mt-4 ${isCollapsed ? 'mx-2 mb-12 ' : 'mx-4 mb-4'}`}>
+        <div className={`flex   ${isCollapsed ? 'flex-col items-center space-y-3' : 'flex-row justify-center space-x-4'} p-3`}>
           <a 
             href="https://www.instagram.com/lamarquedubattant" 
             target="_blank" 
@@ -208,13 +255,14 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 overflow-hidden">
       <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
       <div 
         className={`flex-1 overflow-auto transition-all duration-300 ${
           isCollapsed ? 'md:ml-2' : 'md:ml-4'
         }`}
         onClick={handleNavigation}
+        style={{ overscrollBehavior: 'contain' }}
       >
         <div className="p-4 md:p-6">
           <Outlet />
@@ -236,6 +284,12 @@ const Dashboard = () => {
           <Route path=":id/modifier" element={<ArticleForm />} />
           <Route path=":id" element={<ProductSheet />} />
         </Route>
+        <Route path="events">
+          <Route index element={<EventsList />} />
+          <Route path="nouveau" element={<EventForm />} />
+          <Route path=":id/modifier" element={<EventForm />} />
+        </Route>
+        <Route path="site-info" element={<SiteInfoForm />} />
         {/* Redirection pour les routes inconnues */}
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Route>

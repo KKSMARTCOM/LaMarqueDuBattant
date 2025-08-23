@@ -32,9 +32,50 @@ import {
 } from '../../services/articleService';
 import getImagePath from '../../components/getImagePath';
 import Loader from '../../components/Loader';
+import useChangesCart from '../../hooks/useChangesCart';
+import { getCollectionsMap } from '../../services/filterService';
 
 const ArticlesList = () => {
   const navigate = useNavigate();
+  // Panier de modifications: permet de mettre en file d'attente des opérations (create/update/delete)
+  // pour une application ultérieure en batch depuis la modale dédiée.
+  const { count, openModal, addChange } = useChangesCart();
+  // Map des couleurs pour gérer les noms non CSS -> codes hex
+  const COLOR_MAP = {
+    'noir': '#000000',
+    'blanc': '#FFFFFF',
+    'gris': '#808080',
+    'gris foncé': '#555555',
+    'gris anthracite': '#333333',
+    'bleu': '#0000FF',
+    'bleu marine': '#001F3F',
+    'rouge': '#FF0000',
+    'rouge bordeaux': '#800020',
+    'rose': '#FFC0CB',
+    'rose poudré': '#EEC9D2',
+    'jaune': '#FFFF00',
+    'marron': '#8B4513',
+    'camel': '#C19A6B',
+    'taupe': '#483C32',
+    'beige': '#F5F5DC',
+    'kaki': '#78866B',
+    'vert': '#008000',
+    'vert militaire': '#4B5320',
+    'mauve': '#E0B0FF',
+    'blanc cassé': '#F8F8F0',
+  };
+  const norm = (s = '') => s.toString().trim().toLowerCase();
+  // Retourne { name, code } à partir d'une entrée ("name:code" ou nom legacy)
+  const parseColorEntry = (entry) => {
+    if (!entry) return { name: '', code: '' };
+    if (typeof entry === 'string' && entry.includes(':')) {
+      const [name, code] = entry.split(':');
+      return { name: name.trim(), code: code.trim() };
+    }
+    const name = typeof entry === 'string' ? entry : (entry.name || entry.label || '');
+    const code = COLOR_MAP[norm(name)] || name; // si name est déjà un code CSS
+    return { name, code };
+  };
   // Styles pour le tableau
   const tableCellStyle = "px-4 py-3.5 text-sm text-gray-800 whitespace-nowrap text-left border-r border-gray-100 last:border-r-0";
   const tableHeaderStyle = "px-4 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider bg-gray-50 border-b border-gray-200 last:border-r-0";
@@ -44,11 +85,13 @@ const ArticlesList = () => {
   
   const [articles, setArticles] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Toutes');
+  const [selectedCategory] = useState('Toutes');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [collectionsMap, setCollectionsMap] = useState({});
   const [selectedArticle, setSelectedArticle] = useState(null);
+
 
   // Récupérer les catégories uniques depuis les articles
   //const categories = ['Toutes', ...new Set(articles.map(article => article.category))];
@@ -68,22 +111,49 @@ const ArticlesList = () => {
     }
   };
 
+  // La fonction refreshArticleList a été supprimée car non utilisée
+  // La fonction loadArticles est utilisée à la place
+
   // Charger les articles au montage et à chaque rafraîchissement
   useEffect(() => {
     loadArticles();
   }, [refreshKey]);
 
-  // Fonction pour supprimer un article
+  // Charger la map des collections (id -> name)
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        const map = await getCollectionsMap();
+        if (isMounted) setCollectionsMap(map || {});
+      } catch (e) {
+        if (isMounted) setCollectionsMap({});
+      }
+    })();
+    return () => { isMounted = false; };
+  }, []);
+
+  // Ancienne suppression immédiate (appel serveur direct). Conservée pour référence.
+  // Préférer désormais la mise au panier (voir handleQueueDelete).
   const handleDelete = async (id) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article immédiatement ?')) {
       try {
         await deleteArticle(id);
-        // Recharger les articles après suppression
         setRefreshKey(prev => prev + 1);
       } catch (err) {
         setError('Erreur lors de la suppression de l\'article');
         console.error('Erreur:', err);
       }
+    }
+  };
+
+  // Nouvelle approche: on ajoute une opération de suppression dans le panier de modifications.
+  // L'utilisateur pourra ensuite appliquer toutes ses modifications en une seule fois (batch).
+  const handleQueueDelete = (id) => {
+    if (!id) return;
+    if (window.confirm('Ajouter la suppression de cet article au panier de modifications ?')) {
+      addChange({ type: 'delete', targetId: id, source: 'ArticlesList' });
+      // La modale s'ouvre automatiquement via le contexte pour donner un feedback immédiat.
     }
   };
 
@@ -104,7 +174,7 @@ const ArticlesList = () => {
 
   // Fonction pour formater le prix
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price);
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(price);
   };
 
   // Fonction pour formater la date
@@ -157,21 +227,34 @@ const ArticlesList = () => {
             <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-gray-900">Gestion des articles</h2>
             <div className="flex space-x-3">
-                <button
+              <button
                 onClick={() => setRefreshKey(prev => prev + 1)}
                 className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-md text-sm leading-4 font-medium rounded-md  text-white/80 bg-black/95 hover:bg-black/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
                 title="Actualiser la liste"
-                >
+              >
                 <FiRefreshCw className="-ml-0.5 mr-2 h-4 w-4" />
                 Actualiser
-                </button>
-                <Link
+              </button>
+              <button
+                onClick={openModal}
+                className="relative inline-flex items-center px-3 py-2 border border-gray-300 shadow-md text-sm leading-4 font-medium rounded-md text-black bg-white hover:bg-white/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black/20"
+                title="Ouvrir le panier de modifications"
+                aria-label="Ouvrir le panier de modifications"
+              >
+                <span className="mr-2">Panier</span>
+                {count > 0 && (
+                  <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-white bg-red-600 rounded-full">
+                    {count}
+                  </span>
+                )}
+              </button>
+              <Link
                 to="/admin/articles/nouveau"
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-md text-black/80 bg-white hover:bg-white/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black/20"
-                >
+              >
                 <FiPlus className="-ml-1 mr-2 h-5 w-5" />
                 Nouvel article
-                </Link>
+              </Link>
             </div>
             </div>
         </div>
@@ -221,10 +304,10 @@ const ArticlesList = () => {
             </button>
             <button
                 className={`p-2 rounded-md transition-colors ${selectedArticle ? 'text-red-600 hover:bg-red-50' : 'text-gray-300 cursor-not-allowed'}`}
-              title={selectedArticle ? "Supprimer" : "Sélectionnez un article"}
+              title={selectedArticle ? "Mettre la suppression au panier" : "Sélectionnez un article"}
               disabled={!selectedArticle}
-              onClick={() => selectedArticle && handleDelete(selectedArticle.id)}
-                aria-label="Supprimer l'article"
+              onClick={() => selectedArticle && handleQueueDelete(selectedArticle.id)}
+                aria-label="Mettre la suppression au panier"
             >
               <FiTrash2 className="h-5 w-5" />
             </button>
@@ -239,14 +322,6 @@ const ArticlesList = () => {
             </button>
             </div>
             
-            <button
-              className="px-4 py-2 bg-black/95 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-              title="Filtrer les articles"
-              onClick={() => setRefreshKey(prev => prev + 1)}
-              aria-label="Appliquer les filtres"
-            >
-              Appliquer
-            </button>
         </div>
       </div>
     </div>
@@ -351,7 +426,9 @@ const ArticlesList = () => {
                         {/* Colonne Collection */}
                         <td className={tableCellStyle} style={{ verticalAlign: 'top' }}>
                           {article.collectionId ? (
-                            <span className="text-sm">{article.collectionId}</span>
+                            <span className="text-sm">
+                              {article.collectionId} - {collectionsMap[Number(article.collectionId)] || '-'}
+                            </span>
                           ) : (
                             <span className="text-gray-400 text-sm">-</span>
                           )}
@@ -372,18 +449,21 @@ const ArticlesList = () => {
                           </div>
                         </td>
                         
-                        {/* Colonne Couleurs */}
+                        {/* Colonne Couleurs (swatches uniquement) */}
                         <td className={tableCellStyle} style={{ verticalAlign: 'top' }}>
                           <div className="flex flex-wrap gap-1">
                             {article.availableColors && article.availableColors.length > 0 ? (
-                              article.availableColors.map((color, index) => (
-                                <div 
-                                  key={index}
-                                  className="w-4 h-4 rounded-full border border-gray-200"
-                                  style={{ backgroundColor: color }}
-                                  title={color}
-                                />
-                              ))
+                              article.availableColors.map((entry, index) => {
+                                const { name, code } = parseColorEntry(entry);
+                                return (
+                                  <div
+                                    key={index}
+                                    className="w-4 h-4 rounded-full border border-gray-200"
+                                    style={{ backgroundColor: code }}
+                                    title={name || code}
+                                  />
+                                );
+                              })
                             ) : (
                               <span className="text-gray-400 text-sm">-</span>
                             )}

@@ -34,7 +34,7 @@ const MegaMenuItemCard = ({
 
   return (
     <div 
-      className={`w-[220px] h-[280px] group relative overflow-hidden shadow hover:shadow-lg border border-gray-100 bg-black flex flex-col justify-end ${className}`}
+      className={`w-[220px] h-[280px] group relative overflow-hidden shadow hover:shadow-lg rounded-md border border-gray-100 bg-black flex flex-col justify-end ${className}`}
       style={{ cursor: 'pointer' }}
     >
       {/* Image de l'article */}
@@ -53,7 +53,7 @@ const MegaMenuItemCard = ({
       
       {/* Badge de réduction */}
       {hasDiscount && (
-        <span className="absolute top-2 right-2 bg-white text-black text-[10px] md:text-[11px] font-bold px-2 py-1 z-20 shadow">
+        <span className="absolute top-2 right-2 bg-white rounded-md text-black text-[10px] md:text-[11px] font-bold px-2 py-1 z-20 shadow">
           -{item.discount_percent}%
         </span>
       )}

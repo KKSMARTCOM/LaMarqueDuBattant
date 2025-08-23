@@ -252,6 +252,7 @@ export default function ProductPageSection() {
                 updateFilter('priceMin', undefined);
                 updateFilter('priceMax', undefined);
                 updateFilter('nouveau', false);
+                updateFilter('collections', []);
             }}
             title="Réinitialiser les filtres"
           >
@@ -260,7 +261,7 @@ export default function ProductPageSection() {
             </svg>
           </button>
           {/* Affichage dynamique des filtres actifs */}
-          <span className="text-sm sm:text-2xl font-extrabold tracking-wide">
+          <span className="text-sm text-left sm:text-2xl font-extrabold tracking-wide">
             {!filters.categorie ? (
               <span><b>TOUT</b> </span>
             ) : (
@@ -344,6 +345,7 @@ export default function ProductPageSection() {
                 updateFilter('priceMin', undefined);
                 updateFilter('priceMax', undefined);
                 updateFilter('nouveau', false);
+                updateFilter('collections', []);
               }}
               className="inline-flex items-center px-4 py-2 rounded-md border border-transparent text-sm font-medium  shadow-sm text-white bg-black hover:bg-gray-950 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black transition-colors duration-200"
             >

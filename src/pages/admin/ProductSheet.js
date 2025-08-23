@@ -12,6 +12,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getArticleById, deleteArticle } from '../../services/articleService';
 import getImagePath from '../../components/getImagePath';
 import Loader from '../../components/Loader';
+import useChangesCart from '../../hooks/useChangesCart';
 
 const ProductSheet = () => {
   const { id } = useParams();
@@ -19,7 +20,9 @@ const ProductSheet = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+ // const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  // Panier de modifications pour planifier les suppressions
+  const { addChange, openModal } = useChangesCart();
 
   // Charger les données du produit
   useEffect(() => {
@@ -60,6 +63,29 @@ const ProductSheet = () => {
   const formatPrice = (price) => 
     new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' })
       .format(price || 0);
+
+  // Suppression immédiate (ancienne approche) - conservée pour référence/dépannage
+  const handleImmediateDelete = async () => {
+    if (!product?.id) return;
+    if (window.confirm('Supprimer définitivement cet article maintenant ?')) {
+      try {
+        await deleteArticle(product.id);
+        navigate('/admin/articles');
+      } catch (e) {
+        console.error('Erreur suppression immédiate:', e);
+      }
+    }
+  };
+
+  // Nouvelle approche: ajouter la suppression au panier de modifications
+  const handleQueueDelete = () => {
+    if (!product?.id) return;
+    if (window.confirm('Ajouter la suppression de cet article au panier de modifications ?')) {
+      addChange({ type: 'delete', targetId: Number(product.id), source: 'ProductSheet' });
+      // Ouvrir la modale pour feedback
+      openModal();
+    }
+  };
 
   if (loading) {
     return (
@@ -267,11 +293,11 @@ const ProductSheet = () => {
               Modifier
             </button>
             <button
-              onClick={() => deleteArticle(product.id )}
+              onClick={handleQueueDelete}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700"
             >
               <FiTrash2 className="-ml-1 mr-2 h-5 w-5" />
-              Supprimer
+              Mettre la suppression au panier
             </button>
           </div>
         </div>

@@ -1,10 +1,23 @@
+/**
+ * useEventDetails.js
+ *
+ * Description:
+ *  Hook personnalisé pour charger les détails d'un événement en fonction de l'ID
+ *  provenant des paramètres d'URL (react-router-dom). Fournit les états
+ *  `event`, `loading`, `error` et un helper pour revenir à la liste.
+ */
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import fetchData from '../components/fetchData';
 
 /**
- * Hook personnalisé pour gérer la logique de la page de détail d'un événement
- * @returns {Object} Les états et fonctions nécessaires pour la page de détail d'événement
+ * Hook personnalisé pour gérer la logique de la page de détail d'un événement.
+ * @returns {{
+ *  event: null | { id:number, [key:string]: any },
+ *  loading: boolean,
+ *  error: string,
+ *  handleBackToEvents: () => void,
+ * }} Les états et fonctions nécessaires pour la page de détail d'événement
  */
 export function useEventDetails() {
   const { id } = useParams(); // Changé de eventId à id pour correspondre à la route
@@ -15,6 +28,7 @@ export function useEventDetails() {
 
   useEffect(() => {
     // On utilise async/await pour gérer l'appel à fetchData
+    /** Charge les événements et sélectionne celui demandé. */
     const fetchEvent = async () => {
       try {
         // On charge les événements
@@ -51,7 +65,7 @@ export function useEventDetails() {
     }
   }, [id]);
 
-  // Fonction pour retourner à la page des événements
+  /** Fonction utilitaire pour retourner à la page des événements. */
   const handleBackToEvents = () => {
     navigate('/events');
   };

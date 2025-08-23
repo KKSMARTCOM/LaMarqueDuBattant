@@ -85,9 +85,10 @@ const EventsSection = ({
             <div className="text-gray-500 text-sm">Aucun événement à afficher</div>
           ) : (
             filteredEvents.map(event => (
+              <Link to={`/events/${event.id}`} key={event.id}>
               <div 
                 key={event.id} 
-                className="w-[230px] h-[280px] group relative overflow-hidden shadow hover:shadow-lg border border-gray-100 bg-black flex flex-col justify-end"
+                className="w-[230px] h-[280px] rounded-md group relative overflow-hidden shadow hover:shadow-lg border border-gray-100 bg-black flex flex-col justify-end"
               >
                 {/* Image de l'événement */}
                 <img
@@ -108,6 +109,7 @@ const EventsSection = ({
                   <p className="text-xs text-gray-300 line-clamp-2">{event.description}</p>
                 </div>
               </div>
+              </Link>
             ))
           )}
         </div>
@@ -117,11 +119,7 @@ const EventsSection = ({
           imageUrl={getImagePath('hero.webp', 'cover')}
           buttonText="TOUS LES ÉVÉNEMENTS"
           altText="Événements"
-          onButtonClick={() => {
-            if (typeof onFooterLinkClick === 'function') {
-              onFooterLinkClick('events');
-            }
-          }}
+          clickurl="/events"
         />
       </div>
 

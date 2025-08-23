@@ -54,8 +54,9 @@
  * ```
  */
 
-import React, { useState, useEffect } from "react";
-import { loadCollections } from "../services/collectionService";
+import React, { useState, useEffect } from 'react';
+//import { loadCollections } from '../services/collectionService';
+import { getFilterValues } from '../services/filterService';
 
 export default function FilterBar({ 
   filters, 
@@ -74,21 +75,65 @@ export default function FilterBar({
     nouveau = false
   } = filters || {};
   
-  // État pour stocker les catégories de collection
-  const [collectionCategories, setCollectionCategories] = useState([]);
-  
-  // Charger les catégories de collection au montage du composant
+  // État pour les collections complètes {id,name}
+  const [collections, setCollections] = useState([]);
+  // Charger les valeurs de filtre
+  const [filterOptions, setFilterOptions] = useState({
+    categories: [],
+    remises: [],
+    tailles: [],
+    sexe: []
+  });
+
+  // Charger les catégories de collection et les valeurs de filtre au montage du composant
   useEffect(() => {
-    const fetchCollections = async () => {
+    let isMounted = true;
+    
+    const loadAllFilters = async () => {
       try {
-        const { categories } = await loadCollections();
-        setCollectionCategories(categories || []);
+        // Charger les collections
+        //const { collections } = await loadCollections();
+        
+        // Charger les valeurs de filtre avec des valeurs par défaut en cas d'erreur
+        const [categories = [], remises = [], tailles = [], sexe = [], loadedCollections = []] = await Promise.all([
+          getFilterValues('categories').catch(() => []),
+          getFilterValues('remises').catch(() => ['Sans remise']),
+          getFilterValues('tailles').catch(() => []),
+          getFilterValues('sexe').catch(() => []),
+          getFilterValues('collections').catch(() => [])
+        ]);
+        
+        // Ne mettre à jour l'état que si le composant est toujours monté
+        if (isMounted) {
+          setCollections(Array.isArray(loadedCollections) ? loadedCollections : []);
+          setFilterOptions({
+            categories: Array.isArray(categories) ? categories : [],
+            remises: ['Sans remise', ...(Array.isArray(remises) ? remises.filter(r => r && r !== 'Sans remise') : [])],
+            tailles: Array.isArray(tailles) ? tailles : [],
+            sexe: Array.isArray(sexe) ? sexe : [],
+            collections: Array.isArray(loadedCollections) ? loadedCollections : []
+          });
+        }
       } catch (error) {
-        console.error('Erreur lors du chargement des collections:', error);
+        console.error('Erreur lors du chargement des filtres:', error);
+        // En cas d'erreur, utiliser des tableaux vides pour éviter les erreurs
+        if (isMounted) {
+          setFilterOptions({
+            categories: [],
+            remises: ['Sans remise'],
+            tailles: [],
+            sexe: []
+          });
+        }
       }
     };
     
-    fetchCollections();
+    loadAllFilters();
+    
+    // Nettoyage en cas de démontage du composant
+    return () => {
+      isMounted = false;
+    };
   }, []);
   
   // Gestionnaires de changement de filtre
@@ -96,18 +141,24 @@ export default function FilterBar({
     onFilterChange('categorie', e.target.value);
   };
   
-  const handleRemiseToggle = (remise) => {
-    const newRemises = remises.includes(remise)
-      ? remises.filter(r => r !== remise)
-      : [...remises, remise];
-    onFilterChange('remises', newRemises);
+  const handleRemiseChange = (e) => {
+    onFilterChange('remises', e.target.value ? [e.target.value] : []);
   };
   
   const handleTailleToggle = (taille) => {
-    const newTailles = tailles.includes(taille)
-      ? tailles.filter(t => t !== taille)
-      : [...tailles, taille];
+    if (!taille) return;
+    
+    const currentTailles = Array.isArray(tailles) ? tailles : [];
+    const newTailles = currentTailles.includes(taille)
+      ? currentTailles.filter(t => t !== taille)
+      : [...currentTailles, taille];
+      
     onFilterChange('tailles', newTailles);
+  };
+  
+  const handleCollectionChange = (e) => {
+    const val = e.target.value;
+    onFilterChange('collections', val ? [Number(val)] : []);
   };
   
   const handleSexeChange = (newSexe) => {
@@ -141,14 +192,6 @@ export default function FilterBar({
   // Gestionnaire pour le filtre "Nouveau"
   const handleShowNewOnlyChange = (e) => {
     onFilterChange('nouveau', e.target.checked);
-  };
-  
-  // Gestionnaire pour le filtre "Collection"
-  const handleCollectionToggle = (collectionCategorie) => {
-    const newCollections = filters.collections?.includes(collectionCategorie)
-      ? filters.collections.filter(c => c !== collectionCategorie)
-      : [...(filters.collections || []), collectionCategorie];
-    onFilterChange('collections', newCollections);
   };
 
   // Réinitialiser tous les filtres
@@ -209,20 +252,20 @@ export default function FilterBar({
       
       {/* Catégories */}
       <div className="mb-4 border-b border-black/10 py-2">
-        <details>
-        <summary className=" cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">CATÉGORIES</summary>
-        <select
-          className="w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black text-gray-600"
-          value={categorie}
-          onChange={handleCategorieChange}
-        >
-          <option value="" className="text-gray-500">Toutes les catégories</option>
-          <option value="tshirt" className="text-gray-500">T-shirt</option>
-          <option value="sweat" className="text-gray-500">Sweat</option>
-          <option value="veste" className="text-gray-500">Veste</option>
-          <option value="pantalon" className="text-gray-500">Pantalon</option>
-          <option value="accessoire" className="text-gray-500">Accessoire</option>
-        </select>
+        <details open>
+          <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">CATÉGORIES</summary>
+          <select
+            className="w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black text-gray-600 mt-2"
+            value={categorie || ''}
+            onChange={handleCategorieChange}
+          >
+            <option value="">Toutes les catégories</option>
+            {filterOptions.categories?.map((category) => (
+              <option key={category} value={category.toLowerCase()} className="text-gray-900">
+                {category}
+              </option>
+            ))}
+          </select>
         </details>
       </div>
 
@@ -353,59 +396,43 @@ export default function FilterBar({
       </div>
 
 
-      {/* Remise */}
+      {/* Remises */}
       <div className="mb-4 border-b border-black/10 py-2">
         <details>
-        <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">REMISE</summary>
-        <div className="flex flex-wrap gap-5">
-          <label className="flex items-center rounded-md gap-2 text-sm text-gray-600">
-            <input
-              type="checkbox"
-              className="w-5 h-5 rounded-2xl accent-black"
-              checked={remises.includes('Sans remise')}
-              onChange={() => handleRemiseToggle('Sans remise')}
-            /> Sans remise
-          </label>
-          <label className="flex items-center rounded-md gap-2 text-sm text-gray-600">
-            <input
-              type="checkbox"
-              className="w-5 h-5 rounded-md accent-black"
-              checked={remises.includes('-10%')}
-              onChange={() => handleRemiseToggle('-10%')}
-            /> -10%
-          </label>
-          <label className="flex items-center rounded-md gap-2 text-sm text-gray-600">
-            <input
-              type="checkbox"
-              className="w-5 h-5 rounded-md accent-black"
-              checked={remises.includes('-20%')}
-              onChange={() => handleRemiseToggle('-20%')}
-            /> -20%
-          </label>
-          <label className="flex items-center rounded-md gap-2 text-sm text-gray-600">
-            <input
-              type="checkbox"
-              className="w-5 h-5 rounded-md accent-black"
-              checked={remises.includes('-30% et plus')}
-              onChange={() => handleRemiseToggle('-30% et plus')}
-            /> -30% et plus
-          </label>
-        </div>
+          <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">REMISES</summary>
+          <select
+            className="w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black text-gray-600 mt-2"
+            value={Array.isArray(remises) && remises.length > 0 ? remises[0] : ''}
+            onChange={handleRemiseChange}
+          >
+            <option value="">Toutes les remises</option>
+            {filterOptions.remises?.map((remise) => (
+              <option key={remise} value={remise} className="text-gray-900">
+                {remise === 'Sans remise' ? 'Sans remise' : `Jusqu'à ${remise}`}
+              </option>
+            ))}
+          </select>
         </details>
       </div>
 
 
-      {/* Taille */}
+      {/* Tailles */}
       <div className="mb-4 border-b border-black/10 py-2">
-        <details>
-        <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">TAILLE</summary>
-        <div className="flex flex-wrap gap-5">
-          {['XS','S','M','L','XL'].map(size => (
-            <label key={size} className="rounded-md flex items-center gap-1 text-sm text-gray-600">
-              <input type="checkbox" className="w-5 h-5 rounded-md accent-black" checked={tailles.includes(size)} onChange={() => handleTailleToggle(size)} /> {size}
-            </label>
-          ))}
-        </div>
+        <details open>
+          <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">TAILLE</summary>
+          <div className="flex flex-wrap gap-5 mt-2">
+            {filterOptions.tailles?.map((taille) => (
+              <label key={taille} className="rounded-md flex items-center gap-2 text-sm text-gray-600">
+                <input 
+                  type="checkbox" 
+                  className="w-5 h-5 rounded-md accent-black" 
+                  checked={tailles.includes(taille)}
+                  onChange={() => handleTailleToggle(taille)} 
+                />
+                {taille}
+              </label>
+            ))}
+          </div>
         </details>
       </div>
 
@@ -414,40 +441,38 @@ export default function FilterBar({
       <div className="mb-4 border-b border-black/10 py-2">
         <details>
         <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">SEXE</summary>
-        <select
-          className="flex-1 w-full rounded-md border justify-start justify-items-start border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black text-gray-600"
-          value={sexe}
-          onChange={e => handleSexeChange(e.target.value)}
-        >
-          <option value="">Tous</option>
-          <option value="Homme">Homme</option>
-          <option value="Femme">Femme</option>
-          <option value="Unisexe">Unisexe</option>
-        </select>
+        <div className="flex flex-wrap gap-5 mt-2">
+          {['Homme', 'Femme', 'Unisexe'].map((sexeOption) => (
+            <label key={sexeOption} className="rounded-md flex items-center gap-2 text-sm text-gray-600">
+              <input 
+                type="checkbox" 
+                className="w-5 h-5 rounded-md accent-black" 
+                checked={sexe?.includes(sexeOption)}
+                onChange={() => handleSexeChange(sexeOption)} 
+              />
+              {sexeOption}
+            </label>
+          ))}
+        </div>
         </details>
       </div>
 
-      {/* Collection  */}
+      {/* Collection */}
       <div className="mb-4 border-b border-black/10 py-2">
         <details>
           <summary className="cursor-pointer text-left text-sm mb-2 font-semibold uppercase tracking-wider">COLLECTION</summary>
-          <div className="flex flex-col gap-5">
-            {collectionCategories.length > 0 ? (
-              collectionCategories.map(category => (
-                <label key={category} className="rounded-md flex items-center gap-1 text-sm text-gray-600 cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    className="w-5 h-5 rounded-md accent-black"
-                    checked={filters.collections?.includes(category) || false}
-                    onChange={() => handleCollectionToggle(category)}
-                  />
-                  {category}
-                </label>
-              ))
-            ) : (
-              <p className="text-sm text-gray-500">Chargement des collections...</p>
-            )}
-          </div>
+          <select
+            className="w-full rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-black text-gray-600 mt-2"
+            value={(filters.collections && filters.collections.length > 0) ? String(filters.collections[0]) : ''}
+            onChange={handleCollectionChange}
+          >
+            <option value="">Toutes les collections</option>
+            {(Array.isArray(collections) ? collections : []).map((col) => (
+              <option key={col.id} value={col.id} className="text-gray-900">
+                {col.id} - {col.name}
+              </option>
+            ))}
+          </select>
         </details>
       </div>
     </div>

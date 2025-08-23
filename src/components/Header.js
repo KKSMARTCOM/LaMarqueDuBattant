@@ -198,15 +198,10 @@ export default function Header({ showCategoriesBar, opacity = 80 }) {
           <input
             type="text"
             placeholder="Rechercher..."
-            className="hidden md:block bg-transparent border border-white  px-2 py-1 text-white placeholder-white text-[10px]"
+            className="hidden md:block bg-transparent border border-white  pr-8 pl-3 py-1 text-white placeholder-white text-[10px]"
             style={{ fontFamily: 'Montserrat, Arial, Helvetica, sans-serif' }}
           />
-          {/* Bouton community - Caché sur mobile */}
-          <Link to="/apropos" className="hidden md:block">
-            <button class="btnAbout">
-              <span>A propos de nous</span>
-            </button>
-          </Link>
+         
           {/* Icône utilisateur */}
           <span className="text-white text-2xl font-sans cursor-pointer p-2" onClick={() => setUserDrawerOpen(true)}><FiUser /></span>
           {/* Icône panier + badge */}
@@ -278,9 +273,6 @@ export default function Header({ showCategoriesBar, opacity = 80 }) {
                 className="w-full bg-transparent border border-white  px-3 py-2 text-white placeholder-white text-base"
                 style={{ fontFamily: 'Montserrat, Arial, Helvetica, sans-serif' }}
               />
-              <Link to="/apropos">
-              <span className="inline-block mt-6 bg-black text-white text-sm border px-3 py-1 hover:bg-white hover:text-black transition-colors duration-150">Apropos de nous</span>
-              </Link>
             </div>
           </div>
         </div>

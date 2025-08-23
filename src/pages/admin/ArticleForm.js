@@ -25,24 +25,114 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { FiArrowLeft, FiCheck, FiX, FiImage, FiPlus } from 'react-icons/fi';
-import { getArticleById, updateArticle, createArticle } from '../../services/articleService';
+import { 
+  getArticleById, 
+  getNextArticleId,
+  
+} from '../../services/articleService';
+import { getFilterValues } from '../../services/filterService';
 import getImagePath from '../../components/getImagePath';
 import Loader from '../../components/Loader';
+import useChangesCart from '../../hooks/useChangesCart';
 
-// Constantes pour les catégories
-const CATEGORIES = ['Tshirt', 'Sweat', 'Veste', 'Pantalon', 'Accessoire'];
+// Les catégories/tailles/etc seront chargées via filterService
 
 const ArticleForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const isEditing = Boolean(id);
+  const { addChange } = useChangesCart();
+
+  // Dictionnaire des couleurs (nom -> code hex). Ajoutez ici d'autres couleurs au besoin.
+  const COLOR_MAP = {
+    'noir': '#000000',
+    'blanc': '#FFFFFF',
+    'gris': '#808080',
+    'gris foncé': '#555555',
+    'gris anthracite': '#333333',
+    'bleu': '#0000FF',
+    'bleu marine': '#001F3F',
+    'rouge': '#FF0000',
+    'rouge bordeaux': '#800020',
+    'rose': '#FFC0CB',
+    'rose poudré': '#EEC9D2',
+    'jaune': '#FFFF00',
+    'marron': '#8B4513',
+    'camel': '#C19A6B',
+    'taupe': '#483C32',
+    'beige': '#F5F5DC',
+    'kaki': '#78866B',
+    'vert': '#008000',
+    'vert militaire': '#4B5320',
+    'mauve': '#E0B0FF',
+    'blanc cassé': '#F8F8F0',
+    'violet': '#8A2BE2',
+    'orange': '#FFA500',
+  };
+
+  // Normalise un nom (casse/espaces) pour clé de map
+  const norm = (s = '') => s.toString().trim().toLowerCase();
+
+  // Récupère code hex pour un nom; privilégie les codes issus de filters.couleurs
+  const nameToCode = (name) => {
+    const key = norm(name);
+    // D'abord chercher dans filters.couleurs si c'est une liste d'objets
+    if (Array.isArray(filters.couleurs)) {
+      const found = filters.couleurs.find((c) => {
+        if (typeof c === 'string') return norm(c) === key;
+        if (c && typeof c === 'object' && c.name) return norm(c.name) === key;
+        return false;
+      });
+      if (found) {
+        if (typeof found === 'string') return COLOR_MAP[key] || found;
+        if (found.code) return found.code;
+      }
+    }
+    // Sinon fallback local
+    return COLOR_MAP[key] || name;
+  };
+
+  // Convertit un élément du modèle (string ou objet) en nom humain
+  const colorEntryToName = (entry) => {
+    if (!entry) return '';
+    if (typeof entry === 'string') {
+      if (entry.includes(':')) return entry.split(':')[0].trim();
+      return entry;
+    }
+    if (typeof entry === 'object') {
+      return entry.name || entry.label || '';
+    }
+    return '';
+  };
+
+  // Convertit un nom en "name:code"
+  const nameToNameCode = (name) => {
+    const code = nameToCode(name);
+    return `${name}:${code}`;
+  };
+  
+  // Met en Title Case pour correspondre aux libellés des boutons (Noir, Blanc, ...)
+  const toTitleCase = (s = '') => s
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/(^|\s|-|_)[a-zà-ÿ]/g, (m) => m.toUpperCase());
   
   // États du composant
-  const [loading, setLoading] = useState(isEditing);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  // Plus de modal de notification ici; le panier de modifications gère l'affichage.
+  // Options dynamiques chargées depuis filterService
+  const [filters, setFilters] = useState({
+    categories: [],
+    tailles: [],
+    sexe: [],
+    collections: [], // [{id,name}]
+    couleurs: [],    // [{name,code}]
+  });
   
   // État du formulaire
   const [formData, setFormData] = useState({
+    id: 0,
     title: '',
     summary: '',
     price: '',
@@ -57,57 +147,85 @@ const ArticleForm = () => {
     sizes: [],
     availableColors: [],
     status: 'draft',
+    dateAdded: new Date().toISOString(),
+    dateUpdated: new Date().toISOString(),
+    collectionId: null
   });
 
   const [imagePreview, setImagePreview] = useState('');
   const [secondaryImagePreviews, setSecondaryImagePreviews] = useState([]);
   
-  // Charger les données de l'article en mode édition
+  // Initialiser le formulaire avec le prochain ID disponible ou charger l'article existant
   useEffect(() => {
-    const loadArticle = async () => {
-      if (!isEditing) return;
-      
-      setLoading(true);
+    const initializeForm = async () => {
       try {
-        const article = await getArticleById(id);
-        if (article) {
-          // Mettre à jour l'état du formulaire avec les données de l'article
-          setFormData({
-            title: article.title || '',
-            summary: article.summary || '',
-            price: article.price || '',
-            discount_price: article.discount_price || '',
-            discount_percent: article.discount_percent || 0,
-            category: article.category || '',
-            sexe: article.sexe || 'Homme',
-            collection: article.collection || '',
-            stockQuantity: article.stockQuantity || 0,
-            image: article.image || '',
-            secondaryImages: article.secondaryImages || [],
-            sizes: article.sizes || [],
-            availableColors: article.availableColors || [],
-            status: article.status || 'draft',
-          });
-          
-          // Mettre à jour les aperçus d'images
-          if (article.image) {
-            setImagePreview(getImagePath(article.image, 'products'));
+        setLoading(true);
+        // Charger les filtres en parallèle
+        const [categories, tailles, sexe, collections, couleurs] = await Promise.all([
+          getFilterValues('categories'),
+          getFilterValues('tailles'),
+          getFilterValues('sexe'),
+          getFilterValues('collections'),
+          getFilterValues('couleurs'),
+        ]);
+        setFilters({ categories, tailles, sexe, collections, couleurs });
+        
+        if (isEditing) {
+          // Mode édition : charger l'article existant
+          const article = await getArticleById(id);
+          if (article) {
+            setFormData({
+              id: article.id,
+              title: article.title || '',
+              summary: article.summary || '',
+              price: article.price || '',
+              discount_price: article.discount_price || '',
+              discount_percent: article.discount_percent || 0,
+              category: article.category || '',
+              sexe: article.sexe || 'Homme',
+              collection: article.collection || '',
+              stockQuantity: article.stockQuantity || 0,
+              image: article.image || '',
+              secondaryImages: article.secondaryImages || [],
+              sizes: article.sizes || [],
+              availableColors: Array.isArray(article.availableColors)
+                ? article.availableColors.map((e) => toTitleCase(colorEntryToName(e)))
+                : [],
+              status: article.status || 'draft',
+              dateAdded: article.dateAdded || new Date().toISOString(),
+              dateUpdated: article.dateUpdated || new Date().toISOString(),
+              collectionId: article.collectionId || null
+            });
+            
+            // Mettre à jour les aperçus d'images
+            if (article.image) {
+              setImagePreview(getImagePath(article.image, 'products'));
+            }
+            if (article.secondaryImages && article.secondaryImages.length > 0) {
+              setSecondaryImagePreviews(
+                article.secondaryImages.map(img => getImagePath(img, 'products'))
+              );
+            }
           }
-          
-          if (article.secondaryImages && article.secondaryImages.length > 0) {
-            const previews = article.secondaryImages.map(img => getImagePath(img, 'products'));
-            setSecondaryImagePreviews(previews);
-          }
+        } else {
+          // Mode création : initialiser avec le prochain ID
+          const nextId = await getNextArticleId();
+          setFormData(prev => ({
+            ...prev,
+            id: nextId,
+            dateAdded: new Date().toISOString(),
+            dateUpdated: new Date().toISOString()
+          }));
         }
-      } catch (err) {
-        console.error('Erreur lors du chargement de l\'article:', err);
-        setError('Impossible de charger l\'article. Veuillez réessayer.');
+      } catch (error) {
+        console.error('Erreur lors de l\'initialisation du formulaire:', error);
+        
       } finally {
         setLoading(false);
       }
     };
     
-    loadArticle();
+    initializeForm();
   }, [id, isEditing]);
 
   // Gestion des changements des champs
@@ -118,9 +236,11 @@ const ArticleForm = () => {
       // Gestion de l'image principale
       if (name === 'image' && files[0]) {
         const file = files[0];
+        const fileName = file.name; // Récupère le nom du fichier avec extension
+        
         setFormData(prev => ({
           ...prev,
-          [name]: file.name
+          [name]: fileName // Stocke uniquement le nom du fichier
         }));
         
         // Créer un aperçu de l'image
@@ -130,14 +250,16 @@ const ArticleForm = () => {
         };
         reader.readAsDataURL(file);
       } else if (name === 'secondaryImages' && files.length > 0) {
-        const newImages = Array.from(files);
+        // Récupérer uniquement les noms des fichiers
+        const newImageNames = Array.from(files).map(file => file.name);
+        
         setFormData(prev => ({
           ...prev,
-          secondaryImages: [...prev.secondaryImages, ...newImages]
+          secondaryImages: [...prev.secondaryImages, ...newImageNames]
         }));
         
         // Créer des aperçus pour les nouvelles images
-        newImages.forEach(file => {
+        Array.from(files).forEach(file => {
           const reader = new FileReader();
           reader.onload = () => {
             setSecondaryImagePreviews(prev => [...prev, reader.result]);
@@ -151,10 +273,23 @@ const ArticleForm = () => {
         [name]: checked
       }));
     } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
+      if (name === 'collectionId') {
+        const idNum = value === '' ? null : Number(value);
+        // Trouver le libellé pour stocker aussi formData.collection (optionnel)
+        const col = Array.isArray(filters.collections)
+          ? filters.collections.find(c => c && typeof c === 'object' && Number(c.id) === idNum)
+          : null;
+        setFormData(prev => ({
+          ...prev,
+          collectionId: idNum,
+          collection: col?.name || ''
+        }));
+      } else {
+        setFormData(prev => ({
+          ...prev,
+          [name]: value
+        }));
+      }
     }
   };
 
@@ -184,53 +319,78 @@ const ArticleForm = () => {
     const newSecondaryImages = [...formData.secondaryImages];
     const newImagePreviews = [...secondaryImagePreviews];
     
-    // Supprimer l'image à l'index spécifié
-    newSecondaryImages.splice(index, 1);
-    newImagePreviews.splice(index, 1);
-    
-    // Mettre à jour les états
-    setFormData(prev => ({
-      ...prev,
-      secondaryImages: newSecondaryImages
-    }));
-    
-    setSecondaryImagePreviews(newImagePreviews);
-    
-    // Mettre à jour l'input file pour permettre de réajouter des images
-    const input = document.getElementById('secondary-images');
-    if (input) {
-      input.value = '';
+    // Vérifier si l'index est valide
+    if (index >= 0 && index < newSecondaryImages.length) {
+      // Supprimer l'image à l'index spécifié
+      newSecondaryImages.splice(index, 1);
+      
+      // Supprimer également l'aperçu correspondant s'il existe
+      if (index < newImagePreviews.length) {
+        newImagePreviews.splice(index, 1);
+      }
+      
+      // Mettre à jour les états
+      setFormData(prev => ({
+        ...prev,
+        secondaryImages: newSecondaryImages
+      }));
+      
+      setSecondaryImagePreviews(newImagePreviews);
+      
+      // Mettre à jour l'input file pour permettre de réajouter des images
+      const input = document.getElementById('secondary-images');
+      if (input) {
+        input.value = '';
+      }
     }
   };
+
+  // Suppression des états/effets liés aux notifications locales.
 
   // Soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.stopPropagation();
     
     // Validation des champs obligatoires
     if (!formData.title || !formData.category || !formData.price) {
-      setError('Veuillez remplir tous les champs obligatoires');
-      return;
+      // Les attributs required gèrent déjà la validation visuelle côté navigateur.
+      return false;
     }
     
     try {
       setLoading(true);
-      
+
+      // Préparer le payload de l'article avec dates cohérentes
+      const now = new Date().toISOString();
+      const payload = {
+        ...formData,
+        // Transformer availableColors (noms) en liste de "nom:code"
+        availableColors: Array.isArray(formData.availableColors)
+          ? formData.availableColors
+              .filter(Boolean)
+              .map((name) => nameToNameCode(name))
+          : [],
+        id: isEditing ? (typeof id === 'string' ? parseInt(id, 10) : id) : formData.id,
+        dateAdded: formData.dateAdded || now,
+        dateUpdated: now,
+      };
+
       if (isEditing) {
-        // Mise à jour d'un article existant
-        await updateArticle(id, formData);
-        // Rediriger vers la fiche produit après la mise à jour
-        navigate(`/admin/articles/${id}`);
+        // On pousse une mise à jour dans le panier
+        addChange({ type: 'update', targetId: payload.id, payload, resource: 'article', source: 'ArticleForm' });
       } else {
-        // Création d'un nouvel article
-        await createArticle(formData);
-        // Rediriger vers la liste des articles après la création
-        navigate('/admin/articles');
+        // On pousse une création dans le panier
+        addChange({ type: 'create', payload, resource: 'article', source: 'ArticleForm' });
       }
-      
-    } catch (err) {
-      console.error('Erreur lors de la soumission du formulaire:', err);
-      setError('Une erreur est survenue lors de la sauvegarde. Veuillez réessayer.');
+
+      return true;
+
+    } catch (submitError) {
+      console.error('Erreur lors de la soumission du formulaire:', submitError);
+      // Log de l'erreur sans modal locale
+      console.error(submitError);
+      return false;
     } finally {
       setLoading(false);
     }
@@ -262,37 +422,14 @@ const ArticleForm = () => {
       </div>
     );
   }
-  
-  // Afficher les erreurs
-  if (error) {
-    return (
-      <div className="bg-red-50 border-l-4 border-red-400 p-4">
-        <div className="flex">
-          <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
-          </div>
-          <div className="ml-3">
-            <p className="text-sm text-red-700">
-              {error}
-            </p>
-            <button
-              onClick={() => navigate('/admin/articles')}
-              className="mt-2 inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-            >
-              Retour à la liste
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      {/* En-tête */}
-      <div className="pb-5 border-b border-gray-200">
+    <div className="space-y-6 h-full">
+      {/* Pas de NotificationModal ici; le panier de modifications s'en charge. */}
+      
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* En-tête */}
+        <div className="pb-5 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-2xl text-left font-bold text-gray-800">
@@ -316,12 +453,26 @@ const ArticleForm = () => {
       </div>
 
       {/* Formulaire */}
-      <form onSubmit={handleSubmit} className="mt-8 space-y-8">
+      <form 
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleSubmit(e);
+        }}
+        onKeyDown={(e) => {
+          // Empêcher la soumission du formulaire avec la touche Entrée
+          if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+          }
+        }}
+        className="mt-8 space-y-8"
+      >
         <div className="bg-white shadow-sm px-8 py-8 rounded-xl border border-gray-100">
+          {/* Informations de base */}
           <h4 className="text-xl text-left font-semibold text-gray-900 mb-8 pb-2 border-b border-gray-100">Informations de base</h4>
           <div className="grid grid-cols-1 gap-y-6 gap-x-8 sm:grid-cols-6">
             {/* Titre */}
-            <div className="sm:col-span-4 mb-2">
+            <div className="sm:col-span-6 mb-2">
               <label htmlFor="title" className="block text-left text-sm font-medium text-gray-700 mb-1.5">
                 Titre de l'article <span className="text-red-500">*</span>
               </label>
@@ -339,8 +490,26 @@ const ArticleForm = () => {
               </div>
             </div>
 
-            {/* Catégorie */}
+            {/* ID - Champ non modifiable */}
             <div className="sm:col-span-2 mb-2">
+              <label htmlFor="article-id" className="block text-left text-sm font-medium text-gray-700 mb-1.5">
+                ID de l'article
+              </label>
+              <div className="mt-1">
+                <input
+                  type="text"
+                  id="article-id"
+                  name="article-id"
+                  value={formData.id || ''}
+                  readOnly
+                  disabled
+                  className="shadow-sm block w-full sm:text-sm border border-gray-200 rounded-lg px-4 py-3 bg-gray-50 text-gray-500 cursor-not-allowed"
+                />
+              </div>
+            </div>
+
+            {/* Catégorie */}
+            <div className="sm:col-span-4 mb-2 w-full">
               <label htmlFor="category" className="block text-left text-sm font-medium text-gray-700 mb-1.5">
                 Catégorie <span className="text-red-500">*</span>
               </label>
@@ -349,11 +518,11 @@ const ArticleForm = () => {
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="mt-1 block w-full pl-3 pr-10 py-3 text-sm border border-gray-300 rounded-lg bg-white text-gray-900"
+                className="mt-1 block w-full pl-3 pr-26 py-3 text-sm border border-gray-300 rounded-lg bg-white text-gray-900"
                 required
               >
                 <option value="">Sélectionnez une catégorie</option>
-                {CATEGORIES.map(cat => (
+                {(filters.categories.length ? filters.categories : ['Tshirt','Pantalon','Veste','Accessoire']).map(cat => (
                   <option key={cat} value={cat} className="py-2">{cat}</option>
                 ))}
               </select>
@@ -387,33 +556,36 @@ const ArticleForm = () => {
                 Collection
               </label>
               <div className="mt-1">
-                <input
-                  type="text"
-                  name="collection"
+                <select
+                  name="collectionId"
                   id="collection"
-                  value={formData.collection}
+                  value={formData.collectionId ?? ''}
                   onChange={handleChange}
                   className="shadow-sm focus:ring-2 focus:ring-black focus:border-black block w-full sm:text-sm border border-gray-300 rounded-lg px-4 py-3 bg-white text-gray-900 placeholder-gray-400 transition duration-150 ease-in-out"
-                  placeholder="Nom de la collection"
-                />
+                >
+                  <option value="">Sélectionnez une collection</option>
+                  {(Array.isArray(filters.collections) ? filters.collections : []).map((c) => (
+                    <option key={c.id} value={c.id}>{c.id} - {c.name}</option>
+                  ))}
+                </select>
               </div>
             </div>
 
-            {/* Genre */}
+            {/* Sexe */}
             <div className="sm:col-span-2">
-              <label htmlFor="genre" className="block text-left text-sm font-medium text-gray-700 mb-1.5">
-                Genre
+              <label htmlFor="sexe" className="block text-left text-sm font-medium text-gray-700 mb-1.5">
+                Sexe
               </label>
               <select
-                id="genre"
-                name="genre"
-                value={formData.genre}
-                onChange={handleChange }
+                id="sexe"
+                name="sexe"
+                value={formData.sexe}
+                onChange={handleChange}
                 className="mt-1 block w-full pl-3 pr-10 py-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-black bg-white text-gray-900"
               >
-                <option value="homme">Homme</option>
-                <option value="femme">Femme</option>
-                <option value="unisexe">Unisexe</option>
+                {(filters.sexe.length ? filters.sexe : ['Homme','Femme','Unisexe']).map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -476,21 +648,19 @@ const ArticleForm = () => {
                 Prix soldé (€) <span className="text-gray-400 text-xs">optionnel</span>
               </label>
               <div className="mt-1 relative rounded-lg shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 sm:text-sm">€</span>
-                </div>
+                
                 <input
-                  type="number"
+                  type="text"
                   name="discount_price"
                   id="discount_price"
-                  value={formData.discount_price || ''}
+                  value={(String(formData.discount_price) + "  FCFA") || '----'} 
                   onChange={handleChange}
                   min="0"
                   step="0.01"
-                  className="block  w-full pl-7 pr-12 sm:text-sm border border-gray-300  rounded-lg px-4 py-3 bg-gray-200 text-green-600"
+                  className="shadow-sm block pl-2 w-full sm:text-sm border border-gray-200 rounded-lg px-4 py-3 bg-gray-50 text-green-500 cursor-not-allowed"
                   placeholder="0.00"
                   readOnly={true}
-                />
+                />   
               </div>
             </div>
 
@@ -534,7 +704,7 @@ const ArticleForm = () => {
                 <span className="text-xs font-normal text-gray-500 ml-2">(Sélectionnez au moins une taille)</span>
               </label>
               <div className="flex flex-wrap gap-3">
-                {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => (
+                {(filters.tailles.length ? filters.tailles : ['XS', 'S', 'M', 'L', 'XL', 'XXL']).map((size) => (
                   <button
                     key={size}
                     type="button"
@@ -561,42 +731,38 @@ const ArticleForm = () => {
                 <span className="text-xs font-normal text-gray-500 ml-2">(Sélectionnez une ou plusieurs couleurs)</span>
               </label>
               <div className="flex flex-wrap gap-4">
-                {[
-                  { name: 'Noir', value: 'black' },
-                  { name: 'Blanc', value: 'white', border: 'border-gray-200' },
-                  { name: 'Bleu', value: '#2563eb' },
-                  { name: 'Rouge', value: '#dc2626' },
-                  { name: 'Vert', value: '#16a34a' },
-                  { name: 'Jaune', value: '#ca8a04' },
-                  { name: 'Rose', value: '#db2777' },
-                  { name: 'Gris', value: '#4b5563' },
-                ].map(({ name, value, border = 'border-gray-200' }) => {
-                  const isSelected = formData.availableColors.includes(name);
-                  
+                {(
+                  Array.isArray(filters.couleurs) && filters.couleurs.length
+                    ? filters.couleurs.map(c => (typeof c === 'string' ? { name: c, code: nameToCode(c) } : c))
+                    : ['noir','blanc','bleu','rouge','vert','jaune','rose','gris'].map(n => ({ name: n, code: nameToCode(n) }))
+                ).map(({ name, code }) => {
+                  const label = toTitleCase(name);
+                  const isSelected = formData.availableColors.includes(label);
+                  const needsDarkCheck = ['#FFFFFF', 'white', 'blanc'].includes(String(code));
                   return (
-                    <div key={name} className="flex flex-col items-center group">
+                    <div key={label} className="flex flex-col items-center group">
                       <button
                         type="button"
-                        onClick={() => handleColorToggle(name)}
+                        onClick={() => handleColorToggle(label)}
                         className={`w-12 h-12 rounded-full border-2 transition-all duration-200 flex items-center justify-center ${
                           isSelected 
                             ? 'border-black ring-2 ring-offset-2 ring-black scale-110' 
-                            : `${border} hover:border-black/40 hover:scale-105`
+                            : 'border-gray-200 hover:border-black/40 hover:scale-105'
                         }`}
                         style={{ 
-                          backgroundColor: value,
+                          backgroundColor: code,
                           boxShadow: isSelected ? '0 4px 6px -1px rgba(0, 0, 0, 0.1)' : 'none'
                         }}
-                        title={name}
+                        title={label}
                       >
                         {isSelected && (
-                          <FiCheck className="text-white text-lg drop-shadow-md" />
+                          <FiCheck className={`${needsDarkCheck ? 'text-black' : 'text-white'} text-lg drop-shadow-md`} />
                         )}
                       </button>
                       <span className={`mt-2 text-xs font-medium ${
                         isSelected ? 'text-indigo-700' : 'text-gray-600'
                       }`}>
-                        {name}
+                        {label}
                       </span>
                     </div>
                   );
@@ -840,28 +1006,19 @@ const ArticleForm = () => {
           <button
             type="button"
             onClick={() => navigate('/admin/articles')}
-            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none "
           >
             Annuler
           </button>
           <button
-            type="button"
-            onClick={() => {
-              setFormData(prev => ({ ...prev, status: 'brouillon' }));
-              // La soumission sera gérée par le bouton de soumission
-            }}
-            className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-black/80 bg-black/10 hover:bg-black/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Enregistrer comme brouillon
-          </button>
-          <button
             type="submit"
-            className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-black/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-black/80 "
           >
             {isEditing ? 'Mettre à jour' : 'Publier l\'article'}
           </button>
         </div>
       </form>
+    </div>
     </div>
   );
 };

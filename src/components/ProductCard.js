@@ -85,7 +85,7 @@ export default function ProductCard({ article, isVisible, onEyeClick, index }) {
                     : 'Aucune taille'}
                 </span>
                 <button
-                  className="p-0 sm:p-1 bg-black text-white hover:bg-white hover:text-black border border-black transition flex items-center justify-center"
+                  className="p-0 sm:p-1 rounded-md bg-black text-white hover:bg-white hover:text-black border border-black transition flex items-center justify-center"
                   title="Voir les tailles"
                   onClick={e => { e.preventDefault(); onEyeClick(article.id); }}
                 >

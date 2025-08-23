@@ -16,6 +16,7 @@ const MegaMenuFooter = ({ links, onLinkClick }) => {
     >
       {links.map((link, i) => (
         <a 
+          href="#none"
           key={i} 
           className="text-black hover:underline cursor-pointer"
           onClick={(e) => {

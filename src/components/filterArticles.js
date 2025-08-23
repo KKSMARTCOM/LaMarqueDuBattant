@@ -1,29 +1,101 @@
-// Fonction de filtrage des articles
-// options = { categorie, remises, tailles, couleur, prixMin, prixMax, collections, nouveau }
-// articles = tableau d'articles (chaque article doit avoir les propriétés correspondantes)
-import { loadCollections } from '../services/collectionService';
+/**
+ * filterArticles.js
+ * 
+ * Description :
+ * Logique de filtrage des articles utilisant des valeurs de filtre dynamiques.
+ * Les valeurs possibles sont chargées depuis le fichier productFilters.json
+ *
+ * Fonctionnalités :
+ * - Filtrage par catégorie, remise, taille, sexe, prix, collections, etc.
+ * - Gestion des valeurs de filtre dynamiques
+ * - Compatible avec les filtres d'URL
+ */
 
-// Fonction utilitaire pour charger les collections une seule fois
-let collectionsCache = null;
+import { getFilterValues } from '../services/filterService';
 
-async function loadCollectionsOnce() {
-  if (!collectionsCache) {
+// Cache pour les valeurs de filtre
+let filterValuesCache = null;
+
+// Charger les valeurs de filtre une seule fois
+async function loadFilterValuesOnce() {
+  if (!filterValuesCache) {
     try {
-      const { collections } = await loadCollections();
-      collectionsCache = collections || [];
+      const [categories, tailles, remises, sexe] = await Promise.all([
+        getFilterValues('categories'),
+        getFilterValues('tailles'),
+        getFilterValues('remises'),
+        getFilterValues('sexe')
+      ]);
+      
+      filterValuesCache = {
+        categories,
+        tailles,
+        remises: ['Sans remise', ...remises.filter(r => r !== 'Sans remise')],
+        sexe
+      };
     } catch (error) {
-      console.error('Erreur lors du chargement des collections:', error);
-      collectionsCache = [];
+      console.error('Erreur lors du chargement des valeurs de filtre:', error);
+      filterValuesCache = {
+        categories: [],
+        tailles: [],
+        remises: ['Sans remise'],
+        sexe: []
+      };
     }
   }
-  return collectionsCache;
+  return filterValuesCache;
 }
 
+/**
+ * Filtre les articles selon les critères spécifiés
+ * @param {Object} options - Options de filtrage
+ * @param {string} options.categorie - Catégorie à filtrer
+ * @param {Array} options.remises - Tableau des remises à inclure
+ * @param {Array} options.tailles - Tableau des tailles à inclure
+ * @param {string} options.sexe - Sexe à filtrer
+ * @param {number} options.prixMin - Prix minimum
+ * @param {number} options.prixMax - Prix maximum
+ * @param {boolean} options.nouveau - Si vrai, uniquement les nouveaux articles
+ * @param {Array} options.collections - Tableau des collections à inclure
+ * @param {Array} articles - Tableau des articles à filtrer
+ * @returns {Promise<Array>} Tableau des articles filtrés
+ */
 export async function filtrer(options, articles) {
-  // Charger les collections une seule fois au début
-  const collections = await loadCollectionsOnce();
+  // Charger les valeurs de filtre une seule fois (collections non nécessaires pour filtrer par id)
+  const filterValues = await loadFilterValuesOnce();
   
-  // Filtrer les articles selon les critères
+  // Valider les options de filtre par rapport aux valeurs autorisées
+  const validatedOptions = { ...options };
+  
+  // Valider la catégorie
+  if (validatedOptions.categorie && filterValues.categories.length > 0) {
+    if (!filterValues.categories.includes(validatedOptions.categorie)) {
+      validatedOptions.categorie = '';
+    }
+  }
+  
+  // Valider les remises
+  if (Array.isArray(validatedOptions.remises) && filterValues.remises.length > 0) {
+    validatedOptions.remises = validatedOptions.remises.filter(remise => 
+      filterValues.remises.includes(remise)
+    );
+  }
+  
+  // Valider les tailles
+  if (Array.isArray(validatedOptions.tailles) && filterValues.tailles.length > 0) {
+    validatedOptions.tailles = validatedOptions.tailles.filter(taille => 
+      filterValues.tailles.includes(taille)
+    );
+  }
+  
+  // Valider le sexe
+  if (validatedOptions.sexe && filterValues.sexe.length > 0) {
+    if (!filterValues.sexe.includes(validatedOptions.sexe)) {
+      validatedOptions.sexe = '';
+    }
+  }
+  
+  // Filtrer les articles selon les critères validés
   const filteredArticles = articles.filter(article => {
     // Catégorie : si non défini ou vide, valide
     if (options.categorie && options.categorie !== '') {
@@ -38,21 +110,17 @@ export async function filtrer(options, articles) {
       }
     }
     // Remises : si non défini ou vide, valide
-    if (Array.isArray(options.remises) && options.remises.length > 0) {
+    if (Array.isArray(validatedOptions.remises) && validatedOptions.remises.length > 0) {
       const discountPercent = Number(article.discount_percent) || 0;
-      
-      // Vérifier si l'article est en remise
       const hasDiscount = discountPercent > 0;
       
       // Vérifier si l'article correspond à une des options de remise sélectionnées
-      const matchesAnyRemise = options.remises.some(remise => {
+      const matchesAnyRemise = validatedOptions.remises.some(remise => {
         if (remise === 'Sans remise') {
           return !hasDiscount;
-        } else if (remise === '-30% et plus') {
-          return hasDiscount && discountPercent >= 30;
-        } else if (remise.startsWith('-') && remise.endsWith('%')) {
-          const remiseValue = parseInt(remise.slice(1, -1), 10);
-          return hasDiscount && discountPercent === remiseValue;
+        } else if (remise.endsWith('%')) {
+          const remiseValue = parseInt(remise.replace(/[^0-9]/g, ''), 10);
+          return hasDiscount && discountPercent >= remiseValue;
         }
         return false;
       });
@@ -62,18 +130,20 @@ export async function filtrer(options, articles) {
       }
     }
     // Tailles : si non défini ou vide, valide
-    if (Array.isArray(options.tailles) && options.tailles.length > 0) {
-      if (!article.sizes) {
-        // Article sans tailles : valide
-      } else if (!options.tailles.some(taille => article.sizes.includes(taille))) {
+    if (Array.isArray(validatedOptions.tailles) && validatedOptions.tailles.length > 0) {
+      if (!article.sizes || !Array.isArray(article.sizes)) {
+        // Article sans tailles : valide uniquement si 'Sans taille' est sélectionné
+        if (!validatedOptions.tailles.includes('Sans taille')) {
+          return false;
+        }
+      } else if (!validatedOptions.tailles.some(taille => article.sizes.includes(taille))) {
         return false;
       }
     }
     // Sexe : si non défini ou vide, valide
-    if (options.sexe && options.sexe !== '') {
-      if (article.sexe === undefined || article.sexe === null) {
-        // Article sans sexe : valide
-      } else if (article.sexe !== options.sexe) {
+    if (validatedOptions.sexe && validatedOptions.sexe !== '') {
+      const articleSexe = article.sexe || '';
+      if (articleSexe !== validatedOptions.sexe) {
         return false;
       }
     }
@@ -117,18 +187,11 @@ export async function filtrer(options, articles) {
       }
     }
     
-    // Filtre par collection : si des collections sont sélectionnées
+    // Filtre par collection (par ID): si des IDs de collections sont sélectionnées
     if (Array.isArray(options.collections) && options.collections.length > 0) {
-      // Vérifier si l'article appartient à une collection
-      if (!article.collectionId) {
-        return false; // Si l'article n'a pas de collection, on l'exclut
-      }
-      
-      // Trouver la collection de l'article
-      const articleCollection = collections.find(c => c.id === article.collectionId);
-      
-      // Vérifier si la catégorie de la collection de l'article est dans les collections sélectionnées
-      if (!articleCollection || !options.collections.includes(articleCollection.categorie)) {
+      const selectedIds = options.collections.map(Number);
+      const artColId = Number(article.collectionId);
+      if (!artColId || !selectedIds.includes(artColId)) {
         return false;
       }
     }

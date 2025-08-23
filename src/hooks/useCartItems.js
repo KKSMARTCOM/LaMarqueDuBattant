@@ -1,12 +1,26 @@
-// useCartItems.js
-// Hook personnalisé pour gérer le panier (lecture, écriture, synchronisation, modification) via localStorage
-// Permet d'éviter la duplication de logique dans CartDrawer, Header, etc.
+/**
+ * useCartItems.js
+ *
+ * Description:
+ *  Hook personnalisé pour gérer le panier utilisateur via localStorage
+ *  (lecture, écriture, synchronisation). Évite la duplication de logique
+ *  dans les composants (CartDrawer, Header, etc.).
+ */
 
 import { useEffect, useState } from 'react';
 
 /**
- * useCartItems : hook pour gérer le panier utilisateur
- * @returns { cartItems, setCartItems, addItem, removeItem, increment, decrement, loading, error }
+ * useCartItems : hook pour gérer le panier utilisateur.
+ * @returns {{
+ *  cartItems: Array,
+ *  setCartItems: Function,
+ *  addItem: Function,
+ *  removeItem: Function,
+ *  increment: Function,
+ *  decrement: Function,
+ *  loading: boolean,
+ *  error: string|null,
+ * }}
  */
 export default function useCartItems() {
   const [cartItems, setCartItems] = useState([]);

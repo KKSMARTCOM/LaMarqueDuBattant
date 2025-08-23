@@ -108,7 +108,7 @@ const CollectionSection = ({
           {collectionCards.map((card, index) => (
             <div 
               key={`${card.collectionId || index}`}
-              className="w-[220px] h-[280px] group relative overflow-hidden shadow hover:shadow-lg border border-gray-100 bg-black flex flex-col justify-end cursor-pointer"
+              className="w-[220px] h-[280px] group relative overflow-hidden shadow hover:shadow-lg rounded-md border border-gray-100 bg-black flex flex-col justify-end cursor-pointer"
               onClick={() => onNavItemClick(`collection-${card.collectionId || index}`)}
             >
               {card.file ? (
@@ -135,7 +135,7 @@ const CollectionSection = ({
           imageUrl={collections[0].images[0] ? getImagePath(collections[0].images[0].file, 'cover') : getImagePath('hero.webp', 'cover')}
           buttonText="DÉCOUVREZ"
           altText={collections[0].nom || "Collection"}
-          onButtonClick={() => onFooterLinkClick('COLLECTION')}
+          clickurl="/collection"
         />
       </div>
 
