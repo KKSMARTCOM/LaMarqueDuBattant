@@ -1,11 +1,30 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiSave, FiArrowLeft } from 'react-icons/fi';
+import { 
+  FiSave, 
+  FiArrowLeft,
+  FiTag,
+  FiHome,
+  FiInfo,
+  FiFileText,
+  FiSearch,
+  FiTruck,
+  FiRotateCw,
+  FiShield,
+  FiMail,
+} from 'react-icons/fi';
+import { Tab } from '@headlessui/react';
+import AccueilForm from '../../components/admin/page-editors/AccueilForm';
+import EventsForm from '../../components/admin/page-editors/EventsForm';
+import AproposForm from '../../components/admin/page-editors/AproposForm';
+import HeaderForm from '../../components/admin/page-editors/HeaderForm';
+import FooterForm from '../../components/admin/page-editors/FooterForm';
 import { saveSiteInfo } from '../../services/siteInfoService';
 
 const SiteInfoForm = () => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('brand');
+  const [activePageTab, setActivePageTab] = useState('Accueil');
   const [additionalSocials, setAdditionalSocials] = useState({});
   const [newSocialName, setNewSocialName] = useState('');
   const [newSocialUrl, setNewSocialUrl] = useState('');
@@ -22,6 +41,7 @@ const SiteInfoForm = () => {
     returns: {},
     seo: {},
     legal: {},
+    PageData: {},
     version: '',
     lastUpdated: ''
   });
@@ -114,12 +134,16 @@ const SiteInfoForm = () => {
           // Remplacer les URLs par les noms de fichiers
           logo: formData.brand.logoFile || formData.brand.logo?.split('/').pop() || '',
           favicon: formData.brand.faviconFile || formData.brand.favicon?.split('/').pop() || ''
-        }
+        },
+        // S'assurer que PageData est inclus tel quel
+        PageData: formData.PageData || {}
       };
       
       // Supprimer les champs temporaires
       delete dataToSave.brand.logoFile;
       delete dataToSave.brand.faviconFile;
+      
+      console.log('Données à sauvegarder:', JSON.stringify(dataToSave, null, 2));
       
       const result = await saveSiteInfo(dataToSave);
       
@@ -1381,6 +1405,142 @@ const SiteInfoForm = () => {
     </div>
   );
 
+  const handlePageDataChange = (page, section, value) => {
+    console.log('handlePageDataChange:', { page, section, value });
+    
+    setFormData(prev => {
+      const updated = {
+        ...prev,
+        PageData: {
+          ...prev.PageData,
+          [page]: {
+            ...prev.PageData?.[page],
+            [section]: value
+          }
+        }
+      };
+      
+      console.log('Updated PageData:', updated.PageData);
+      return updated;
+    });
+  };
+  
+  // Effet pour déboguer les changements de PageData
+  useEffect(() => {
+    console.log('PageData updated:', formData.PageData);
+  }, [formData.PageData]);
+
+  const renderPageDataSection = () => {
+    const pageData = formData.PageData || {};
+    const pageTabs = Object.keys(pageData);
+    
+    if (pageTabs.length === 0) {
+      return (
+        <div className="text-center py-12 text-gray-500">
+          Aucune donnée de page disponible
+        </div>
+      );
+    }
+    
+    const renderPageContent = (page) => {
+      const pageContent = pageData[page] || {};
+      
+      switch(page) {
+        case 'Accueil':
+          return (
+            <AccueilForm 
+              data={pageContent} 
+              onChange={(section, value) => handlePageDataChange(page, section, value)}
+            />
+          );
+        case 'Events':
+          return (
+            <EventsForm 
+              data={pageContent} 
+              onChange={(section, value) => handlePageDataChange(page, section, value)}
+            />
+          );
+        case 'Apropos':
+          return (
+            <AproposForm 
+              data={pageContent} 
+              onChange={(section, value) => handlePageDataChange(page, section, value)}
+            />
+          );
+        case 'Header':
+          return (
+            <HeaderForm 
+              data={pageContent} 
+              onChange={(value) => handlePageDataChange(page, 'Header', value)}
+            />
+          );
+        case 'Footer':
+          return (
+            <FooterForm 
+              data={pageContent} 
+              onChange={(value) => handlePageDataChange(page, 'Footer', value)}
+            />
+          );
+        default:
+          return (
+            <div className="space-y-4">
+              {Object.keys(pageContent).map((section) => (
+                <div key={section} className="border rounded-lg p-4">
+                  <h4 className="font-medium text-left text-gray-900 mb-2">{section}</h4>
+                  <p className="text-sm text-gray-500">
+                    {typeof pageContent[section] === 'object' 
+                      ? JSON.stringify(pageContent[section], null, 2)
+                      : pageContent[section]}
+                  </p>
+                </div>
+              ))}
+            </div>
+          );
+      }
+    };
+    
+    return (
+      <div className="space-y-6">
+        <div className="border-b border-gray-200 pb-5">
+          <h2 className="text-2xl font-semibold text-gray-900 text-left">Contenu des pages</h2>
+          <p className="mt-1 text-sm text-left text-gray-500">Gérez le contenu des différentes pages du site</p>
+        </div>
+        
+        <Tab.Group selectedIndex={pageTabs.indexOf(activePageTab)} 
+                 onChange={(index) => setActivePageTab(pageTabs[index])}>
+          <Tab.List className="flex space-x-1 justify-between  rounded-xl bg-gray-100 px-2 py-2 overflow-x-auto">
+            {pageTabs.map((page) => (
+              <Tab
+                key={page}
+                className={({ selected }) =>
+                  `flex-shrink-0 rounded-lg py-2.5 px-4 text-sm font-medium leading-5
+                  ring-white ring-opacity-60 focus:outline-none focus:ring-2
+                  ${
+                    selected
+                      ? 'bg-white shadow text-black'
+                      : 'text-gray-600 hover:bg-white/[0.4] hover:text-gray-900'
+                  }`
+                }
+              >
+                {page}
+              </Tab>
+            ))}
+          </Tab.List>
+          <Tab.Panels className="mt-6">
+            {pageTabs.map((page) => (
+              <Tab.Panel
+                key={page}
+                className={`rounded-xl bg-white p-6 shadow-sm border border-gray-200`}
+              >
+                {renderPageContent(page)}
+              </Tab.Panel>
+            ))}
+          </Tab.Panels>
+        </Tab.Group>
+      </div>
+    );
+  };
+
   const renderLegalSection = () => (
     <div className="space-y-8">
       <div className="border-b border-gray-200 pb-5">
@@ -1603,6 +1763,8 @@ const SiteInfoForm = () => {
 
   const renderSection = () => {
     switch (activeSection) {
+      case 'pageData':
+        return renderPageDataSection();
       case 'brand':
         return renderBrandSection();
       case 'contact':
@@ -1704,38 +1866,43 @@ const SiteInfoForm = () => {
               Gérer les informations de base de votre site web.
             </p>
           </div>
-          <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-            <div className="md:flex">
-              {/* Sidebar navigation */}
-              <div className="md:w-1/4 border-r border-gray-200 bg-gray-50 p-4">
-                <nav className="space-y-1">
-                  {['brand', 'contact', 'businessInfo', 'about', 'shipping', 'returns', 'seo', 'legal'].map((section) => (
+          <div className="border-t border-gray-200 bg-gray-50">
+            <div className="flex flex-col md:flex-row min-h-[calc(100vh-200px)]">
+              <div className="w-full md:w-52 border-r border-gray-200 bg-white shadow-sm">
+                <nav className="space-y-1 p-2">
+                  {[
+                    { id: 'brand', name: 'Marque', icon: <FiTag className="w-5 h-5" /> },
+                    { id: 'contact', name: 'Contact', icon: <FiMail className="w-5 h-5" /> },
+                    { id: 'businessInfo', name: 'Entreprise', icon: <FiHome className="w-5 h-5" /> },
+                    { id: 'about', name: 'À propos', icon: <FiInfo className="w-5 h-5" /> },
+                    { id: 'pageData', name: 'Contenu', icon: <FiFileText className="w-5 h-5" /> },
+                    { id: 'seo', name: 'Référencement', icon: <FiSearch className="w-5 h-5" /> },
+                    { id: 'legal', name: 'Légal', icon: <FiShield className="w-5 h-5" /> },
+                    { id: 'shipping', name: 'Livraison', icon: <FiTruck className="w-5 h-5" /> },
+                    { id: 'returns', name: 'Retours', icon: <FiRotateCw className="w-5 h-5" /> },
+                  ].map((item) => (
                     <button
-                      key={section}
-                      onClick={() => setActiveSection(section)}
-                      className={`w-full text-left px-3 py-2 text-sm font-medium rounded-md ${
-                        activeSection === section
-                          ? 'bg-blue-100 text-black/95 border-l-4 border-black'
-                          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 border-l-4 border-transparent'
+                      key={item.id}
+                      onClick={() => setActiveSection(item.id)}
+                      className={`group w-full text-left flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                        activeSection === item.id
+                          ? 'bg-blue-50 text-gray-700 border-l-4 border-blue-500 font-semibold'
+                          : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 border-l-4 border-transparent hover:border-gray-200'
                       }`}
                     >
-                      {section === 'brand' && 'Marque'}
-                      {section === 'contact' && 'Coordonnées'}
-                      {section === 'businessInfo' && 'Informations légales'}
-                      {section === 'about' && 'À propos'}
-                      {section === 'shipping' && 'Livraison'}
-                      {section === 'returns' && 'Retours'}
-                      {section === 'seo' && 'Référencement'}
-                      {section === 'legal' && 'Mentions légales'}
+                      <span className="mr-3 text-gray-600">{item.icon}</span>
+                      {item.name}
                     </button>
                   ))}
                 </nav>
               </div>
-
+              
               {/* Main content */}
-              <div className="md:w-3/4 p-6">
-                <div className="space-y-6">
-                {renderSection()}
+              <div className="flex-1 overflow-y-auto bg-gray-50">
+                <div className="p-2 md:p-4 max-w-5xl mx-auto w-full">
+                  <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 space-y-8">
+                    {renderSection()}
+                  </div>
                 </div>
               </div>
             </div>

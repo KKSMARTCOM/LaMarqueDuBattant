@@ -13,21 +13,55 @@ const DATA_PATH = path.join(__dirname, '../public/data');
 const ARTICLES_FILE = path.join(DATA_PATH, 'articles.json');
 const EVENTS_FILE = path.join(DATA_PATH, 'events.json');
 
-// Configuration CORS
+// Configuration CORS plus permissive pour le développement
 const corsOptions = {
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5000'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'X-CSRF-Token'],
   credentials: true,
   preflightContinue: false,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 204,
+  maxAge: 600 // Mise en cache des pré-requêtes OPTIONS pendant 10 minutes
 };
 
 // Middleware
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions)); // Enable preflight for all routes
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' })); // Augmenter la limite de taille pour les données JSON
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.static(path.join(__dirname, '../build')));
+
+// Middleware pour vérifier les permissions du fichier
+app.use(async (req, res, next) => {
+  try {
+    const filesToCheck = [
+      path.join(__dirname, '../public/data/brandInfo.json'),
+      path.join(__dirname, '../public/data/articles.json'),
+      path.join(__dirname, '../public/data/events.json')
+    ];
+    
+    for (const filePath of filesToCheck) {
+      try {
+        // Vérifier si le fichier existe
+        await fs.access(filePath, fs.constants.F_OK | fs.constants.W_OK);
+      } catch (err) {
+        if (err.code === 'ENOENT') {
+          // Créer le fichier s'il n'existe pas
+          await fs.writeFile(filePath, '{}', 'utf8');
+          console.log(`Fichier créé : ${filePath}`);
+        } else if (err.code === 'EACCES') {
+          console.error(`Erreur de permission sur le fichier: ${filePath}`);
+          console.error('Veuillez vérifier les permissions du fichier.');
+        } else {
+          console.error(`Erreur lors de l'accès au fichier ${filePath}:`, err);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Erreur dans le middleware de vérification des fichiers:', error);
+  }
+  next();
+});
 
 // Middleware de logging des requêtes
 app.use((req, res, next) => {

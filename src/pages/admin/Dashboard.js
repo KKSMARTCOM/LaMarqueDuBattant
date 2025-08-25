@@ -27,22 +27,19 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, Outlet, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Link, Outlet, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { 
   FiHome, 
   FiShoppingBag, 
-  FiTag, 
   FiUsers, 
-  FiSettings, 
-  FiFileText,
+  FiTag, 
+  FiFileText, 
   FiChevronLeft, 
-  FiChevronRight,
-  FiInstagram,
-  FiFacebook,
-  FiLinkedin,
+  FiChevronRight, 
+  FiSettings, 
+  FiLogOut,
 } from 'react-icons/fi';
-import { FaWhatsapp } from 'react-icons/fa';
-import { FaXTwitter } from 'react-icons/fa6';
 import getImagePath from '../../components/getImagePath';
 import DashboardHome from './DashboardHome';
 import ArticlesList from './ArticlesList';
@@ -53,11 +50,24 @@ import EventsList from './EventsList';
 import EventForm from './EventForm';
 import SiteInfoForm from './SiteInfoForm';
 
-// Composant Sidebar pour la navigation
+/**
+ * Composant Sidebar - Barre latérale de navigation du tableau de bord
+ * 
+ * @param {boolean} isCollapsed - État de réduction de la barre latérale
+ * @param {function} toggleSidebar - Fonction pour basculer l'état de réduction
+ * 
+ * Fonctionnalités :
+ * - Affiche la navigation principale de l'administration
+ * - Gère la déconnexion de l'utilisateur
+ * - Affiche les compteurs de modifications en attente
+ * - Adapte l'interface en mode réduit/étendu
+ */
 const Sidebar = ({ isCollapsed, toggleSidebar }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [activePath, setActivePath] = useState('');
   const { count, openModal } = useChangesCart();
+  const { user, logout } = useAuth(); // Accès aux méthodes d'authentification
 
   useEffect(() => {
     setActivePath(location.pathname);
@@ -73,51 +83,74 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
 
   return (
     <div 
-      className={`${isCollapsed ? 'w-20' : 'w-64'} 
-      bg-black/95 text-white min-h-screen flex flex-col transition-all duration-300 ease-in-out relative`}
+      className={`${isCollapsed ? 'w-20' : 'w-72'} 
+      bg-gradient-to-b from-black/100 to-black/80 text-white min-h-screen flex flex-col transition-all duration-300 ease-in-out relative border-r border-gray-700`}
     >
       {/* Bouton de basculement */}
       <button 
         onClick={toggleSidebar}
-        className="absolute -right-5 top-6 bg-white rounded-full p-1 shadow-md text-gray-700 z-10"
+        className="absolute -right-3 top-6 bg-white hover:bg-gray-100 rounded-full p-1.5 shadow-lg text-gray-800 z-10 transition-all duration-200 transform hover:scale-110"
         aria-label={isCollapsed ? 'Déplier le menu' : 'Replier le menu'}
       >
-        {isCollapsed ? <FiChevronRight size={20} /> : <FiChevronLeft size={20} />}
+        {isCollapsed ? <FiChevronRight size={18} /> : <FiChevronLeft size={18} />}
       </button>
-      
-      <div className={`p-4 ${isCollapsed ? 'px-2' : 'px-4'} flex flex-col items-center justify-center `}>
-        <Link to="/" className="flex flex-row items-center justify-center w-full">
-          <img 
-            src={getImagePath('LOGO_LMDB.svg', 'logo')} 
-            alt="La Marque du Battant" 
-            className={`${isCollapsed ? 'w-13 h-13' : 'w-14 h-14'} mb-2 cursor-pointer hover:opacity-80 transition-opacity duration-200`}
-            onError={(e) => {
-              console.log('Erreur de chargement du logo');
-              e.target.style.display = 'none';
-            }}
-          />
-          {!isCollapsed && (
-            <span className="text-sm font-black text-left text-gray-300">
-              La Marque du Battant <span className="text-xs text-gray-500">Admin</span>
-            </span>
-          )}
+
+      {/* En-tête avec logo */}
+      <div className={`p-4 ${isCollapsed ? 'px-2' : 'px-6'} flex flex-col items-center justify-center border-b border-gray-700 pb-6`}>
+        <Link to="/" className="flex flex-row items-center justify-center w-full group">
+          <div className={`${isCollapsed ? 'w-12 h-12' : 'w-14 h-14'} mb-2 overflow-hidden rounded-full bg-white p-1.5 transition-all duration-300 group-hover:shadow-lg group-hover:scale-105`}>
+            <img 
+              src={getImagePath('LOGO_LMDB_noir_sb.png', 'logo')} 
+              alt="La Marque du Battant" 
+              className="w-full h-full object-contain"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = '/LOGO_LMDB_noir_sb.png';
+              }}
+            />
+          </div>
         </Link>
+        {!isCollapsed && (
+          <div className="text-center">
+            <h1 className="text-lg font-bold text-white">
+              La Marque du Battant
+            </h1>
+            <p className="text-xs text-gray-400 mt-1">Tableau de bord</p>
+          </div>
+        )}
       </div>
       
-      {/* Bouton Nouvel article */}
+      {/* Bouton Nouveau avec menu déroulant */}
       <div className={`border-b mb-4 border-gray-700 px-4 py-3 ${isCollapsed ? 'px-2' : 'px-4'}`}>
-        <Link
-          to="/admin/articles/nouveau"
-          className={`flex items-center justify-center w-full px-3 py-3 text-sm font-medium text-black bg-white rounded-md  hover:bg-white/80 transition-colors duration-300 ${
-            isCollapsed ? 'justify-center p-2' : 'px-4'
-          }`}
-          title="Créer un nouvel article"
-        >
-          <svg className={`h-4 w-4 ${!isCollapsed ? 'mr-2' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          {!isCollapsed && 'Nouvel article'}
-        </Link>
+        <div className="relative group">
+          <button
+            className={`flex items-center justify-center w-full px-3 py-3 text-sm font-medium text-black bg-white rounded-md hover:bg-white/80 transition-colors duration-300 ${
+              isCollapsed ? 'justify-center p-2' : 'px-4'
+            }`}
+            title="Créer un nouvel élément"
+          >
+            <svg className={`h-4 w-4 ${!isCollapsed ? 'mr-2' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            {!isCollapsed && 'Nouveau'}
+          </button>
+          
+          {/* Menu déroulant */}
+          <div className="absolute left-0 right-0 mt-1 w-full bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+            <Link
+              to="/admin/articles/nouveau"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Nouvel article
+            </Link>
+            <Link
+              to="/admin/events/nouveau"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              Nouvel événement
+            </Link>
+          </div>
+        </div>
         {/* Bouton Panier de modifications */}
         <button
           onClick={openModal}
@@ -144,103 +177,87 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
         </button>
       </div>
       
-    <nav className="flex-1 space-y-1 mt-1">
-            {menuItems.map((item) => (
+      {/* Navigation */}
+      <nav className="flex-1 px-3 py-4 space-y-1 ">
+        {menuItems.map((item) => {
+          const isActive = activePath === item.path || 
+                         (item.path !== '/admin' && activePath.startsWith(item.path));
+          
+          return (
             <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center  px-2 py-2 mx-4 rounded-md  transition-colors group ${
-                activePath === item.path 
-                    ? 'bg-white bg-opacity-15 backdrop-blur-2xl text-white' 
-                    : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                } ${isCollapsed ? 'justify-center' : ''}`}
-                title={isCollapsed ? item.label : ''}
+              key={item.path}
+              to={item.path}
+              className={`group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
+                isActive
+                  ? 'bg-white/10 text-white shadow-lg'
+                  : 'text-gray-300 hover:bg-white/5 hover:text-white'
+              } ${isCollapsed ? 'justify-center px-2' : 'pl-4'}`}
             >
-                <span className={activePath === item.path ? 'text-white' : 'text-gray-300 group-hover:text-white'}>
-                {React.cloneElement(item.icon, { className: 'h-4 w-4' })}
-                </span>
-                {!isCollapsed && <span className="ml-3 text-sm">{item.label}</span>}
+              <span className={`flex-shrink-0 transition-transform duration-200 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>
+                {React.cloneElement(item.icon, {
+                  className: `h-5 w-5 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`
+                })}
+              </span>
+              {!isCollapsed && (
+                <>
+                  <span className="ml-3">{item.label}</span>
+                  {count > 0 && item.path === '/admin/changes' && (
+                    <span className="ml-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-bold bg-red-500 text-white">
+                      {count}
+                    </span>
+                  )}
+                </>
+              )}
             </Link>
-            ))}
-            <div className="h-12 mx-4 mt-6  border-gray-700 border-b"></div>
-            <Link
-                key={"/admin/parametres"}
-                to={"/admin/parametres"}
-                className={`flex items-center  px-2 py-4  mx-4 rounded-md  transition-colors group ${
-                activePath === "/admin/parametres" 
-                    ? 'bg-white bg-opacity-15 backdrop-blur-2xl text-white' 
-                    : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                } ${isCollapsed ? 'justify-center' : ''}`}
-                title={isCollapsed ? "Paramètres" : ''}
-            >
-                <span className={activePath === "/admin/parametres" ? 'text-white' : 'text-gray-300 group-hover:text-white'}>
-                {React.cloneElement(<FiSettings className="h-5 w-5" />, { className: 'h-4 w-4' })}
-                </span>
-                {!isCollapsed && <span className="ml-3 text-sm">Paramètres</span>}
-            </Link>
-    </nav>
-    
-      <div className={`pt-4 rounded-md bg-white/20 mt-4 ${isCollapsed ? 'mx-2 mb-12 ' : 'mx-4 mb-4'}`}>
-        <div className={`flex   ${isCollapsed ? 'flex-col items-center space-y-3' : 'flex-row justify-center space-x-4'} p-3`}>
-          <a 
-            href="https://www.instagram.com/lamarquedubattant" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-white transition-colors duration-200"
-            title="Instagram"
-          >
-            <FiInstagram size={isCollapsed ? 16 : 18} />
-          </a>
-          <a 
-            href="https://www.facebook.com/lamarquedubattant" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-white transition-colors duration-200"
-            title="Facebook"
-          >
-            <FiFacebook size={isCollapsed ? 16 : 18} />
-          </a>
-          <a 
-            href="https://x.com/lamarquedubattant" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-white transition-colors duration-200"
-            title="X (anciennement Twitter)"
-          >
-            <FaXTwitter size={isCollapsed ? 16 : 18} />
-          </a>
-          <a 
-            href="https://www.linkedin.com/company/lamarquedubattant" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-white transition-colors duration-200"
-            title="LinkedIn"
-          >
-            <FiLinkedin size={isCollapsed ? 16 : 18} />
-          </a>
-          <a 
-            href="https://wa.me/221785936061" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-white transition-colors duration-200"
-            title="WhatsApp"
-          >
-            <FaWhatsapp size={isCollapsed ? 16 : 18} />
-          </a>
-        </div>
-        {!isCollapsed && (
-          <div className="text-[10px] text-gray-500 text-center mt-2 px-2">
-            © {new Date().getFullYear()} La Marque du Battant
-          </div>
-        )}
+          );
+        })}
+      </nav>
+      
+      {/* Section du bas */}
+      <div className="mt-auto pt-2">
+        {/* Paramètres */}
+        <Link
+          to={"/admin/parametres"}
+          className={`group flex items-center px-4 py-3 text-sm font-medium rounded-lg mx-2 transition-all duration-200 ${
+            activePath === "/admin/parametres" 
+              ? 'bg-white/10 text-white shadow-lg'
+              : 'text-gray-300 hover:bg-white/5 hover:text-white'
+          } ${isCollapsed ? 'justify-center px-2' : 'pl-4'}`}
+        >
+          <span className={`flex-shrink-0 transition-transform duration-200 ${activePath === "/admin/parametres" ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>
+            {React.cloneElement(<FiSettings className="h-5 w-5" />, {
+              className: `h-5 w-5 ${activePath === "/admin/parametres" ? 'scale-110' : 'group-hover:scale-110'}`
+            })}
+          </span>
+          {!isCollapsed && <span className="ml-3">Paramètres</span>}
+        </Link>
+
+        {/* Bouton de déconnexion */}
+        <button
+          onClick={() => {
+            logout();
+            navigate('/admin/login');
+          }}
+          className={`w-full flex items-center ${isCollapsed ? 'justify-center px-2' : 'px-4'} py-3 text-sm text-gray-300 hover:bg-white/5 hover:text-white rounded-lg mx-2 transition-colors duration-200`}
+          title={isCollapsed ? "Se déconnecter" : ""}
+        >
+          <FiLogOut className="h-5 w-5" />
+          {!isCollapsed && <span className="ml-3">Se déconnecter</span>}
+        </button>
       </div>
+      {/* Footer avec copyright */}
+      {!isCollapsed && (
+        <div className="text-[10px] text-gray-500 text-center mt-2 px-2 pb-4">
+          &copy; {new Date().getFullYear()} La Marque du Battant
+        </div>
+      )}
     </div>
   );
 };
 
 // Layout principal du tableau de bord
 const DashboardLayout = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   
   // Fonction pour basculer l'état de la sidebar
   const toggleSidebar = () => {
@@ -290,6 +307,7 @@ const Dashboard = () => {
           <Route path=":id/modifier" element={<EventForm />} />
         </Route>
         <Route path="site-info" element={<SiteInfoForm />} />
+        <Route path="parametres" element={<div>Paramètres (à implémenter)</div>} />
         {/* Redirection pour les routes inconnues */}
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Route>

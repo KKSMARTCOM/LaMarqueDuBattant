@@ -149,7 +149,7 @@
       "Hero": {
         "slides": [
           {
-            "title": "SUMMER SALE",
+            "title": "ertyuiop",
             "description": "NEW STYLES ADDED",
             "image": "Elegant-Unity.png"
           },
@@ -192,9 +192,9 @@
         "title": "Découvrez notre nouvelle collection",
         "CTA": "Des vêtements qui allient style et confort.",
         "collections": {
-          "Tendance de la saison": "Black-and-White Portrait.png",
-          "Nouveautés ETE": "Relaxing on Sandy Beach.png",
-          "Meilleures Hiver": "p1.jpg"
+          "Tendance de la saison": "image 1",
+          "Nouveautés ETE": "image 2",
+          "Meilleures Hiver": "image 3"
         }
       }
     },

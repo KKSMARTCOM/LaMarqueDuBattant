@@ -217,7 +217,7 @@ export default function Footer() {
               className="absolute rounded-md inset-0 z-0 transform transition-transform duration-1000 hover:scale-105"
             >
               <img 
-                src="/assets/images/CoverImage/Serious Man Portrait.png"
+                src={getImagePath("Serious Man Portrait.png", 'cover')}
                 alt="Nouvelle collection"
                 className="w-full h-full object-cover"
                 onError={(e) => {

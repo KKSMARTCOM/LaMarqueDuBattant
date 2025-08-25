@@ -38,44 +38,65 @@ import Apropos from "../pages/Apropos";
 import Events from "../pages/Events";
 import DetailsEvent from "../pages/DetailsEvent";
 import { useCart } from "./CartContext";
-// Import du tableau de bord d'administration
+// Import des composants d'administration
 import { Dashboard as AdminDashboard } from "../pages/admin";
+import Login from "../pages/admin/Login";
+import { AuthProvider } from "../context/AuthContext";
 import { ChangesCartProvider } from "../context/ChangesCartContext";
 import ChangesCartModal from "./admin/ChangesCartModal";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   // On utilise le contexte global du panier
   const { cartOpen, closeCart } = useCart();
+  
+  /**
+   * Structure de routage principale de l'application
+   * - Les routes publiques sont accessibles à tous
+   * - Les routes sous /admin/* sont protégées et nécessitent une authentification
+   * - La route /admin/login est accessible sans authentification
+   */
   return (
-    <ChangesCartProvider>
-      <Router>
-        <div className="App">
-          <Routes>
-          {/* Route pour les pages - plus besoin de passer onCartClick */}
-          <Route path="/" element={<Accueil />} />
-          <Route path="/produits" element={<Produit />} />
-          <Route path="/produit/:id" element={<DetailsProduits />} />
-          <Route path="/details-produit" element={<DetailsProduits />} />
-          <Route path="/apropos" element={<Apropos />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/events/:id" element={<DetailsEvent />} />
-          
-          {/* Routes du tableau de bord d'administration */}
-          {/* <Route path="/admin/*" element={<AdminDashboard />} /> */}
-          
-          {/* Redirection pour les routes inconnues */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-          {/* Le CartDrawer utilise le contexte pour s'ouvrir/se fermer */}
-          <CartDrawer
-            open={cartOpen}
-            onClose={closeCart}
-          />
-          {/* Modale globale du panier de modifications */}
-          <ChangesCartModal />
-        </div>
-      </Router>
-    </ChangesCartProvider>
+    <AuthProvider>
+      <ChangesCartProvider>
+        <Router>
+          <div className="App">
+            <Routes>
+              {/* Routes publiques */}
+              <Route path="/" element={<Accueil />} />
+              <Route path="/produits" element={<Produit />} />
+              <Route path="/produit/:id" element={<DetailsProduits />} />
+              <Route path="/details-produit" element={<DetailsProduits />} />
+              <Route path="/apropos" element={<Apropos />} />
+              <Route path="/events" element={<Events />} />
+              <Route path="/events/:id" element={<DetailsEvent />} />
+              
+              {/* Routes d'administration */}
+              <Route path="/admin/login" element={<Login />} />
+              <Route 
+                path="/admin/*" 
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Redirection pour les routes inconnues */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+            
+            {/* Le CartDrawer utilise le contexte pour s'ouvrir/se fermer */}
+            <CartDrawer
+              open={cartOpen}
+              onClose={closeCart}
+            />
+            {/* Modale globale du panier de modifications */}
+            <ChangesCartModal />
+          </div>
+        </Router>
+      </ChangesCartProvider>
+    </AuthProvider>
   );
 }
 

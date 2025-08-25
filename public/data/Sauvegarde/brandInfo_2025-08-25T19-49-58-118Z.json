@@ -192,9 +192,9 @@
         "title": "Découvrez notre nouvelle collection",
         "CTA": "Des vêtements qui allient style et confort.",
         "collections": {
-          "Tendance de la saison": "Black-and-White Portrait.png",
-          "Nouveautés ETE": "Relaxing on Sandy Beach.png",
-          "Meilleures Hiver": "p1.jpg"
+          "Tendance de la saison": "image 1",
+          "Nouveautés ETE": "image 2",
+          "Meilleures Hiver": "image 3"
         }
       }
     },
@@ -282,6 +282,10 @@
           {
             "question": "Offrez-vous des réductions?",
             "answer": "Oui, nous proposons régulièrement des promotions et des réductions sur une sélection d'articles. Inscrivez-vous à notre newsletter pour être informé des offres spéciales et des ventes exclusives."
+          },
+          {
+            "question": "ertyuiop",
+            "answer": "êdfghjklm"
           }
         ]
       }
