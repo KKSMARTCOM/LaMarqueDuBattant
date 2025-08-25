@@ -76,12 +76,14 @@ const ArticlesList = () => {
     const code = COLOR_MAP[norm(name)] || name; // si name est déjà un code CSS
     return { name, code };
   };
-  // Styles pour le tableau
+  // Styles pour la table
   const tableCellStyle = "px-4 py-3.5 text-sm text-gray-800 whitespace-nowrap text-left border-r border-gray-100 last:border-r-0";
   const tableHeaderStyle = "px-4 py-3.5 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider bg-gray-50 border-b border-gray-200 last:border-r-0";
   const tableRowStyle = (isSelected) => 
     `border-b border-gray-100 transition-colors duration-150 ${isSelected ? 'bg-gray-200 ring-1 ring-blue-200' : 'hover:bg-gray-100'}`;
   const tableContainerStyle = "shadow-sm rounded-lg border border-gray-200 overflow-hidden";
+  const scrollableTableStyle = "block max-h-[calc(100vh-270px)] min-h-0 overflow-y-auto";
+  const tableHeaderContainerStyle = "sticky top-0 bg-gray-50 z-10";
   
   const [articles, setArticles] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -333,8 +335,9 @@ const ArticlesList = () => {
         <div className="-my-2 overflow-x-auto">
           <div className="py-2 align-middle inline-block min-w-full">
             <div className={tableContainerStyle}>
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-gray-50">
+              <div className={scrollableTableStyle}>
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className={tableHeaderContainerStyle}>
                   <tr>
                     <th className={tableHeaderStyle} style={{ minWidth: '220px' }}>
                       Article
@@ -529,6 +532,7 @@ const ArticlesList = () => {
                   )}
                 </tbody>
               </table>
+              </div>
             </div>
           </div>
         </div>

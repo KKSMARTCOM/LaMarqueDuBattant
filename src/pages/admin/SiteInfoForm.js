@@ -1715,7 +1715,7 @@ const SiteInfoForm = () => {
                       onClick={() => setActiveSection(section)}
                       className={`w-full text-left px-3 py-2 text-sm font-medium rounded-md ${
                         activeSection === section
-                          ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-500'
+                          ? 'bg-blue-100 text-black/95 border-l-4 border-black'
                           : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 border-l-4 border-transparent'
                       }`}
                     >

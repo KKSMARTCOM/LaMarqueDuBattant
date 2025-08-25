@@ -61,7 +61,7 @@ function App() {
           <Route path="/events/:id" element={<DetailsEvent />} />
           
           {/* Routes du tableau de bord d'administration */}
-          <Route path="/admin/*" element={<AdminDashboard />} />
+          {/* <Route path="/admin/*" element={<AdminDashboard />} /> */}
           
           {/* Redirection pour les routes inconnues */}
           <Route path="*" element={<Navigate to="/" replace />} />
