@@ -41,7 +41,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import LegalModal from './LegalModal';
 import getLegalContent from '../data/legalContent';
-import { getContactInfo } from '../services/brandService';
+import { getContactInfo, getPageSection, getBrandInfo } from '../services/brandService';
 import Silk from './ReactbitsAnimations/Silk';
 import getImagePath from "./getImagePath";
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp, FaInstagram } from 'react-icons/fa';
@@ -75,17 +75,43 @@ export default function Footer() {
   const footerRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const [contactInfo, setContactInfo] = useState(null);
- 
+  const [brandInfo, setBrandInfo] = useState({
+    name: 'La Marque Du Battant',
+    logo: 'LOGO_LMDB.svg'
+  });
+  const [footerCard, setFooterCard] = useState({
+    title: 'NOUVELLE COLLECTION',
+    description: 'Découvrez notre dernière collection',
+    image: 'Serious Man Portrait.png'
+  });
 
-  // Charger les données de contact et de la marque
+
+  // Charger les données de contact, de la marque et de la carte du footer
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [contact] = await Promise.all([
+        const [contact, cardData, brand] = await Promise.all([
           getContactInfo(),
+          getPageSection('Footer', 'Card'),
+          getBrandInfo()
         ]);
+        
         setContactInfo(contact);
         
+        if (brand) {
+          setBrandInfo(prev => ({
+            ...prev,
+            name: brand.name || prev.name,
+            logo: brand.logo || prev.logo
+          }));
+        }
+        
+        if (cardData) {
+          setFooterCard(prev => ({
+            ...prev,
+            ...cardData
+          }));
+        }
       } catch (error) {
         console.error('Erreur lors du chargement des données:', error);
       }
@@ -138,8 +164,8 @@ export default function Footer() {
         <div className={`w-full mb-12 transition-all duration-1000 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white text-center tracking-widest font-thin ">
-            LA MARQUE DU BATTANT
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white text-center tracking-widest font-thin uppercase">
+            {brandInfo.name}
           </h2>
           <div className="h-px bg-gradient-to-r from-transparent via-white/30 to-transparent w-3/4 mx-auto mt-6"></div>
         </div>
@@ -152,7 +178,15 @@ export default function Footer() {
             }`}>
             <div className="bg-gradient-to-br from-black/80 to-white/35 rounded-md p-6 md:p-8 lg:p-10  border border-white/20 shadow-lg w-full">
               <div className="text-left mb-4">
-                <img src={getImagePath("LOGO_LMDB.svg", "logo")} alt="Logo" className="h-12 w-auto mx-2" />
+                <img 
+                  src={getImagePath(brandInfo.logo, "logo")} 
+                  alt={brandInfo.name || 'Logo'} 
+                  className="h-12 w-auto mx-2"
+                  onError={(e) => {
+                    console.error('Erreur de chargement du logo:', e.target.src);
+                    e.target.src = getImagePath('LOGO_LMDB.svg', 'logo'); // Fallback logo
+                  }}
+                />
               </div>
               <h3 className="text-white text-xl md:text-2xl font-medium mb-3 text-left">Restez connecté</h3>
               <p className="text-gray-300 text-sm md:text-base mb-6 text-left w-full  mx-auto">Inscrivez-vous à notre newsletter pour recevoir les dernières actualités et offres exclusives.</p>
@@ -217,12 +251,12 @@ export default function Footer() {
               className="absolute rounded-md inset-0 z-0 transform transition-transform duration-1000 hover:scale-105"
             >
               <img 
-                src={getImagePath("Serious Man Portrait.png", 'cover')}
+                src={getImagePath(footerCard.image || "Serious Man Portrait.png", 'cover')}
                 alt="Nouvelle collection"
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   console.error('Erreur de chargement de l\'image:', e.target.src);
-                  e.target.src = getImagePath('hero1.jpg', ''); // Fallback image
+                  e.target.src = getImagePath('Serious Man Portrait.png', ''); // Fallback image
                 }}
               />
               <div className="absolute rounded-md inset-0 bg-white/10"></div>
@@ -230,17 +264,17 @@ export default function Footer() {
             
             {/* Contenu superposé */}
             <div className="relative z-10 h-full flex flex-col items-center justify-end p-8 text-center">
-              <h3 className="text-2xl font-bold text-white mb-3">NOUVELLE COLLECTION</h3>
-              <p className="text-white/90 mb-6 max-w-md">Découvrez notre dernière collection printemps-été 2025</p>
-              <Link 
-                to="/collection" 
+              <h3 className="text-2xl font-bold text-white mb-3">{footerCard.title || 'NOUVELLE COLLECTION'}</h3>
+              <p className="text-white/90 mb-6 max-w-md">{footerCard.description || 'Découvrez notre dernière collection'}</p>
+                <Link 
+                  to="/collection" 
                 className="inline-flex items-center rounded-md gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-3 border border-white/20 transition-all duration-300 hover:scale-105"
-              >
+                >
                 <span>Découvrir</span>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
-              </Link>
+                </Link>
             </div>
           </div>
           </div>

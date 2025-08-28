@@ -1,50 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import getImagePath from "./getImagePath";
 
-// Tableau d'objets : chaque image est associée à son texte
-const slides = [
-  {
-    image: "bo4.jpg",
-    title: "Un club, une passion",
-    desc: "Depuis 1987, notre club rassemble les passionnés de tennis de tout âge et tout niveau."
-  },
-  {
-    image: "ca5.jpg",
-    title: "Des événements toute l'année",
-    desc: "Tournois, stages, animations : la vie du club est rythmée par de nombreux rendez-vous."
-  },
-  {
-    image: "cu2.jpg",
-    title: "Des infrastructures modernes",
-    desc: "Profitez de terrains rénovés, d'un club house convivial et d'équipements de qualité."
-  },
-  {
-    image: "hero.webp",
-    title: "Une ambiance conviviale",
-    desc: "Rejoignez une communauté soudée où le plaisir de jouer prime avant tout."
-  },
-  {
-    image: "hero1.jpg",
-    title: "Des coachs diplômés",
-    desc: "Nos entraîneurs accompagnent petits et grands dans leur progression."
-  },
-  {
-    image: "p1.jpg",
-    title: "Ouvert à tous",
-    desc: "Débutants ou confirmés, jeunes ou adultes, chacun trouve sa place au club."
-  },
-  {
-    image: "th6.jpg",
-    title: "Rejoignez-nous !",
-    desc: "Venez découvrir le club lors d'une séance d'essai gratuite."
-  }
-];
-
 export default function AboutSection() {
+  // État pour stocker les slides
+  const [slides, setSlides] = useState([]);
   // Index du slide courant
   const [current, setCurrent] = useState(0);
   // Pour l'animation (fade)
   const [fade, setFade] = useState(false);
+  // Chargement
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Chargement des slides depuis brandInfo.json
+  useEffect(() => {
+    fetch('/data/brandInfo.json')
+      .then(response => response.json())
+      .then(data => {
+        const aboutSlides = data.PageData?.Apropos?.AboutSection?.slides || [];
+        setSlides(aboutSlides);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error("Erreur lors du chargement des slides:", error);
+        setIsLoading(false);
+      });
+  }, []);
+
+  // Si chargement en cours
+  if (isLoading) {
+    return <div className="w-full min-h-[65vh] flex items-center justify-center">
+      <div className="animate-pulse text-white">Chargement des informations...</div>
+    </div>;
+  }
+
+
 
   // Fonction pour passer à l'image précédente
   const prevImage = () => {

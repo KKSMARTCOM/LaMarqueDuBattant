@@ -1409,7 +1409,27 @@ const SiteInfoForm = () => {
     console.log('handlePageDataChange:', { page, section, value });
     
     setFormData(prev => {
-      const updated = {
+      // Pour Header et Footer, on utilise directement la valeur fournie
+      if (page === 'Header' || page === 'Footer') {
+        // Si la valeur est déjà un objet avec une clé Card (pour Footer) ou SloganBar (pour Header)
+        // On l'utilise directement, sinon on l'enveloppe dans un objet avec la clé appropriée
+        const pageData = value.Card || value.SloganBar ? value : 
+          page === 'Footer' ? { Card: value } : { SloganBar: value };
+          
+        return {
+          ...prev,
+          PageData: {
+            ...prev.PageData,
+            [page]: {
+              ...prev.PageData?.[page],
+              ...pageData
+            }
+          }
+        };
+      }
+      
+      // Pour les autres pages, on conserve la logique existante
+      return {
         ...prev,
         PageData: {
           ...prev.PageData,
@@ -1419,9 +1439,6 @@ const SiteInfoForm = () => {
           }
         }
       };
-      
-      console.log('Updated PageData:', updated.PageData);
-      return updated;
     });
   };
   
@@ -1471,14 +1488,17 @@ const SiteInfoForm = () => {
           return (
             <HeaderForm 
               data={pageContent} 
-              onChange={(value) => handlePageDataChange(page, 'Header', value)}
+              onChange={(value) => handlePageDataChange('Header', null, value)}
             />
           );
         case 'Footer':
           return (
             <FooterForm 
               data={pageContent} 
-              onChange={(value) => handlePageDataChange(page, 'Footer', value)}
+              onChange={(value) => {
+                // On envoie directement la valeur qui contient déjà la structure { Card: {...} }
+                handlePageDataChange('Footer', null, value);
+              }}
             />
           );
         default:
@@ -1875,7 +1895,7 @@ const SiteInfoForm = () => {
                     { id: 'contact', name: 'Contact', icon: <FiMail className="w-5 h-5" /> },
                     { id: 'businessInfo', name: 'Entreprise', icon: <FiHome className="w-5 h-5" /> },
                     { id: 'about', name: 'À propos', icon: <FiInfo className="w-5 h-5" /> },
-                    { id: 'pageData', name: 'Contenu', icon: <FiFileText className="w-5 h-5" /> },
+                    { id: 'pageData', name: 'Contenu des pages', icon: <FiFileText className="w-5 h-5" /> },
                     { id: 'seo', name: 'Référencement', icon: <FiSearch className="w-5 h-5" /> },
                     { id: 'legal', name: 'Légal', icon: <FiShield className="w-5 h-5" /> },
                     { id: 'shipping', name: 'Livraison', icon: <FiTruck className="w-5 h-5" /> },

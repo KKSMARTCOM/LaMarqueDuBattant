@@ -103,6 +103,27 @@ export const getReturnsInfo = async () => {
 };
 
 /**
+ * Récupère les données d'une section spécifique d'une page
+ * @param {string} pageName - Le nom de la page (ex: 'Accueil', 'Apropos')
+ * @param {string} sectionName - Le nom de la section (ex: 'Hero', 'AboutSection')
+ * @returns {Promise<Object>} Les données de la section demandée ou un objet vide
+ */
+export const getPageSection = async (pageName, sectionName) => {
+  try {
+    const data = await fetchBrandData();
+    // Vérifier si la page et la section existent
+    if (data?.PageData?.[pageName]?.[sectionName] !== undefined) {
+      return data.PageData[pageName][sectionName];
+    }
+    console.log(`Section ${sectionName} non trouvée dans la page ${pageName}`);
+    return {};
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données de la section:', error);
+    return {};
+  }
+};
+
+/**
  * Récupère les informations SEO si présentes.
  * @returns {Promise<Object>} Objet `seo` ou {}.
  */

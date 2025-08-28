@@ -1,34 +1,41 @@
-import React from "react";
-
-const faqs = [
-  {
-    question: "Quels types de vêtements?",
-    answer:
-      "Nous proposons une large gamme de vêtements allant des tenues décontractées aux vêtements de soirée. Chaque pièce est conçue avec soin pour allier confort et style. Explorez notre collection pour trouver votre look idéal.",
-  },
-  {
-    question: "Comment passer une commande?",
-    answer:
-      "Pour passer une commande, parcourez notre site, sélectionnez les articles souhaités et ajoutez-les à votre panier. Ensuite, suivez les instructions pour finaliser votre achat. C'est simple et rapide!",
-  },
-  {
-    question: "Quels sont les délais de livraison?",
-    answer:
-      "Nos délais de livraison varient en fonction de votre emplacement. En général, vous pouvez vous attendre à recevoir votre commande dans un délai de 3 à 7 jours ouvrables. Nous vous tiendrons informé de l'état de votre livraison.",
-  },
-  {
-    question: "Comment retourner un article?",
-    answer:
-      "Si vous n'êtes pas satisfait de votre achat, vous pouvez retourner l'article dans un délai de 30 jours. Assurez-vous que l'article est dans son état d'origine. Consultez notre politique de retour pour plus de détails.",
-  },
-  {
-    question: "Offrez-vous des réductions?",
-    answer:
-      "Oui, nous proposons régulièrement des promotions et des réductions sur une sélection d'articles. Inscrivez-vous à notre newsletter pour être informé des offres spéciales et des ventes exclusives.",
-  },
-];
+import React, { useState, useEffect } from "react";
 
 export default function FAQSection() {
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchFAQs = async () => {
+      try {
+        const response = await fetch('/data/brandInfo.json');
+        if (!response.ok) {
+          throw new Error('Erreur lors du chargement des FAQ');
+        }
+        const data = await response.json();
+        const faqsData = data.PageData?.Apropos?.FAQ?.faqs || [];
+        setFaqs(faqsData);
+      } catch (err) {
+        console.error('Erreur:', err);
+        setError('Impossible de charger les questions fréquentes');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFAQs();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="w-full py-16 px-4 sm:px-4 lg:px-6 bg-black">
+        <div className="max-w-6xl mx-auto text-center">
+          <p className="text-white">Chargement des questions fréquentes...</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="w-full py-16 px-4 sm:px-4 lg:px-6 bg-black">
       <div className="max-w-6xl mx-auto">

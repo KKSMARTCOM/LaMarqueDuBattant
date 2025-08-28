@@ -44,8 +44,10 @@ import useArticles from '../hooks/useArticles';
 import { MegaMenu, SloganBar, CartIcon, MenuPrincipal } from './Header/index';
 import UserAuthDrawer from './UserAuthDrawer';
 
-// Liste des slogans animés affichés en haut du header
-const phrases = [
+import { getPageSection, getBrandInfo } from '../services/brandService';
+
+// Liste par défaut des slogans (utilisée en cas d'erreur de chargement)
+const defaultPhrases = [
   "La MARQUE DU BATTANT",
   "SÉRÉNITÉ EN TOUT TEMPS",
   "STAY STRONG",
@@ -59,6 +61,8 @@ const phrases = [
  * l'état global, et compose les sous-composants spécialisés.
  */
 export default function Header({ showCategoriesBar, opacity = 80 }) {
+  // État pour stocker les slogans
+  const [phrases, setPhrases] = useState(defaultPhrases);
   // Index du slogan affiché
   const [index, setIndex] = useState(0);
   // Animation de fade pour le slogan
@@ -76,11 +80,45 @@ export default function Header({ showCategoriesBar, opacity = 80 }) {
   // Nombre d'articles dans le panier
   const [cartCount, setCartCount] = useState(0);
   const [userDrawerOpen, setUserDrawerOpen] = useState(false);
+  const [logo, setLogo] = useState('LOGO_LMDB.svg');
+
+  // Charge les informations de la marque (logo, etc.)
+  useEffect(() => {
+    const loadBrandInfo = async () => {
+      try {
+        const brandData = await getBrandInfo();
+        if (brandData?.logo) {
+          setLogo(brandData.logo);
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des informations de la marque:', error);
+      }
+    };
+
+    loadBrandInfo();
+  }, []);
 
   // Fonction pour ouvrir le drawer du panier (depuis le contexte global)
   const { openCart } = useCart();
   // Chargement des articles (pour le mega menu)
   const { articles, loading: articlesLoading } = useArticles();
+
+  // Charge les slogans depuis brandInfo.json
+  useEffect(() => {
+    const loadSlogans = async () => {
+      try {
+        const sloganData = await getPageSection('Header', 'SloganBar');
+        if (sloganData?.phrases && sloganData.phrases.length > 0) {
+          setPhrases(sloganData.phrases);
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des slogans:', error);
+        setPhrases(defaultPhrases);
+      }
+    };
+
+    loadSlogans();
+  }, []);
 
   // Met à jour le badge du panier dynamiquement en écoutant localStorage
   useEffect(() => {
@@ -180,7 +218,7 @@ export default function Header({ showCategoriesBar, opacity = 80 }) {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img 
-              src={getImagePath('LOGO_LMDB.svg', 'logo')} 
+              src={getImagePath(logo, 'logo')} 
               alt="Logo" 
               className="max-h-10 md:max-h-14 w-12 mr-2 cursor-pointer hover:opacity-80 transition-opacity duration-200" 
               style={{ minHeight: '40px' }}

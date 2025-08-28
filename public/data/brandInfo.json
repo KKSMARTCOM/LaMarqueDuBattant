@@ -2,7 +2,7 @@
   "brand": {
     "name": "La Marque Du Battant",
     "slogan": "L'excellence à portée de main",
-    "logo": "logo.png",
+    "logo": "LOGO_LMDB.svg",
     "favicon": "favicon.ico"
   },
   "contact": {
@@ -184,9 +184,7 @@
         "title": "Découvrez notre histoire et notre passion",
         "womenImage": "ca5.jpg",
         "menImage": "cu2.jpg",
-        "description": "Chez La Marque des Battants, chaque pièce raconte une histoire, la vôtre, et célèbre votre parcours. Nous croyons en une mode authentique et engagée, où chaque choix est porteur de sens. Rejoignez-nous et affichez fièrement vos couleurs : celles de la détermination et de la victoire.",
-        "buttonText": "En savoir plus",
-        "buttonLink": "/apropos"
+        "description": "Chez La Marque des Battants, chaque pièce raconte une histoire, la vôtre, et célèbre votre parcours. Nous croyons en une mode authentique et engagée, où chaque choix est porteur de sens. Rejoignez-nous et affichez fièrement vos couleurs : celles de la détermination et de la victoire."
       },
       "CollectionsSection": {
         "title": "Découvrez notre nouvelle collection",
@@ -206,7 +204,6 @@
       },
       "ImageGallerySection": {
         "images": [
-          "event1.jpg",
           "event2.jpg",
           "event3.jpg",
           "event4.jpg",
@@ -287,7 +284,6 @@
       }
     },
     "Header": {
-      "Logo": "LOGO_LMDB.svg",
       "SloganBar": {
         "phrases": [
           "La MARQUE DU BATTANT",
@@ -299,16 +295,13 @@
       }
     },
     "Footer": {
-      "Logo": "LOGO_LMDB.svg",
-      "Nom": "La Marque Du Battant",
-      "Slogan": "L'EXCELLENCE À PORTÉE DE MAIN",
       "Card": {
         "title": "NOUVELLE COLLECTION",
-        "description": "Découvrez notre dernière collection printemps-été 2025",
+        "description": "Découvrez notre dernière collection printemps-été ",
         "image": "Serious Man Portrait.png"
       }
     }
   },
   "version": "1.0.0",
-  "lastUpdated": "2025-08-25"
+  "lastUpdated": "2025-08-26"
 }

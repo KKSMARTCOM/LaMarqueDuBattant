@@ -2,20 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import getImagePath from "./getImagePath";
 
 // Images CoverImage utilisées dans la galerie
-const coverImages = [
-  "th6.jpg",
-  "p1.jpg",
-  "cu2.jpg",
-  "ca5.jpg",
-  "bo4.jpg",
-  "hero1.jpg",
-  "hero.webp"
-];
 
-const images = coverImages.map((img) => ({
-  src: getImagePath(img, "cover"),
-  alt: img.replace(/\..+$/, ""),
-}));
+
+
+
 
 // Hook pour le nombre d'images visibles (3 desktop, 1 mobile)
 function useResponsivePerPage() {
@@ -31,6 +21,28 @@ function useResponsivePerPage() {
 }
 
 export default function ImageGallerySection() {
+// Images CoverImage utilisées dans la galerie
+const [coverImages, setCoverImages] = useState([]);
+
+const images = coverImages.map((img) => ({
+  src: getImagePath(img, "events"),
+  alt: img.replace(/\..+$/, ""),
+}));
+
+  useEffect(() => {
+    // Chargement direct du fichier JSON
+    fetch('/data/brandInfo.json')
+      .then(response => response.json())
+      .then(data => {
+        const galleryImages = data.PageData?.Events?.ImageGallerySection?.images || [];
+        setCoverImages(galleryImages);
+        
+      })
+      .catch(error => {
+        console.error("Erreur lors du chargement des images:", error);
+      });
+  }, []);
+  console.log(coverImages);
   const sliderRef = useRef(null);
   const cardRef = useRef(null); // Pour mesurer la largeur d'une image
   const perPage = useResponsivePerPage();

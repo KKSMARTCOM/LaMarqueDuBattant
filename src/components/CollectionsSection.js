@@ -56,6 +56,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import getImagePath from "./getImagePath";
+import { getPageSection } from "../services/brandService";
 
 // Ajout de la police Commissioner via Google Fonts dans le head si pas déjà présente
 if (!document.getElementById('commissioner-font')) {
@@ -68,7 +69,42 @@ if (!document.getElementById('commissioner-font')) {
 
 export default function CollectionsSection() {
   const sectionRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [collectionsData, setCollectionsData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+
+   // Chargement des données de la section
+   useEffect(() => {
+    const loadSectionData = async () => {
+      try {
+        console.log("Début du chargement de la section Collections...");
+        const data = await getPageSection('Accueil', 'CollectionsSection');
+        console.log("Données reçues:", data);
+        
+        if (data) {
+          // Convertir l'objet collections en tableau
+          const collectionsArray = data.collections ? 
+            Object.entries(data.collections).map(([name, image]) => ({ name, image })) : 
+            [];
+          
+          setCollectionsData({
+            title: data.title,
+            CTA: data.CTA,
+            collections: collectionsArray
+          });
+          console.log("Données chargées:", collectionsData);
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des collections:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    loadSectionData();
+  }, []);
+
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -96,8 +132,21 @@ export default function CollectionsSection() {
     };
   }, []);
 
+  // Afficher un indicateur de chargement pendant le chargement des données
+  if (isLoading) {
+    return (
+      <section className="w-full bg-white py-8 sm:py-12 md:py-16 xl:py-20 2xl:py-24 px-4 sm:px-6 md:px-9 xl:px-12 2xl:px-16" style={{ fontFamily: 'Commissioner, sans-serif' }}>
+        <div className="w-full py-20 flex justify-center items-center bg-white">
+          <div className="animate-pulse text-black text-2xl"> <h2>Chargement des collections...</h2></div>
+        </div>
+      </section>
+    );
+  }
+  else {
   return (
-    <section ref={sectionRef} className="w-full bg-white py-8 sm:py-12 md:py-16 xl:py-20 2xl:py-24 px-4 sm:px-6 md:px-9 xl:px-12 2xl:px-16" style={{ fontFamily: 'Commissioner, sans-serif' }}>
+    <section 
+    ref={sectionRef} 
+    className="w-full bg-white py-8 sm:py-12 md:py-16 xl:py-20 2xl:py-24 px-4 sm:px-6 md:px-9 xl:px-12 2xl:px-16" style={{ fontFamily: 'Commissioner, sans-serif' }}>
       <div className="max-w-6xl mx-auto w-full flex flex-col items-center">
         {/* Sous-titre avec animation */}
         <div className={`text-black text-xs xl:text-sm 2xl:text-base font-medium mb-2 sm:mb-3 xl:mb-4 2xl:mb-6 mt-2 transition-all duration-700 ease-out ${
@@ -108,14 +157,14 @@ export default function CollectionsSection() {
         <h2 className={`text-2xl sm:text-3xl md:text-4xl xl:text-5xl 2xl:text-6xl font-extrabold text-black text-center mb-2 sm:mb-3 xl:mb-4 2xl:mb-6 leading-tight px-2 transition-all duration-700 ease-out delay-200 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
         }`}>
-          Découvrez notre nouvelle<br />collection
+         {collectionsData.title}
         </h2>
         
         {/* Description avec animation */}
         <p className={`text-black text-xs sm:text-sm xl:text-base 2xl:text-lg font-light text-center mb-8 sm:mb-10 md:mb-12 xl:mb-16 2xl:mb-20 max-w-xs sm:max-w-md md:max-w-xl xl:max-w-2xl 2xl:max-w-3xl px-2 transition-all duration-700 ease-out delay-400 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
         }`}>
-          Des vêtements qui allient style et confort.
+          {collectionsData.CTA}
         </p>
         
         {/* Grille des cartes responsive avec animations séquentielles */}
@@ -137,7 +186,7 @@ export default function CollectionsSection() {
             </div>
             {/* Image à droite */}
             <div className="w-2/5 h-full">
-              <img src={getImagePath("Collection/Black-and-White Portrait.png", "cover")} alt="tendance" className="w-full h-full object-cover" />
+              <img src={getImagePath(`Collection/${collectionsData.collections?.[0]?.image || "default-collection.jpg"}`, "cover")}  alt="tendance" className="w-full h-full object-cover" />
             </div>
           </div>
           
@@ -146,7 +195,7 @@ export default function CollectionsSection() {
           aspect-[3/3.5] sm:aspect-[3/3.6] lg:aspect-[1/1.5] xl:aspect-[1/1.5] 2xl:aspect-[1/1.5]
           ${
             isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
-          }`} style={{ backgroundImage: `url(${getImagePath("Relaxing on Sandy Beach.png", "cover")})` }}>
+          }`} style={{ backgroundImage: `url(${getImagePath(`Collection/${collectionsData.collections?.[1]?.image}`, "cover")})` }}>
             {/* Overlay noir dégradé */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-10"></div>
             
@@ -170,9 +219,7 @@ export default function CollectionsSection() {
             aspect-[3/3.5] sm:aspect-[3/3.5] lg:aspect-[1/1.5] xl:aspect-[1/1.5] 2xl:aspect-[1/1.5]
             ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'}
           `} style={{
-            backgroundImage: `url(${getImagePath("p1.jpg", "cover")})`,
-            backgroundPosition: 'center',
-            backgroundSize: 'cover'
+            backgroundImage: `url(${getImagePath(`Collection/${collectionsData.collections?.[2]?.image}`, "cover")})`
           }}>
             {/* Overlay noir dégradé */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-10"></div>
@@ -195,4 +242,4 @@ export default function CollectionsSection() {
       </div>
     </section>
   );
-} 
+} }

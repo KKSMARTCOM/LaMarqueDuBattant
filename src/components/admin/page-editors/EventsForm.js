@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiPlus, FiTrash2, FiUpload, FiImage, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import getImagePath from '../../../components/getImagePath';
 
-// Composant pour les sections repliables
+/**
+ * Composant Section - Crée une section repliable
+ * @param {string} title - Titre de la section
+ * @param {ReactNode} children - Contenu de la section
+ * @param {boolean} defaultOpen - Si vrai, la section est ouverte par défaut
+ */
 const Section = ({ title, children, defaultOpen = false }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   
@@ -25,10 +30,20 @@ const Section = ({ title, children, defaultOpen = false }) => {
   );
 };
 
-// Composant pour les champs de formulaire
+/**
+ * Composant FormField - Champ de formulaire personnalisé
+ * @param {string} label - Libellé du champ
+ * @param {string} name - Nom du champ
+ * @param {string} value - Valeur du champ
+ * @param {function} onChange - Fonction de mise à jour
+ * @param {string} [placeholder=''] - Texte d'aide
+ * @param {string} [type='text'] - Type de champ (text, textarea, etc.)
+ * @param {boolean} [required=false] - Si le champ est obligatoire
+ * @param {string} [className=''] - Classes CSS supplémentaires
+ */
 const FormField = ({ label, name, value, onChange, placeholder = '', type = 'text', required = false, className = '' }) => (
   <div className={className}>
-    <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
+    <label htmlFor={name} className="block text-sm text-left font-medium text-gray-700 mb-1">
       {label} {required && <span className="text-red-500">*</span>}
     </label>
     {type === 'textarea' ? (
@@ -57,7 +72,15 @@ const FormField = ({ label, name, value, onChange, placeholder = '', type = 'tex
   </div>
 );
 
-// Composant pour l'upload d'images
+/**
+ * Composant ImageUpload - Gestion du téléversement d'images
+ * @param {string} label - Libellé du champ
+ * @param {string} name - Nom du champ
+ * @param {string} value - URL de l'image actuelle
+ * @param {function} onChange - Gestionnaire de changement
+ * @param {boolean} [required=false] - Si le champ est obligatoire
+ * @param {string} [className=''] - Classes CSS supplémentaires
+ */
 const ImageUpload = ({ label, name, value, onChange, required = false, className = '' }) => {
   const fileInputRef = React.useRef(null);
   const [isHovered, setIsHovered] = React.useState(false);
@@ -87,7 +110,7 @@ const ImageUpload = ({ label, name, value, onChange, required = false, className
 
   return (
     <div className={className}>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-left text-gray-700 mb-1">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       
@@ -150,33 +173,89 @@ const ImageUpload = ({ label, name, value, onChange, required = false, className
   );
 };
 
+/**
+ * Composant principal du formulaire d'événements
+ * @param {Object} data - Données du formulaire
+ * @param {function} onChange - Fonction de mise à jour des données
+ */
 const EventsForm = ({ data, onChange }) => {
   const [heroSection, setHeroSection] = useState(data?.HeroEvents || {});
   const [galleryImages, setGalleryImages] = useState(data?.ImageGallerySection?.images || []);
+  const [imagePreviews, setImagePreviews] = useState([]);
 
+  // Effet pour charger les aperçus d'images au chargement du composant
+  // Met à jour les aperçus quand la galerie d'images change
+  useEffect(() => {
+    if (galleryImages && galleryImages.length > 0) {
+      // Pour les images existantes, on utilise getImagePath avec le type 'events'
+      const previews = galleryImages.map((img, index) => 
+        imagePreviews[index] || (img.startsWith('http') ? img : getImagePath(img, 'events'))
+      );
+      setImagePreviews(previews);
+    } else {
+      setImagePreviews([]);
+    }
+  }, [galleryImages]);
+
+  /**
+   * Met à jour un champ de la section héro
+   * @param {string} field - Nom du champ à mettre à jour
+   * @param {string} value - Nouvelle valeur du champ
+   */
   const handleHeroChange = (field, value) => {
     const updatedHero = { ...heroSection, [field]: value };
     setHeroSection(updatedHero);
     onChange('HeroEvents', updatedHero);
   };
 
-  const handleGalleryChange = (index, value) => {
-    const updatedImages = [...galleryImages];
-    updatedImages[index] = value;
-    setGalleryImages(updatedImages);
-    onChange('ImageGallerySection', { images: updatedImages });
+  /**
+   * Gère le téléversement de nouvelles images
+   * @param {Event} e - Événement de changement de fichier
+   */
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    
+    // Créer des URLs d'aperçu pour les nouvelles images
+    const newPreviews = [];
+    const newImageNames = [];
+    
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        newPreviews.push(event.target.result);
+        newImageNames.push(file.name);
+        
+        // Quand toutes les images sont chargées
+        if (newPreviews.length === files.length) {
+          // Mettre à jour l'état avec les nouveaux noms de fichiers
+          const updatedImages = [...galleryImages, ...newImageNames];
+          setGalleryImages(updatedImages);
+          setImagePreviews(prev => [...prev, ...newPreviews]);
+          onChange('ImageGallerySection', { images: updatedImages });
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+    
+    // Réinitialiser l'input file
+    e.target.value = '';
   };
 
-  const addGalleryImage = () => {
-    const updatedImages = [...galleryImages, ''];
-    setGalleryImages(updatedImages);
-    onChange('ImageGallerySection', { images: updatedImages });
-  };
-
-  const removeGalleryImage = (index) => {
-    const updatedImages = galleryImages.filter((_, i) => i !== index);
-    setGalleryImages(updatedImages);
-    onChange('ImageGallerySection', { images: updatedImages });
+  /**
+   * Supprime une image de la galerie
+   * @param {number} index - Index de l'image à supprimer
+   */
+  const removeImage = (index) => {
+    const newImages = [...galleryImages];
+    const newPreviews = [...imagePreviews];
+    
+    newImages.splice(index, 1);
+    newPreviews.splice(index, 1);
+    
+    setGalleryImages(newImages);
+    setImagePreviews(newPreviews);
+    onChange('ImageGallerySection', { images: newImages });
   };
 
   return (
@@ -186,16 +265,29 @@ const EventsForm = ({ data, onChange }) => {
       {/* Hero Section */}
       <Section title="Bannière Principale">
         <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              label="Titre"
-              name="title"
-              value={heroSection.title || ''}
-              onChange={(e) => handleHeroChange('title', e.target.value)}
-              placeholder="Titre de la bannière"
-              required
-            />
-            
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <FormField
+                label="Titre"
+                name="title"
+                value={heroSection.title || ''}
+                onChange={(e) => handleHeroChange('title', e.target.value)}
+                placeholder="Titre de la bannière"
+                required
+              />
+              
+              <FormField
+                label="Description"
+                name="description"
+                type="textarea"
+                value={heroSection.description || ''}
+                onChange={(e) => handleHeroChange('description', e.target.value)}
+                placeholder="Description de la bannière"
+              />
+            </div>
+          </div>
+          
+          <div className="pt-2">
             <ImageUpload
               label="Image de fond"
               name="image"
@@ -204,71 +296,53 @@ const EventsForm = ({ data, onChange }) => {
               required
             />
           </div>
-          
-          <FormField
-            label="Description"
-            name="description"
-            type="textarea"
-            value={heroSection.description || ''}
-            onChange={(e) => handleHeroChange('description', e.target.value)}
-            placeholder="Description de la bannière"
-          />
         </div>
       </Section>
 
       {/* Gallery Section */}
       <Section title="Galerie d'images">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {galleryImages.map((image, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-3 space-y-3 bg-gray-50">
-              <div className="flex justify-between items-center pb-2 border-b border-gray-200">
-                <span className="text-sm font-medium text-gray-700">Image #{index + 1}</span>
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {galleryImages.map((image, index) => (
+              <div key={index} className="relative group aspect-square bg-gray-100 rounded-md overflow-hidden">
+                {imagePreviews[index] ? (
+                  <img 
+                    src={imagePreviews[index]} 
+                    alt={`Galerie ${index + 1}`} 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-300">
+                    <FiImage className="h-8 w-8" />
+                  </div>
+                )}
                 <button
                   type="button"
-                  onClick={() => removeGalleryImage(index)}
-                  className="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-50"
+                  onClick={() => removeImage(index)}
+                  className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                   title="Supprimer cette image"
                 >
                   <FiTrash2 className="h-4 w-4" />
                 </button>
               </div>
-              
-              <div className="relative aspect-square bg-gray-100 rounded-md overflow-hidden">
-                {image ? (
-                  <img 
-                    src={getImagePath(image)} 
-                    alt={`Galerie ${index + 1}`} 
-                    className="w-full h-full object-cover" 
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
-                    <FiImage className="h-12 w-12" />
-                  </div>
-                )}
-              </div>
-              
-              <FormField
-                label="URL de l'image"
-                name={`gallery-${index}`}
-                value={image || ''}
-                onChange={(e) => handleGalleryChange(index, e.target.value)}
-                placeholder="Nom du fichier ou URL"
-                className="text-sm"
+            ))}
+            
+            <label className="flex flex-col items-center justify-center aspect-square border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors duration-200">
+              <input 
+                type="file" 
+                className="hidden" 
+                multiple
+                accept="image/*"
+                onChange={handleImageUpload}
               />
-            </div>
-          ))}
+              <FiPlus className="h-8 w-8 text-gray-400 mb-2" />
+              <span className="text-sm text-gray-600">Ajouter</span>
+            </label>
+          </div>
           
-          <button
-            type="button"
-            onClick={addGalleryImage}
-            className="flex flex-col items-center justify-center h-full min-h-[200px] border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors duration-200 p-6 text-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            <FiPlus className="h-10 w-10 text-gray-400 mb-2 group-hover:text-blue-500" />
-            <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600">
-              Ajouter une image
-            </span>
-            <span className="text-xs text-gray-500 mt-1">Glissez-déposez ou cliquez pour téléverser</span>
-          </button>
+          <div className="text-sm text-gray-500">
+            {galleryImages.length} image(s) sélectionnée(s)
+          </div>
         </div>
       </Section>
     </div>

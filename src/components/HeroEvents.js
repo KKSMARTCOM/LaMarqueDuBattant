@@ -1,11 +1,48 @@
 import React, { useRef, useEffect, useState } from "react";
 import getImagePath from "./getImagePath";
+import { getPageSection } from "../services/brandService";
 
 export default function HeroEvents() {
   // Ref pour observer l'entrée dans le viewport
   const sectionRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [sectionData, setSectionData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); 
 
+
+   // Chargement initial des données
+    useEffect(() => {
+      
+      const loadSectionData = async () => {
+        try {
+          console.log("Début du chargement de la section Events...");
+          const data = await getPageSection('Events', 'HeroEvents');
+          console.log("Données reçues:", data);
+          
+          if (data) {
+            console.log("Données à stocker:", {
+              title: data.title,
+              description: data.description,
+              image: data.image
+            });
+            
+            setSectionData({
+              title: data.title,
+              description: data.description,
+              image: data.image
+            });
+          }
+        } 
+      catch (error) {
+          console.log('Erreur lors du chargement des données de la section:', error);
+        }finally {
+          setIsLoading(false);
+        }
+      };
+  
+      loadSectionData();
+    }, []);
+    console.log("Données chargées22:", sectionData);
   // Intersection Observer pour déclencher l'animation
   useEffect(() => {
     const observer = new window.IntersectionObserver(
@@ -20,7 +57,18 @@ export default function HeroEvents() {
       if (currentSection) observer.unobserve(currentSection);
     };
   }, []);
-
+ 
+   // Afficher un indicateur de chargement pendant le chargement des données
+   if (isLoading) {
+    return (
+      <section className="w-full bg-white py-8 sm:py-12 md:py-16 xl:py-20 2xl:py-24 px-4 sm:px-6 md:px-9 xl:px-12 2xl:px-16" style={{ fontFamily: 'Commissioner, sans-serif' }}>
+        <div className="w-full py-20 flex justify-center items-center bg-white">
+          <div className="animate-pulse text-black text-2xl"> <h2>Chargement des collections...</h2></div>
+        </div>
+      </section>
+    );
+  }
+  else{
   return (
     <section
       ref={sectionRef}
@@ -28,10 +76,10 @@ export default function HeroEvents() {
     >
       <div className="w-full mx-auto">
         <h1 className="text-2xl md:text-4xl font-bold mb-4 text-left leading-tight">
-          Découvrez nos événements passionnants et rejoignez-nous pour des moments inoubliables !
+          {sectionData.title}
         </h1>
         <p className="text-xs md:text-sm mb-6 text-left">
-          Participez à nos événements exclusifs et vivez des expériences uniques avec notre marque.
+          {sectionData.description}
         </p>
         <div className="flex flex-row gap-3 mb-6">
           <a href="#EventSection" className="bg-black rounded-md hover:bg-black/20 hover:text-black transition-all duration-700 ease-out text-white px-4 py-2 text-xs font-medium">Explorer</a>
@@ -39,7 +87,7 @@ export default function HeroEvents() {
         </div>
         <div className="w-full mt-2 rounded-md">
           <img
-            src={getImagePath("event6.jpg", "events")}
+            src={getImagePath(sectionData.image, "events")}
             alt="Événement"
             className="w-full object-cover"
             style={{ aspectRatio: '2/1', maxHeight: 620 }}
@@ -47,5 +95,5 @@ export default function HeroEvents() {
         </div>
       </div>
     </section>
-  );
+  );}
 } 
