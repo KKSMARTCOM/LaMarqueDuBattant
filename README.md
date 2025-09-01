@@ -1,6 +1,6 @@
-# La Marque Du Battant - Plateforme E-commerce
+# 🛍️ La Marque Du Battant - Plateforme E-commerce
 
-Plateforme e-commerce complète pour La Marque Du Battant, développée avec React 19 et une architecture moderne. Le projet inclut une gestion avancée des produits, des événements et une interface d'administration complète.
+Plateforme e-commerce moderne pour La Marque Du Battant, développée avec React 19 et une architecture full-stack JavaScript. Cette solution complète intègre une gestion avancée des produits, des événements et une interface d'administration intuitive.
 
 ## 📁 Structure des dossiers d'images
 
@@ -17,7 +17,7 @@ public/
 │           └── Collection/    # Images des collections
 ```
 
-Consultez le [Guide d'Utilisation](./GUIDE_UTILISATION.md) pour plus de détails sur la gestion des images.
+Consultez le [Guide d'Utilisation](./GUIDE_UTILISATION.md) pour des instructions détaillées sur l'installation et l'utilisation.
 
 ## 🚀 Fonctionnalités Principales
 

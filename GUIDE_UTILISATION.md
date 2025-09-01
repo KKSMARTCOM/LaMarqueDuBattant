@@ -1,4 +1,4 @@
-# Guide d'Utilisation - Gestion des Informations du Site
+# 📘 Guide d'Utilisation - La Marque Du Battant
 
 ## Table des matières
 1. [Démarrage du projet en local](#démarrage-du-projet-en-local)
@@ -68,8 +68,39 @@ Ce guide explique comment gérer les informations du site via l'interface d'admi
 
 ## Accès à l'interface d'administration
 
-1. Connectez-vous à l'interface d'administration
-2. Accédez à la section "Informations du site" dans le menu de navigation
+### Connexion
+
+1. Accédez à la page de connexion : http://localhost:3000/admin/login
+2. Entrez vos identifiants :
+   - **Email** : directeur@lamarquedubattant.com
+   - **Mot de passe** : Directeur123
+
+### Comptes administrateurs
+
+Deux comptes administrateurs sont pré-configurés :
+
+1. **Compte principal**
+   - Email : directeur@lamarquedubattant.com
+   - Mot de passe : Directeur123
+   - Rôle : Administrateur complet
+
+2. **Compte secondaire**
+   - Email : admin@example.com
+   - Mot de passe : admin123
+   - Rôle : Administrateur
+
+### Sécurité
+
+- La session reste active jusqu'à la déconnexion
+- Les mots de passe sont sensibles à la casse
+- Évitez d'utiliser des mots de passe faibles
+- Ne partagez jamais vos identifiants de connexion
+
+### Déconnexion
+
+1. Cliquez sur votre profil en haut à droite
+2. Sélectionnez "Déconnexion"
+3. Vous serez redirigé vers la page de connexion
 
 ## Gestion des images
 
@@ -143,11 +174,21 @@ Les informations sont organisées en sections :
 - Vérifiez les permissions du dossier de sauvegarde
 - Consultez les logs du serveur pour plus de détails
 
+## 🔒 Réinitialisation du mot de passe
+
+Si vous avez oublié votre mot de passe, contactez l'équipe technique pour le réinitialiser. Pour des raisons de sécurité, les mots de passe ne peuvent pas être récupérés directement depuis l'interface.
+
 ## Support
 
 Pour toute question ou problème, contactez l'équipe technique à :
 - Email : support@lamarquedubattant.com
 - Téléphone : +33 1 23 45 67 89
+
+### Support technique
+En cas de problème de connexion, veuillez fournir :
+1. Le message d'erreur exact
+2. L'heure à laquelle le problème est survenu
+3. Le navigateur et la version utilisés
 
 ---
 *Dernière mise à jour : 2025-08-23*
